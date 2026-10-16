@@ -1,7 +1,11 @@
 import { ghostty } from "./generators/ghostty.ts";
 import { herdr } from "./generators/herdr.ts";
 import { jetbrains } from "./generators/jetbrains.ts";
+import { micro } from "./generators/micro.ts";
+import { obsidian } from "./generators/obsidian.ts";
 import { pi } from "./generators/pi.ts";
+import { raycast } from "./generators/raycast.ts";
+import { slack } from "./generators/slack.ts";
 import { starship } from "./generators/starship.ts";
 import { tmux } from "./generators/tmux.ts";
 import type { Target } from "./generators/types.ts";
@@ -24,4 +28,8 @@ export const targets: Target[] = [
   tmux,
   vim,
   xcode,
+  micro,
+  obsidian,
+  slack,
+  raycast,
 ];
