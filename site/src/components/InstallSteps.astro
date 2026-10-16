@@ -1,0 +1,16 @@
+---
+import { inline } from "../data/inline.ts";
+
+interface Props {
+  steps: string[];
+}
+const { steps } = Astro.props;
+---
+<ol class="steps">
+  {steps.map((s) => <li set:html={inline(s)} />)}
+</ol>
+
+<style>
+  .steps { padding-left: 1.4rem; display: grid; gap: .5rem; }
+  .steps li::marker { color: var(--lime); font-weight: 700; }
+</style>

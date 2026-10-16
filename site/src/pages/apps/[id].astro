@@ -1,14 +1,58 @@
 ---
-import { type Target, targets } from "../../data/targets.ts";
+import InstallSteps from "../../components/InstallSteps.astro";
+import SyntaxPreview from "../../components/SyntaxPreview.astro";
+import { REPO, rawUrl, type Target, targets } from "../../data/targets.ts";
+import { themeFile } from "../../data/themes.ts";
 import Base from "../../layouts/Base.astro";
 
 export function getStaticPaths() {
   return targets.map((t) => ({ params: { id: t.id }, props: { target: t } }));
 }
 const { target } = Astro.props as { target: Target };
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const main = target.files[0]!;
+const source = themeFile(target.id, main.path);
+const shown = source.split("\n").slice(0, 40).join("\n");
+const truncated = source.split("\n").length > 40;
+const levelLabel = {
+  tool: "Checked with the tool",
+  schema: "Checked against its schema",
+  format: "Format-checked only",
+}[target.check.level];
 ---
 <Base title={`Bigface for ${target.name}`}>
-  <p class="muted">{target.kind}</p>
+  <p class="muted"><a href={`${base}/#apps`}>← All apps</a> · {target.kind}</p>
   <h1>Bigface for {target.name}</h1>
-  <p>{target.tagline}</p>
+  <p class="lead">{target.tagline}</p>
+
+  <SyntaxPreview terminal={target.terminalPreview} />
+
+  <h2>Install</h2>
+  <InstallSteps steps={target.steps} />
+
+  <h2>Download</h2>
+  <ul class="downloads">
+    {target.download && (
+      <li><a class="dl" href={`${base}/${target.download.href}`} download>{target.download.label}</a></li>
+    )}
+    {target.files.map((f) => (
+      <li>
+        <a class="dl" href={`${base}/themes/${target.id}/${f.path}`} download>{f.label}</a>
+        <span class="muted"> · <a href={rawUrl(target.id, f.path)}>raw on GitHub</a></span>
+      </li>
+    ))}
+  </ul>
+
+  <h2>What was checked</h2>
+  <p><span class={`pill ${target.check.level}`}>{levelLabel}</span> {target.check.text}</p>
+
+  <h2>{main.label}</h2>
+  <pre><code>{shown}{truncated ? "\n…" : ""}</code></pre>
+  <p class="muted">Generated from the <a href={`${base}/palette/`}>palette</a>. Source: <a href={`${REPO}/tree/main/themes/${target.id}`}>themes/{target.id}</a>.</p>
 </Base>
+
+<style>
+  .lead { font-size: 1.15rem; color: var(--muted); margin-top: -.25rem; }
+  .downloads { padding-left: 1.2rem; display: grid; gap: .4rem; }
+  .dl { font-weight: 600; }
+</style>

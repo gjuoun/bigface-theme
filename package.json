@@ -13,8 +13,8 @@
     "contrast": "bun run src/contrast.ts",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
-    "test": "bun test src",
-    "check": "bun run typecheck && bun run lint && bun test src --pass-with-no-tests",
+    "test": "bun test src site/src",
+    "check": "bun run typecheck && bun run lint && bun test src site/src",
     "site:dev": "bun run --cwd site dev",
     "site:build": "bun run --cwd site build",
     "site:preview": "bun run --cwd site preview"

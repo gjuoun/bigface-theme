@@ -1,10 +1,89 @@
 ---
-import { palette } from "../data/palette.ts";
+import ContrastTable from "../components/ContrastTable.astro";
+import Swatch from "../components/Swatch.astro";
+import SyntaxPreview from "../components/SyntaxPreview.astro";
+import { hex, palette } from "../data/palette.ts";
 import Base from "../layouts/Base.astro";
+
+const groups: [string, string[]][] = [
+  [
+    "Surfaces",
+    ["bg", "bgPanel", "bgDeep", "cursorLine", "braceMatch", "selection", "border", "borderMuted"],
+  ],
+  ["Text", ["fg", "fgMuted", "fgDim", "comment", "caret"]],
+  [
+    "Accents",
+    [
+      "blue",
+      "skyBlue",
+      "lightBlue",
+      "paleBlue",
+      "cyan",
+      "green",
+      "limeGreen",
+      "lime",
+      "yellow",
+      "brightYellow",
+      "orange",
+      "burntOrange",
+      "pink",
+      "purple",
+    ],
+  ],
+  [
+    "Search & tool tints",
+    ["searchBg", "searchFg", "toolPending", "toolSuccess", "toolError", "customMessage"],
+  ],
+];
+const syntaxRows = Object.entries(palette.syntax);
 ---
 <Base title="Bigface palette">
   <h1>Palette</h1>
-  <ul>
-    {Object.entries(palette.colors).map(([name, c]) => <li><code>{c.hex}</code> {name}</li>)}
-  </ul>
+  <p>
+    Every theme is generated from <code>palette/bigface.json</code>. Colours marked with an
+    original <code>OPTION#FIELD</code> label come straight from the 2018 JetBrains scheme and are
+    never adjusted. Those marked <span class="derived">derived</span> are blends the scheme has no
+    equivalent for.
+  </p>
+
+  <SyntaxPreview terminal />
+
+  {groups.map(([title, names]) => (
+    <>
+      <h2>{title}</h2>
+      <div class="swatches">
+        {names.map((n) => <Swatch name={n} color={palette.colors[n]!} />)}
+      </div>
+    </>
+  ))}
+
+  <h2>Terminal (ANSI)</h2>
+  <div class="swatches">
+    {Object.entries(palette.ansi).map(([n, c]) => <Swatch name={n} color={c} />)}
+  </div>
+
+  <h2>Syntax roles</h2>
+  <table class="roles">
+    <thead><tr><th>Role</th><th>Colour</th><th>Hex</th></tr></thead>
+    <tbody>
+      {syntaxRows.map(([role, name]) => (
+        <tr><td>{role}</td><td><i style={`background:${hex(name)}`} /> {name}</td><td><code>{hex(name)}</code></td></tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h2>Contrast</h2>
+  <p class="muted">
+    Informational only. The colours are kept as designed, so a few roles (<code>fgDim</code>,
+    <code>comment</code>) sit below the WCAG 4.5:1 body-text guideline by intent.
+  </p>
+  <ContrastTable />
 </Base>
+
+<style>
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .7rem; }
+  .derived { color: var(--orange); }
+  .roles { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .roles th, .roles td { text-align: left; padding: .4rem .6rem; border-bottom: 1px solid var(--border-muted); }
+  .roles i { display: inline-block; width: .8em; height: .8em; border-radius: 3px; }
+</style>

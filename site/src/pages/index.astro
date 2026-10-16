@@ -1,37 +1,66 @@
 ---
+import SyntaxPreview from "../components/SyntaxPreview.astro";
 import { hex, palette } from "../data/palette.ts";
-import { targets } from "../data/targets.ts";
+import { REPO, targets } from "../data/targets.ts";
 import Base from "../layouts/Base.astro";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const strip = ["blue", "lime", "green", "yellow", "burntOrange", "pink", "cyan", "purple"];
+const kinds = [...new Set(targets.map((t) => t.kind))];
 ---
 <Base title="Bigface — a dark color theme for your tools">
-  <h1>Bigface</h1>
-  <p class="lead">A dark color theme with one palette and {targets.length} ports.</p>
+  <section class="hero">
+    <div>
+      <h1>Bigface</h1>
+      <p class="lead">A dark color theme with one palette and {targets.length} ports.</p>
+      <p>
+        Born in 2018 as a JetBrains scheme, now generated for your terminal, editors, shell and
+        notes from a single palette file. Colours are never adjusted per tool.
+      </p>
+      <p>
+        <a class="btn" href={`#apps`}>Pick your app</a>
+        <a class="btn ghost" href={`${base}/palette/`}>Palette</a>
+        <a class="btn ghost" href={REPO}>GitHub</a>
+      </p>
+    </div>
+    <SyntaxPreview terminal />
+  </section>
+
   <div class="strip" aria-label="palette">
     {strip.map((n) => <span style={`background:${hex(n)}`} title={`${n} ${hex(n)}`} />)}
   </div>
-  <p class="muted">Background <code>{hex("bg")}</code> · text <code>{hex("fg")}</code> · {Object.keys(palette.colors).length} colours. <a href={`${base}/palette/`}>See the palette →</a></p>
+  <p class="muted">Background <code>{hex("bg")}</code> · text <code>{hex("fg")}</code> · {Object.keys(palette.colors).length} colours</p>
 
   <h2 id="apps">Apps</h2>
-  <ul class="grid">
-    {targets.map((t) => (
-      <li>
-        <a href={`${base}/apps/${t.id}/`}>
-          <strong>{t.name}</strong>
-          <span class="muted">{t.kind}</span>
-        </a>
-      </li>
-    ))}
-  </ul>
+  {kinds.map((kind) => (
+    <>
+      <h3>{kind}</h3>
+      <ul class="grid">
+        {targets.filter((t) => t.kind === kind).map((t) => (
+          <li>
+            <a href={`${base}/apps/${t.id}/`}>
+              <strong>{t.name}</strong>
+              <span class="muted">{t.tagline}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  ))}
 </Base>
 
 <style>
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; }
+  @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } }
   .lead { font-size: 1.25rem; color: var(--muted); margin-top: -.25rem; }
-  .strip { display: flex; height: 44px; border-radius: 8px; overflow: hidden; margin: 1.5rem 0 1rem; }
+  .btn { display: inline-block; padding: .5rem 1rem; margin-right: .5rem; border-radius: 8px; background: var(--blue); color: var(--bg); font-weight: 600; }
+  .btn:hover { background: var(--lime); color: var(--bg); }
+  .btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--border); }
+  .btn.ghost:hover { border-color: var(--lime); color: var(--lime); }
+  .strip { display: flex; height: 44px; border-radius: 8px; overflow: hidden; margin: 2.5rem 0 1rem; }
   .strip span { flex: 1; }
-  .grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .75rem; }
-  .grid a { display: flex; flex-direction: column; padding: .9rem 1rem; background: var(--bg-panel); border: 1px solid var(--border-muted); border-radius: 8px; color: var(--fg); }
+  .grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: .75rem; }
+  .grid a { display: flex; flex-direction: column; gap: .2rem; height: 100%; padding: .9rem 1rem; background: var(--bg-panel); border: 1px solid var(--border-muted); border-radius: 8px; color: var(--fg); }
   .grid a:hover { border-color: var(--blue); }
+  .grid span { font-size: .85rem; }
 </style>

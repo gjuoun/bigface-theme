@@ -1,0 +1,96 @@
+---
+import { hex, palette, syntaxHex } from "../data/palette.ts";
+
+interface Props {
+  terminal?: boolean;
+}
+const { terminal = false } = Astro.props;
+
+type Tok = [string, string?];
+const code: Tok[][] = [
+  [["// Greets someone, then counts.", "comment"]],
+  [
+    ["import", "keyword"],
+    [" { ", "punctuation"],
+    ["greet", "function"],
+    [" } ", "punctuation"],
+    ["from", "keyword"],
+    [" "],
+    ['"./hello"', "string"],
+    [";", "punctuation"],
+  ],
+  [],
+  [
+    ["const", "keyword"],
+    [" "],
+    ["answer", "variable"],
+    [": ", "punctuation"],
+    ["number", "type"],
+    [" "],
+    ["=", "operator"],
+    [" "],
+    ["42", "number"],
+    [";", "punctuation"],
+  ],
+  [],
+  [
+    ["export function", "keyword"],
+    [" "],
+    ["main", "function"],
+    ["(", "punctuation"],
+    ["name", "parameter"],
+    [": ", "punctuation"],
+    ["string", "type"],
+    [") {", "punctuation"],
+  ],
+  [
+    ["  "],
+    ["const", "keyword"],
+    [" "],
+    ["msg", "variable"],
+    [" "],
+    ["=", "operator"],
+    [" "],
+    ["`Hello, ${name}`", "string"],
+    [";", "punctuation"],
+  ],
+  [
+    ["  "],
+    ["return", "keyword"],
+    [" "],
+    ["greet", "function"],
+    ["(", "punctuation"],
+    ["msg", "variable"],
+    [", ", "punctuation"],
+    ["answer", "variable"],
+    [");", "punctuation"],
+  ],
+  [["}", "punctuation"]],
+];
+const colorOf = (role?: string) => (role ? syntaxHex(role) : hex("fg"));
+const ansi = Object.entries(palette.ansi);
+---
+<figure class="window">
+  <div class="bar"><i /><i /><i /><span>main.ts</span></div>
+  <pre><code>{code.map((line) => (
+    <span class="ln">{line.length === 0 ? " " : line.map(([text, role]) => <span style={`color:${colorOf(role)}`}>{text}</span>)}</span>
+  ))}</code></pre>
+  {terminal && (
+    <div class="term">
+      <div class="prompt"><span style={`color:${hex("green")}`}>jun</span><span style={`color:${hex("fgMuted")}`}> ~/code </span><span style={`color:${hex("blue")}`}>❯</span> git status</div>
+      <div class="ansi">{ansi.map(([name, c]) => <span style={`background:${c.hex}`} title={`${name} ${c.hex}`} />)}</div>
+    </div>
+  )}
+</figure>
+
+<style>
+  .window { margin: 0; background: var(--bg); border: 1px solid var(--border-muted); border-radius: 10px; overflow: hidden; }
+  .bar { display: flex; align-items: center; gap: .4rem; padding: .5rem .8rem; background: var(--bg-deep); border-bottom: 1px solid var(--border-muted); color: var(--dim); font-size: .8rem; }
+  .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--border); display: inline-block; }
+  .bar span { margin-left: .6rem; }
+  pre { margin: 0; border: 0; border-radius: 0; background: var(--bg); }
+  .ln { display: block; white-space: pre; }
+  .term { border-top: 1px solid var(--border-muted); background: var(--bg); padding: .8rem 1rem; font: .9rem ui-monospace, Menlo, monospace; }
+  .ansi { display: flex; height: 18px; margin-top: .6rem; border-radius: 4px; overflow: hidden; }
+  .ansi span { flex: 1; }
+</style>
