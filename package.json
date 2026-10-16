@@ -23,6 +23,7 @@
     "@biomejs/biome": "^2.2.0",
     "@earendil-works/pi-coding-agent": "1.1.0",
     "@types/bun": "latest",
+    "ajv": "^8.20.0",
     "typescript": "^5.9.0",
     "zod": "^4.0.0"
   }
