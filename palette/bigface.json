@@ -129,6 +129,10 @@
     "searchFg": {
       "hex": "#252621",
       "source": "jetbrains:TEXT_SEARCH_RESULT_ATTRIBUTES#FOREGROUND"
+    },
+    "caret": {
+      "hex": "#f8f8f0",
+      "source": "jetbrains:colors#CARET_COLOR"
     }
   },
   "ansi": {

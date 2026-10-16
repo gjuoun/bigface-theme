@@ -33,7 +33,8 @@
     "toolError": "#3a2028",
     "customMessage": "#2b2740",
     "searchBg": "#ffe792",
-    "searchFg": "#252621"
+    "searchFg": "#252621",
+    "caret": "#f8f8f0"
   },
   "colors": {
     "accent": "blue",

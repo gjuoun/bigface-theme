@@ -48,6 +48,7 @@ export const REQUIRED_COLORS = [
   "customMessage",
   "searchBg",
   "searchFg",
+  "caret",
 ] as const;
 
 export const ANSI_NAMES = [
