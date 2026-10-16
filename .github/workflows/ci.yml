@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      # typecheck + biome + every generator test + the site build test.
+      # Tests that need a tool (ghostty, herdr, zellij, …) skip themselves when it is not installed.
+      - run: bun run check
+      # A palette edit must come with regenerated themes/.
+      - name: themes/ is up to date
+        run: |
+          bun run themes
+          git diff --exit-code themes
