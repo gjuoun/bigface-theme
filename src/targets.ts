@@ -7,6 +7,7 @@ import { tmux } from "./generators/tmux.ts";
 import type { Target } from "./generators/types.ts";
 import { vim } from "./generators/vim.ts";
 import { vscode } from "./generators/vscode.ts";
+import { xcode } from "./generators/xcode.ts";
 import { zed } from "./generators/zed.ts";
 import { zellij } from "./generators/zellij.ts";
 
@@ -22,4 +23,5 @@ export const targets: Target[] = [
   starship,
   tmux,
   vim,
+  xcode,
 ];
