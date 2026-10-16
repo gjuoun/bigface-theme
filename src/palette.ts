@@ -42,6 +42,12 @@ export const REQUIRED_COLORS = [
   "pink",
   "purple",
   "comment",
+  "toolPending",
+  "toolSuccess",
+  "toolError",
+  "customMessage",
+  "searchBg",
+  "searchFg",
 ] as const;
 
 export const ANSI_NAMES = [
