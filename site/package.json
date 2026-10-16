@@ -2,5 +2,13 @@
   "name": "site",
   "private": true,
   "type": "module",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "bun run scripts/sync-assets.ts && astro dev",
+    "build": "bun run scripts/sync-assets.ts && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7"
+  }
 }

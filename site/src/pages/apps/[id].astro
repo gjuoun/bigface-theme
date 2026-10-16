@@ -1,0 +1,14 @@
+---
+import { type Target, targets } from "../../data/targets.ts";
+import Base from "../../layouts/Base.astro";
+
+export function getStaticPaths() {
+  return targets.map((t) => ({ params: { id: t.id }, props: { target: t } }));
+}
+const { target } = Astro.props as { target: Target };
+---
+<Base title={`Bigface for ${target.name}`}>
+  <p class="muted">{target.kind}</p>
+  <h1>Bigface for {target.name}</h1>
+  <p>{target.tagline}</p>
+</Base>

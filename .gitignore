@@ -3,3 +3,5 @@ site/dist
 site/.astro
 *.vsix
 .DS_Store
+public/themes
+public/downloads

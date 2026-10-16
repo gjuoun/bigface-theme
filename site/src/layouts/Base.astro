@@ -1,0 +1,85 @@
+---
+import { hex } from "../data/palette.ts";
+import { REPO } from "../data/targets.ts";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "Bigface — one dark palette, ported to the tools you use." } =
+  Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const vars = {
+  "--bg": hex("bg"),
+  "--bg-panel": hex("bgPanel"),
+  "--bg-deep": hex("bgDeep"),
+  "--fg": hex("fg"),
+  "--muted": hex("fgMuted"),
+  "--dim": hex("fgDim"),
+  "--border": hex("border"),
+  "--border-muted": hex("borderMuted"),
+  "--blue": hex("blue"),
+  "--lime": hex("lime"),
+  "--green": hex("green"),
+  "--yellow": hex("yellow"),
+  "--orange": hex("burntOrange"),
+  "--pink": hex("pink"),
+  "--cyan": hex("cyan"),
+  "--purple": hex("purple"),
+  "--comment": hex("comment"),
+};
+const style = Object.entries(vars)
+  .map(([k, v]) => `${k}:${v}`)
+  .join(";");
+---
+<!doctype html>
+<html lang="en" style={style}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={hex("bg")} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="top">
+      <a class="brand" href={`${base}/`}>Bigface</a>
+      <nav>
+        <a href={`${base}/#apps`}>Apps</a>
+        <a href={`${base}/palette/`}>Palette</a>
+        <a href={REPO}>GitHub</a>
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer>
+      <span>Bigface — MIT licensed. Started in 2018 as a JetBrains scheme.</span>
+      <a href={REPO}>github.com/gjuoun/bigface-theme</a>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  * { box-sizing: border-box; }
+  html { background: var(--bg); color: var(--fg); font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+  main { flex: 1; width: min(1040px, 100% - 2.5rem); margin: 0 auto; padding: 2rem 0 4rem; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { color: var(--lime); }
+  h1, h2, h3 { color: var(--lime); line-height: 1.2; margin: 2rem 0 .75rem; }
+  h1 { font-size: 2.6rem; margin-top: 0; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.1rem; color: var(--fg); }
+  code, pre, kbd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .9em; }
+  code { color: var(--yellow); background: var(--bg-deep); padding: .1em .35em; border-radius: 4px; }
+  pre { background: var(--bg-deep); border: 1px solid var(--border-muted); border-radius: 8px; padding: 1rem; overflow-x: auto; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  .top { display: flex; justify-content: space-between; align-items: center; width: min(1040px, 100% - 2.5rem); margin: 0 auto; padding: 1.25rem 0; border-bottom: 1px solid var(--border-muted); }
+  .top nav { display: flex; gap: 1.25rem; }
+  .brand { font-weight: 700; font-size: 1.15rem; color: var(--fg); letter-spacing: .02em; }
+  footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; width: min(1040px, 100% - 2.5rem); margin: 0 auto; padding: 1.5rem 0; border-top: 1px solid var(--border-muted); color: var(--muted); font-size: .9rem; }
+  .muted { color: var(--muted); }
+  .pill { display: inline-block; font-size: .75rem; padding: .1rem .55rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+  .pill.tool { color: var(--green); border-color: var(--green); }
+  .pill.schema { color: var(--cyan); border-color: var(--cyan); }
+  .pill.format { color: var(--orange); border-color: var(--orange); }
+</style>

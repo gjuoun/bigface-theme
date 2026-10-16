@@ -1,0 +1,37 @@
+---
+import { hex, palette } from "../data/palette.ts";
+import { targets } from "../data/targets.ts";
+import Base from "../layouts/Base.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const strip = ["blue", "lime", "green", "yellow", "burntOrange", "pink", "cyan", "purple"];
+---
+<Base title="Bigface — a dark color theme for your tools">
+  <h1>Bigface</h1>
+  <p class="lead">A dark color theme with one palette and {targets.length} ports.</p>
+  <div class="strip" aria-label="palette">
+    {strip.map((n) => <span style={`background:${hex(n)}`} title={`${n} ${hex(n)}`} />)}
+  </div>
+  <p class="muted">Background <code>{hex("bg")}</code> · text <code>{hex("fg")}</code> · {Object.keys(palette.colors).length} colours. <a href={`${base}/palette/`}>See the palette →</a></p>
+
+  <h2 id="apps">Apps</h2>
+  <ul class="grid">
+    {targets.map((t) => (
+      <li>
+        <a href={`${base}/apps/${t.id}/`}>
+          <strong>{t.name}</strong>
+          <span class="muted">{t.kind}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .lead { font-size: 1.25rem; color: var(--muted); margin-top: -.25rem; }
+  .strip { display: flex; height: 44px; border-radius: 8px; overflow: hidden; margin: 1.5rem 0 1rem; }
+  .strip span { flex: 1; }
+  .grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .75rem; }
+  .grid a { display: flex; flex-direction: column; padding: .9rem 1rem; background: var(--bg-panel); border: 1px solid var(--border-muted); border-radius: 8px; color: var(--fg); }
+  .grid a:hover { border-color: var(--blue); }
+</style>

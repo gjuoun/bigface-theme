@@ -1,0 +1,10 @@
+---
+import { palette } from "../data/palette.ts";
+import Base from "../layouts/Base.astro";
+---
+<Base title="Bigface palette">
+  <h1>Palette</h1>
+  <ul>
+    {Object.entries(palette.colors).map(([name, c]) => <li><code>{c.hex}</code> {name}</li>)}
+  </ul>
+</Base>

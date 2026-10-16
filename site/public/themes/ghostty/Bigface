@@ -1,0 +1,23 @@
+# Bigface — https://github.com/gjuoun/bigface-theme
+palette = 0=#494848
+palette = 1=#f44336
+palette = 2=#8bc34a
+palette = 3=#ffeb3b
+palette = 4=#81d4fa
+palette = 5=#e91e63
+palette = 6=#00bcd4
+palette = 7=#9e9e9e
+palette = 8=#6e6b68
+palette = 9=#ff0000
+palette = 10=#00ff00
+palette = 11=#ccff90
+palette = 12=#40c4ff
+palette = 13=#7e57c2
+palette = 14=#00ffff
+palette = 15=#ffffff
+background = #252925
+foreground = #d9d9d4
+cursor-color = #f8f8f0
+cursor-text = #252925
+selection-background = #646464
+selection-foreground = #d9d9d4
