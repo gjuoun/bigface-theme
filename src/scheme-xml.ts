@@ -28,3 +28,26 @@ export function allColorValues(xml: string): string[] {
     normalizeHex(m[1] as string),
   );
 }
+
+/** JetBrains writes hex without leading zeros (`00b0ff` → `b0ff`). */
+export const toSchemeHex = (hex: string): string => hex.slice(1).replace(/^0+(?=.)/, "");
+
+/**
+ * Set the colour a `jetbrains:...` source points at. The original text is kept when the colour is
+ * unchanged, so an untouched palette reproduces the scheme byte for byte.
+ */
+export function replaceSource(xml: string, source: string, hex: string): string {
+  const ref = source.replace(/^jetbrains:/, "");
+  const [option, field] = ref.split("#") as [string, string];
+  const fieldRe = new RegExp(`(<option name="${escapeRe(field)}" value=")([0-9a-fA-F]*)(")`);
+  const swap = (chunk: string): string =>
+    chunk.replace(fieldRe, (whole, pre: string, raw: string, post: string) =>
+      raw !== "" && normalizeHex(raw) === hex ? whole : `${pre}${toSchemeHex(hex)}${post}`,
+    );
+  if (option === "colors") {
+    return xml.replace(/<colors>[\s\S]*?<\/colors>/, swap);
+  }
+  const blockRe = new RegExp(`<option name="${escapeRe(option)}">\\s*<value>[\\s\\S]*?</value>`);
+  if (!blockRe.test(xml)) throw new Error(`scheme has no option ${option}`);
+  return xml.replace(blockRe, swap);
+}
