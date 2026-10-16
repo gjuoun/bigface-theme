@@ -1,0 +1,28 @@
+{
+  "name": "bigface-theme",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bigface — one dark palette, ported to the tools you use",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "site"
+  ],
+  "scripts": {
+    "themes": "bun run src/build.ts",
+    "contrast": "bun run src/contrast.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "test": "bun test src",
+    "check": "bun run typecheck && bun run lint && bun test src --pass-with-no-tests",
+    "site:dev": "bun run --cwd site dev",
+    "site:build": "bun run --cwd site build",
+    "site:preview": "bun run --cwd site preview"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "@types/bun": "latest",
+    "typescript": "^5.9.0",
+    "zod": "^4.0.0"
+  }
+}
