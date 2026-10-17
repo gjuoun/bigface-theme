@@ -64,14 +64,6 @@ downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs 
 The site's app pages say exactly how far each theme was checked. "Format test only" means the file
 matches the tool's documented format; it was not opened in the app.
 
-## Obsidian
-
-![Bigface in Obsidian](screenshot.png)
-
-Bigface is an Obsidian community theme. The files Obsidian reads (`manifest.json`, `theme.css`) live at the repository
-root and are generated from the palette (`bun run themes`; CI fails if they are stale). Releases are tagged with the
-manifest version (for example `0.2.0`) and carry those two files as assets.
-
 ## Develop
 
 ```sh

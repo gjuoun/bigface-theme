@@ -4,8 +4,6 @@
     "includes": [
       "**",
       "!themes",
-      "!manifest.json",
-      "!theme.css",
       "!site/public/themes",
       "!site/public/downloads",
       "!site/dist",

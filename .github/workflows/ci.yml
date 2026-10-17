@@ -22,4 +22,4 @@ jobs:
       - name: themes/ is up to date
         run: |
           bun run themes
-          git diff --exit-code themes manifest.json theme.css
+          git diff --exit-code themes
