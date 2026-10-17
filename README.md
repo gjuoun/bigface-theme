@@ -1,6 +1,6 @@
 # Bigface
 
-A dark color theme with **one palette and 15 ports**. It started in 2018 as a
+A dark color theme with **one palette and 14 ports**. It started in 2018 as a
 [JetBrains scheme](https://plugins.jetbrains.com/plugin/10988-bigface-color-scheme) and is now
 generated for your terminal, editors, shell and notes from [`palette/bigface.json`](palette/bigface.json).
 
@@ -40,7 +40,7 @@ The installer writes (and on uninstall removes) Bigface's own files only, for ex
 or remove. Add `--dry-run` to see what it would do, or read the script first: it is generated from
 [`src/installer.ts`](src/installer.ts). Apps with no drop-in location (herdr, starship, JetBrains) are
 downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs `BIGFACE_VAULT=/path/to/vault`
-(the interactive mode asks for it). Slack and Raycast write nothing to disk.
+(the interactive mode asks for it). Slack writes nothing to disk.
 
 ## Apps
 
@@ -60,7 +60,6 @@ downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs 
 | micro | `themes/micro/bigface.micro` | format test only |
 | Obsidian | `themes/obsidian/Bigface/` | format test only |
 | Slack | `themes/slack/theme.txt` | format test only |
-| Raycast | `themes/raycast/theme.url` | format test only |
 
 The site's app pages say exactly how far each theme was checked. "Format test only" means the file
 matches the tool's documented format; it was not opened in the app.

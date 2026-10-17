@@ -3,7 +3,7 @@ export type Check = "tool" | "schema" | "format";
 export interface Target {
   id: string;
   name: string;
-  kind: "Terminal" | "Editor" | "IDE" | "Shell" | "Notes" | "Chat" | "Launcher" | "Agent";
+  kind: "Terminal" | "Editor" | "IDE" | "Shell" | "Notes" | "Chat" | "Agent";
   tagline: string;
   /** Files under themes/<id>/ offered for download; the first is the main one. */
   files: { path: string; label: string }[];
@@ -257,22 +257,6 @@ export const targets: Target[] = [
     check: {
       level: "format",
       text: "Eight `#rrggbb` values in the documented order. Slack's current import of this legacy string was not tried.",
-    },
-    terminalPreview: false,
-  },
-  {
-    id: "raycast",
-    name: "Raycast",
-    kind: "Launcher",
-    tagline: "A Raycast theme link.",
-    files: [{ path: "theme.url", label: "theme.url" }],
-    steps: [
-      'Open the link in `theme.url` (run `open "$(cat theme.url)"`).',
-      "Raycast asks to add the theme; accept it and pick **Bigface** in *Settings → Appearance*.",
-    ],
-    check: {
-      level: "format",
-      text: "A well-formed `raycast://theme` link with 12 colours, in the shape of published theme links. This deep link is not in Raycast's own docs and was not tried.",
     },
     terminalPreview: false,
   },

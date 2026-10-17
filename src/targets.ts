@@ -4,7 +4,6 @@ import { jetbrains } from "./generators/jetbrains.ts";
 import { micro } from "./generators/micro.ts";
 import { obsidian } from "./generators/obsidian.ts";
 import { pi } from "./generators/pi.ts";
-import { raycast } from "./generators/raycast.ts";
 import { slack } from "./generators/slack.ts";
 import { starship } from "./generators/starship.ts";
 import { tmux } from "./generators/tmux.ts";
@@ -31,5 +30,4 @@ export const targets: Target[] = [
   micro,
   obsidian,
   slack,
-  raycast,
 ];

@@ -19,9 +19,7 @@ export type InstallKind =
   /** Download to ~/.config/bigface/<id>/ and print the steps (nothing safe to drop in). */
   | "manual"
   /** Print the contents (Slack). */
-  | "print"
-  /** Open the contents as a URL (Raycast). */
-  | "open";
+  | "print";
 
 export interface InstallSpec {
   id: string;
@@ -163,13 +161,6 @@ export const installSpecs: InstallSpec[] = [
     note: "Paste it in Preferences -> Appearance -> Custom theme -> Import theme.",
     undo: "Nothing was written to disk. In Slack: Preferences -> Appearance -> pick another theme.",
   },
-  {
-    id: "raycast",
-    kind: "open",
-    files: [["theme.url", ""]],
-    note: "Raycast asks to add the theme; accept it and pick Bigface in Settings -> Appearance.",
-    undo: "Nothing was written to disk. In Raycast: Settings -> Appearance -> Themes -> remove Bigface.",
-  },
 ];
 
 /** Single-quote a string for sh. */
@@ -222,17 +213,6 @@ function installFn(s: InstallSpec): string {
         note,
         "}",
       ].join("\n");
-    case "open":
-      return [
-        head,
-        `  url="$(get ${sq(`themes/${s.id}/${s.files[0]?.[0]}`)} - | tr -d '\\n')"`,
-        `  if [ -n "$DRY" ]; then echo "  would open: $url"`,
-        `  elif command -v open >/dev/null 2>&1; then open "$url"`,
-        `  elif command -v xdg-open >/dev/null 2>&1; then xdg-open "$url"`,
-        `  else echo "  open this link: $url"; fi`,
-        note,
-        "}",
-      ].join("\n");
   }
 }
 
@@ -270,7 +250,6 @@ function uninstallFn(s: InstallSpec): string {
         "}",
       ].join("\n");
     case "print":
-    case "open":
       return [head, undo, "}"].join("\n");
   }
 }
@@ -293,7 +272,6 @@ function installedTest(s: InstallSpec): string {
         `      return 1`,
       ].join("\n");
     case "print":
-    case "open":
       return "return 1";
   }
 }
@@ -594,7 +572,5 @@ function describe(s: InstallSpec): string {
       return "downloads the file and prints the steps";
     case "print":
       return "prints the theme string";
-    case "open":
-      return "opens the import link";
   }
 }

@@ -20,9 +20,8 @@ const EXPECTED = [
   "micro",
   "obsidian",
   "slack",
-  "raycast",
 ];
-/** These formats take 6-digit colours only; the others (VS Code, Zed, Obsidian, Raycast) use alpha on purpose. */
+/** These formats take 6-digit colours only; the others (VS Code, Zed, Obsidian) use alpha on purpose. */
 const NO_ALPHA = new Set([
   "pi",
   "ghostty",
@@ -51,7 +50,7 @@ const root = new URL("../themes", import.meta.url).pathname;
 const tmp = await mkdtemp(join(tmpdir(), "bf-build-"));
 const written = await buildThemes(tmp);
 
-test("the registry lists all 15 targets, in order, with unique ids", () => {
+test("the registry lists all 14 targets, in order, with unique ids", () => {
   expect(targets.map((t) => t.id)).toEqual(EXPECTED);
 });
 

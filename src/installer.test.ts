@@ -174,18 +174,6 @@ describe("running the script", () => {
     expect(r.out).toContain((await themeText("slack", "theme.txt")).trim());
   });
 
-  test("raycast hands the link to `open`", async () => {
-    const bin = await mkdtemp(join(tmpdir(), "bf-bin-"));
-    const log = join(bin, "open.log");
-    await writeFile(join(bin, "open"), `#!/bin/sh\necho "$1" > "${log}"\n`);
-    await chmod(join(bin, "open"), 0o755);
-    const r = await run(["raycast"], {}, bin);
-    expect(r.code, r.out).toBe(0);
-    expect((await Bun.file(log).text()).trim()).toBe(
-      (await themeText("raycast", "theme.url")).trim(),
-    );
-  });
-
   test("vscode passes the .vsix to code and cursor", async () => {
     const bin = await mkdtemp(join(tmpdir(), "bf-bin-"));
     const log = join(bin, "calls.log");
@@ -382,12 +370,10 @@ describe("uninstall", () => {
     expect(await readdir(join(vault, ".obsidian/themes"))).toEqual([]);
   });
 
-  test("slack and raycast: nothing on disk, so it only says where to remove them", async () => {
-    for (const id of ["slack", "raycast"]) {
-      const r = await run(["--uninstall", id]);
-      expect(r.code).toBe(0);
-      expect(r.out).toContain("Nothing was written to disk");
-    }
+  test("slack: nothing on disk, so it only says where to remove it", async () => {
+    const r = await run(["--uninstall", "slack"]);
+    expect(r.code).toBe(0);
+    expect(r.out).toContain("Nothing was written to disk");
   });
 });
 

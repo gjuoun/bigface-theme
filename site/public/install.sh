@@ -20,7 +20,7 @@ BASE="${BIGFACE_BASE:-https://gjuoun.github.io/bigface-theme}"
 DRY="${BIGFACE_DRY_RUN:-}"
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
 TTY="${BIGFACE_TTY:-/dev/tty}"
-IDS="pi ghostty herdr vscode zed jetbrains zellij starship tmux vim xcode micro obsidian slack raycast"
+IDS="pi ghostty herdr vscode zed jetbrains zellij starship tmux vim xcode micro obsidian slack"
 ALL="pi ghostty vscode zed zellij tmux vim xcode micro"
 MODE="install"
 
@@ -45,7 +45,6 @@ blurb() {
     micro) echo 'installs the theme file' ;;
     obsidian) echo 'needs BIGFACE_VAULT=/path/to/vault' ;;
     slack) echo 'prints the theme string' ;;
-    raycast) echo 'opens the import link' ;;
   esac
 }
 
@@ -147,7 +146,6 @@ is_installed() {
     micro) [ -e "$CFG/micro/colorschemes/bigface.micro" ] ;;
     obsidian) [ -n "${BIGFACE_VAULT:-}" ] && [ -e "$BIGFACE_VAULT/.obsidian/themes/Bigface/theme.css" ] && [ -e "$BIGFACE_VAULT/.obsidian/themes/Bigface/manifest.json" ] ;;
     slack) return 1 ;;
-    raycast) return 1 ;;
     *) return 1 ;;
   esac
 }
@@ -244,15 +242,6 @@ install_slack() {
   note "Paste it in Preferences -> Appearance -> Custom theme -> Import theme."
 }
 
-install_raycast() {
-  url="$(get 'themes/raycast/theme.url' - | tr -d '\n')"
-  if [ -n "$DRY" ]; then echo "  would open: $url"
-  elif command -v open >/dev/null 2>&1; then open "$url"
-  elif command -v xdg-open >/dev/null 2>&1; then xdg-open "$url"
-  else echo "  open this link: $url"; fi
-  note "Raycast asks to add the theme; accept it and pick Bigface in Settings -> Appearance."
-}
-
 uninstall_pi() {
   remove "$HOME/.pi/agent/themes/bigface.json"
   note "If Bigface is your selected theme, pick another under /settings -> Theme."
@@ -339,10 +328,6 @@ uninstall_obsidian() {
 
 uninstall_slack() {
   note "Nothing was written to disk. In Slack: Preferences -> Appearance -> pick another theme."
-}
-
-uninstall_raycast() {
-  note "Nothing was written to disk. In Raycast: Settings -> Appearance -> Themes -> remove Bigface."
 }
 
 valid() { case " $IDS " in *" $1 "*) return 0 ;; esac; return 1; }
