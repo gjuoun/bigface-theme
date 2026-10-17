@@ -5,3 +5,4 @@ site/.astro
 .DS_Store
 public/themes
 public/downloads
+public/install.sh

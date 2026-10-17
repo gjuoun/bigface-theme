@@ -70,3 +70,15 @@ test("internal links stay under the Pages base path", () => {
     }
   }
 });
+
+test("every app page shows its one-line install command, and install.sh is published", () => {
+  expect(existsSync(join(dist, "install.sh"))).toBe(true);
+  const script = readFileSync(join(dist, "install.sh"), "utf8");
+  expect(script.startsWith("#!/bin/sh")).toBe(true);
+  for (const t of targets) {
+    const html = page(`apps/${t.id}`);
+    expect(html, t.id).toContain(`install.sh | sh -s -- ${t.id}`);
+    expect(script, t.id).toContain(`install_${t.id}()`);
+  }
+  expect(page("")).toContain("install.sh | sh -s -- all");
+});

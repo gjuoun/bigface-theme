@@ -1,7 +1,7 @@
 ---
 import InstallSteps from "../../components/InstallSteps.astro";
 import SyntaxPreview from "../../components/SyntaxPreview.astro";
-import { REPO, rawUrl, type Target, targets } from "../../data/targets.ts";
+import { installCommand, REPO, rawUrl, type Target, targets } from "../../data/targets.ts";
 import { themeFile } from "../../data/themes.ts";
 import Base from "../../layouts/Base.astro";
 
@@ -28,7 +28,16 @@ const levelLabel = {
   <SyntaxPreview terminal={target.terminalPreview} />
 
   <h2>Install</h2>
-  <InstallSteps steps={target.steps} />
+  <p class="muted">One command:</p>
+  <pre class="cmd"><code>{installCommand(target.id)}</code></pre>
+  <p class="muted">
+    It writes Bigface's own file only and never edits your config; it prints the one line you still
+    need to add. <a href={`${base}/install.sh`}>Read the script</a> first, or add <code>--dry-run</code>.
+  </p>
+  <details>
+    <summary>Or do it by hand</summary>
+    <InstallSteps steps={target.steps} />
+  </details>
 
   <h2>Download</h2>
   <ul class="downloads">
@@ -55,4 +64,7 @@ const levelLabel = {
   .lead { font-size: 1.15rem; color: var(--muted); margin-top: -.25rem; }
   .downloads { padding-left: 1.2rem; display: grid; gap: .4rem; }
   .dl { font-weight: 600; }
+  .cmd { border-color: var(--blue); }
+  details { margin: 1rem 0; }
+  summary { cursor: pointer; color: var(--muted); }
 </style>

@@ -1,7 +1,7 @@
 ---
 import SyntaxPreview from "../components/SyntaxPreview.astro";
 import { hex, palette } from "../data/palette.ts";
-import { REPO, targets } from "../data/targets.ts";
+import { installCommand, REPO, targets } from "../data/targets.ts";
 import Base from "../layouts/Base.astro";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -31,6 +31,16 @@ const kinds = [...new Set(targets.map((t) => t.kind))];
   </div>
   <p class="muted">Background <code>{hex("bg")}</code> · text <code>{hex("fg")}</code> · {Object.keys(palette.colors).length} colours</p>
 
+  <h2 id="install">Install</h2>
+  <p>One line per app, or <code>all</code> for every supported app it finds on your machine:</p>
+  <pre class="cmd"><code>{installCommand("ghostty tmux zed")}</code></pre>
+  <pre class="cmd"><code>{installCommand("all")}</code></pre>
+  <p class="muted">
+    The installer writes Bigface's own files only, never edits your config, and prints the one line
+    you still need to add. <a href={`${base}/install.sh`}>Read the script</a>, or add
+    <code>--dry-run</code> to see what it would do.
+  </p>
+
   <h2 id="apps">Apps</h2>
   {kinds.map((kind) => (
     <>
@@ -59,6 +69,7 @@ const kinds = [...new Set(targets.map((t) => t.kind))];
   .btn.ghost:hover { border-color: var(--lime); color: var(--lime); }
   .strip { display: flex; height: 44px; border-radius: 8px; overflow: hidden; margin: 2.5rem 0 1rem; }
   .strip span { flex: 1; }
+  .cmd { border-color: var(--blue); }
   .grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: .75rem; }
   .grid a { display: flex; flex-direction: column; gap: .2rem; height: 100%; padding: .9rem 1rem; background: var(--bg-panel); border: 1px solid var(--border-muted); border-radius: 8px; color: var(--fg); }
   .grid a:hover { border-color: var(--blue); }
