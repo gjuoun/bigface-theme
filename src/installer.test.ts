@@ -200,7 +200,8 @@ describe("running the script", () => {
   test("--dry-run writes nothing and says what it would do", async () => {
     const r = await run(["--dry-run", "ghostty", "tmux", "vscode"]);
     expect(r.code, r.out).toBe(0);
-    expect(r.out).toContain("would write");
+    expect(r.out).toContain("would write ~/");
+    expect(r.out).not.toContain(r.home);
     expect(await tree(r.home)).toEqual([]);
   });
 

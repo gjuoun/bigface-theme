@@ -50,7 +50,7 @@ get() {
 # put <remote path> <dest file>
 put() {
   dest="$2"
-  if [ -n "$DRY" ]; then echo "  would write $dest"; return 0; fi
+  if [ -n "$DRY" ]; then echo "  would write $(tilde "$dest")"; return 0; fi
   mkdir -p "$(dirname "$dest")"
   part="$dest.part.$$"
   if get "$1" "$part"; then mv "$part" "$dest"; echo "  wrote $(tilde "$dest")"
