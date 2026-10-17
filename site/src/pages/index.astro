@@ -32,13 +32,17 @@ const kinds = [...new Set(targets.map((t) => t.kind))];
   <p class="muted">Background <code>{hex("bg")}</code> · text <code>{hex("fg")}</code> · {Object.keys(palette.colors).length} colours</p>
 
   <h2 id="install">Install</h2>
-  <p>One line per app, or <code>all</code> for every supported app it finds on your machine:</p>
+  <p>Run it and it asks which apps you want, and whether to install or uninstall:</p>
+  <pre class="cmd"><code>{installCommand()}</code></pre>
+  <p class="muted">Or skip the questions:</p>
   <pre class="cmd"><code>{installCommand("ghostty tmux zed")}</code></pre>
   <pre class="cmd"><code>{installCommand("all")}</code></pre>
+  <pre class="cmd"><code>{installCommand("--uninstall all")}</code></pre>
   <p class="muted">
-    The installer writes Bigface's own files only, never edits your config, and prints the one line
-    you still need to add. <a href={`${base}/install.sh`}>Read the script</a>, or add
-    <code>--dry-run</code> to see what it would do.
+    <code>all</code> means every supported app it finds on your machine. The installer writes and
+    removes Bigface's own files only, never edits your config, and prints the one line you still need
+    to add or remove. <a href={`${base}/install.sh`}>Read the script</a>, or add <code>--dry-run</code>
+    to see what it would do.
   </p>
 
   <h2 id="apps">Apps</h2>

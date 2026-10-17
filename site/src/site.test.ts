@@ -80,5 +80,11 @@ test("every app page shows its one-line install command, and install.sh is publi
     expect(html, t.id).toContain(`install.sh | sh -s -- ${t.id}`);
     expect(script, t.id).toContain(`install_${t.id}()`);
   }
-  expect(page("")).toContain("install.sh | sh -s -- all");
+  for (const t of targets)
+    expect(page(`apps/${t.id}`), t.id).toContain(`install.sh | sh -s -- --uninstall ${t.id}`);
+  const home = page("");
+  expect(home).toContain("install.sh | sh</code>");
+  expect(home).toContain("install.sh | sh -s -- all");
+  expect(home).toContain("install.sh | sh -s -- --uninstall all");
+  expect(script).toContain("uninstall_ghostty()");
 });

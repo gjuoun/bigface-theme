@@ -22,16 +22,25 @@ are low-contrast by design.
 ## Install
 
 ```sh
+curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh
+```
+
+With no arguments it is interactive: it asks whether to install or uninstall, shows every app marked
+`installed` or `detected`, and lets you pick by number or name (Enter = all detected). Or skip the questions:
+
+```sh
 curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- ghostty tmux zed
-curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- all        # every supported app it detects
+curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- all                # every supported app it detects
+curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- --uninstall all   # remove what it installed
 curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- --list
 ```
 
-The installer writes Bigface's own files only (for example `~/.config/ghostty/themes/Bigface`) and never edits
-your config; it prints the one line you still need to add. Add `--dry-run` to see what it would do, or read the
-script first: it is generated from [`src/installer.ts`](src/installer.ts). Apps with no drop-in location (herdr,
-starship, JetBrains) are downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs
-`BIGFACE_VAULT=/path/to/vault`.
+The installer writes (and on uninstall removes) Bigface's own files only, for example
+`~/.config/ghostty/themes/Bigface`. It never edits your config: it prints the one line you still need to add
+or remove. Add `--dry-run` to see what it would do, or read the script first: it is generated from
+[`src/installer.ts`](src/installer.ts). Apps with no drop-in location (herdr, starship, JetBrains) are
+downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs `BIGFACE_VAULT=/path/to/vault`
+(the interactive mode asks for it). Slack and Raycast write nothing to disk.
 
 ## Apps
 

@@ -17,8 +17,10 @@ export interface Target {
 
 export const REPO = "https://github.com/gjuoun/bigface-theme";
 export const SITE_URL = "https://gjuoun.github.io/bigface-theme";
-export const installCommand = (what: string) =>
-  `curl -fsSL ${SITE_URL}/install.sh | sh -s -- ${what}`;
+export const installCommand = (what = "") =>
+  what
+    ? `curl -fsSL ${SITE_URL}/install.sh | sh -s -- ${what}`
+    : `curl -fsSL ${SITE_URL}/install.sh | sh`;
 export const rawUrl = (id: string, path: string) =>
   `https://raw.githubusercontent.com/gjuoun/bigface-theme/main/themes/${id}/${path}`;
 

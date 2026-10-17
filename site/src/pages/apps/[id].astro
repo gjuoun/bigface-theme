@@ -30,9 +30,11 @@ const levelLabel = {
   <h2>Install</h2>
   <p class="muted">One command:</p>
   <pre class="cmd"><code>{installCommand(target.id)}</code></pre>
+  <p class="muted">To remove it again:</p>
+  <pre class="cmd"><code>{installCommand(`--uninstall ${target.id}`)}</code></pre>
   <p class="muted">
     It writes Bigface's own file only and never edits your config; it prints the one line you still
-    need to add. <a href={`${base}/install.sh`}>Read the script</a> first, or add <code>--dry-run</code>.
+    need to add (or remove). <a href={`${base}/install.sh`}>Read the script</a> first, or add <code>--dry-run</code>.
   </p>
   <details>
     <summary>Or do it by hand</summary>
