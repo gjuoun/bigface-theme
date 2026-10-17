@@ -1,0 +1,206 @@
+/* Bigface — https://github.com/gjuoun/bigface-theme */
+.theme-dark {
+
+  /* Colours (the *-rgb triplets drive callouts, canvas colours and translucent fills) */
+  --color-red: #f52670;
+  --color-red-rgb: 245, 38, 112;
+  --color-orange: #fc5d23;
+  --color-orange-rgb: 252, 93, 35;
+  --color-yellow: #e5e500;
+  --color-yellow-rgb: 229, 229, 0;
+  --color-green: #00c853;
+  --color-green-rgb: 0, 200, 83;
+  --color-cyan: #66d9ef;
+  --color-cyan-rgb: 102, 217, 239;
+  --color-blue: #00b0ff;
+  --color-blue-rgb: 0, 176, 255;
+  --color-purple: #ae81ff;
+  --color-purple-rgb: 174, 129, 255;
+  --color-pink: #e91e63;
+  --color-pink-rgb: 233, 30, 99;
+
+  /* Greys: Obsidian derives most of its UI from this scale (00 darkest -> 100 lightest) */
+  --color-base-00: #252925;
+  --color-base-05: #2e332e;
+  --color-base-10: #333333;
+  --color-base-20: #3b3c32;
+  --color-base-25: #494848;
+  --color-base-30: #494848;
+  --color-base-35: #646464;
+  --color-base-40: #6e6b68;
+  --color-base-50: #75715e;
+  --color-base-60: #9c9a8f;
+  --color-base-70: #d9d9d4;
+  --color-base-100: #f8f8f0;
+
+  /* Accent */
+  --accent-h: 199;
+  --accent-s: 100%;
+  --accent-l: 50%;
+  --color-accent: #00b0ff;
+  --color-accent-1: #00b0ff;
+  --color-accent-2: #40c4ff;
+  --interactive-accent: #00b0ff;
+  --interactive-accent-hover: #40c4ff;
+  --text-accent: #00b0ff;
+  --text-accent-hover: #40c4ff;
+  --text-on-accent: #252925;
+  --text-on-accent-inverted: #d9d9d4;
+
+  /* Surfaces and borders */
+  --background-primary: #252925;
+  --background-primary-alt: #2e332e;
+  --background-secondary: #1f231f;
+  --background-secondary-alt: #1f231f;
+  --background-modifier-hover: #3b3c32;
+  --background-modifier-active-hover: #3b514d;
+  --background-modifier-border: #333333;
+  --background-modifier-border-hover: #494848;
+  --background-modifier-border-focus: #00b0ff;
+  --background-modifier-form-field: #1f231f;
+  --background-modifier-message: #2e332e;
+  --background-modifier-error: #f52670;
+  --background-modifier-error-hover: #f52670;
+  --background-modifier-success: #00c853;
+  --background-modifier-cover: #1f231fcc;
+  --interactive-normal: #2e332e;
+  --interactive-hover: #3b3c32;
+
+  /* Text */
+  --text-normal: #d9d9d4;
+  --text-muted: #9c9a8f;
+  --text-faint: #6e6b68;
+  --text-success: #8bc34a;
+  --text-warning: #ff9800;
+  --text-error: #f52670;
+  --text-selection: #64646499;
+  --text-highlight-bg: #ffe792;
+  --caret-color: #f8f8f0;
+
+  /* Headings (lime like functions, then cyan and blue) */
+  --h1-color: #c6ff00;
+  --h2-color: #c6ff00;
+  --h3-color: #66d9ef;
+  --h4-color: #66d9ef;
+  --h5-color: #00b0ff;
+  --h6-color: #9c9a8f;
+  --inline-title-color: #c6ff00;
+
+  /* Inline formatting, links, tags */
+  --bold-color: #ff9800;
+  --italic-color: #ffeb3b;
+  --link-color: #00b0ff;
+  --link-color-hover: #40c4ff;
+  --link-external-color: #66d9ef;
+  --link-external-color-hover: #40c4ff;
+  --link-unresolved-color: #ff9800;
+  --link-unresolved-decoration-color: #ff9800;
+  --tag-color: #00c853;
+  --tag-color-hover: #8bc34a;
+  --tag-background: #00c85322;
+  --tag-background-hover: #00c85344;
+  --tag-border-color: #00c85355;
+  --tag-border-color-hover: #00c853;
+
+  /* Blocks: quotes, rules, lists, checkboxes, tables */
+  --blockquote-border-color: #ae81ff;
+  --blockquote-color: #9c9a8f;
+  --blockquote-background-color: #2e332e;
+  --hr-color: #494848;
+  --list-marker-color: #fc5d23;
+  --list-marker-color-hover: #ff9800;
+  --list-marker-color-collapsed: #00b0ff;
+  --checkbox-color: #00c853;
+  --checkbox-color-hover: #8bc34a;
+  --checkbox-border-color: #6e6b68;
+  --checkbox-border-color-hover: #9c9a8f;
+  --checkbox-marker-color: #252925;
+  --table-border-color: #494848;
+  --table-header-color: #c6ff00;
+  --table-header-background: #2e332e;
+  --table-header-border-color: #494848;
+  --table-row-alt-background: #2e332e80;
+  --table-row-background-hover: #3b3c32;
+  --embed-background: #1f231f;
+
+  /* Code */
+  --code-background: #1f231f;
+  --code-normal: #d9d9d4;
+  --code-comment: #75715e;
+  --code-function: #c6ff00;
+  --code-important: #fc5d23;
+  --code-keyword: #00b0ff;
+  --code-operator: #ffeb3b;
+  --code-property: #00c853;
+  --code-punctuation: #d9d9d4;
+  --code-string: #e5e500;
+  --code-tag: #40c4ff;
+  --code-value: #fc5d23;
+
+  /* Window chrome: title bar, ribbon, tabs, sidebar, status bar, icons */
+  --titlebar-background: #1f231f;
+  --titlebar-background-focused: #1f231f;
+  --titlebar-text-color: #9c9a8f;
+  --titlebar-text-color-focused: #d9d9d4;
+  --ribbon-background: #1f231f;
+  --ribbon-background-collapsed: #1f231f;
+  --tab-container-background: #1f231f;
+  --tab-background-active: #252925;
+  --tab-text-color: #6e6b68;
+  --tab-text-color-focused: #9c9a8f;
+  --tab-text-color-focused-active: #d9d9d4;
+  --tab-text-color-focused-active-current: #00b0ff;
+  --tab-outline-color: #333333;
+  --divider-color: #333333;
+  --divider-color-hover: #00b0ff;
+  --nav-item-color: #9c9a8f;
+  --nav-item-color-hover: #d9d9d4;
+  --nav-item-color-active: #00b0ff;
+  --nav-item-color-selected: #d9d9d4;
+  --nav-item-color-highlighted: #c6ff00;
+  --nav-item-background-hover: #3b3c32;
+  --nav-item-background-active: #3b514d;
+  --nav-item-background-selected: #3b514d;
+  --status-bar-background: #1f231f;
+  --status-bar-border-color: #333333;
+  --status-bar-text-color: #9c9a8f;
+  --icon-color: #9c9a8f;
+  --icon-color-hover: #d9d9d4;
+  --icon-color-active: #00b0ff;
+  --icon-color-focused: #d9d9d4;
+  --scrollbar-bg: #00000000;
+  --scrollbar-thumb-bg: #6e6b6866;
+  --scrollbar-active-thumb-bg: #6e6b68aa;
+
+  /* Popups, settings, graph, canvas */
+  --prompt-background: #2e332e;
+  --prompt-border-color: #494848;
+  --setting-items-background: #2e332e;
+  --setting-items-border-color: #333333;
+  --graph-line: #494848;
+  --graph-node: #9c9a8f;
+  --graph-node-unresolved: #75715e;
+  --graph-node-focused: #00b0ff;
+  --graph-node-tag: #00c853;
+  --graph-node-attachment: #e5e500;
+  --graph-text: #d9d9d4;
+  --canvas-background: #252925;
+}
+
+/* Inline code: yellow like strings (Obsidian only has --code-normal, which also colours code blocks). */
+.markdown-rendered :not(pre) > code,
+.cm-s-obsidian span.cm-inline-code,
+.cm-inline-code {
+  color: #e5e500;
+}
+
+/* Highlights (==text==): dark text on the scheme's search-yellow. */
+.markdown-rendered mark,
+.cm-s-obsidian span.cm-highlight {
+  color: #252621;
+}
+
+/* Empty tab ('no file open') title. */
+.empty-state-title {
+  color: #c6ff00;
+}

@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
-import { buildThemes } from "./build.ts";
+import { buildThemes, OBSIDIAN_ROOT_FILES } from "./build.ts";
 import { targets } from "./targets.ts";
 
 const EXPECTED = [
@@ -79,4 +79,27 @@ test("formats that don't support alpha contain no 8-digit hex", async () => {
     const text = await Bun.file(join(tmp, f)).text();
     expect(text.match(/#[0-9a-fA-F]{8}\b/g), f).toBeNull();
   }
+});
+
+test("the repo root carries the Obsidian theme exactly as generated (the community directory reads the root)", async () => {
+  const repo = join(root, "..");
+  for (const f of OBSIDIAN_ROOT_FILES) {
+    const rootCopy = await Bun.file(join(repo, f)).text();
+    const fresh = await Bun.file(join(tmp, "obsidian/Bigface", f)).text();
+    expect(rootCopy === fresh, `${f} at the repo root is out of date (run bun run themes)`).toBe(
+      true,
+    );
+  }
+  const manifest = JSON.parse(await Bun.file(join(repo, "manifest.json")).text());
+  expect(manifest.name).toBe("Bigface");
+  expect(manifest.version).toMatch(/^\d+\.\d+\.\d+$/);
+});
+
+test("repo root has what Obsidian's directory requires: README, LICENSE and a 512x288 screenshot", async () => {
+  const repo = join(root, "..");
+  for (const f of ["README.md", "LICENSE", "screenshot.png"]) {
+    expect(await Bun.file(join(repo, f)).exists(), f).toBe(true);
+  }
+  const png = Buffer.from(await Bun.file(join(repo, "screenshot.png")).arrayBuffer());
+  expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([512, 288]);
 });
