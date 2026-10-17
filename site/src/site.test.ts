@@ -88,3 +88,21 @@ test("every app page shows its one-line install command, and install.sh is publi
   expect(home).toContain("install.sh | sh -s -- --uninstall all");
   expect(script).toContain("uninstall_ghostty()");
 });
+
+test("the Obsidian page shows a real screenshot that exists and matches its declared size", () => {
+  const html = page("apps/obsidian");
+  const m = html.match(/<img[^>]*src="([^"]+obsidian-preview\.png)"[^>]*>/);
+  expect(m, "img tag").not.toBeNull();
+  const src = (m as RegExpMatchArray)[1] as string;
+  expect(src.startsWith(`${BASE}/img/`)).toBe(true);
+  const file = join(dist, src.slice(BASE.length));
+  expect(existsSync(file)).toBe(true);
+  const buf = readFileSync(file);
+  expect(buf.subarray(1, 4).toString()).toBe("PNG");
+  const [w, h] = [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+  expect(html).toContain(`width="${w}"`);
+  expect(html).toContain(`height="${h}"`);
+  expect(w).toBeGreaterThanOrEqual(1200);
+  expect(buf.length).toBeLessThan(400 * 1024);
+  expect(html).toMatch(/alt="Obsidian in reading view/);
+});

@@ -25,7 +25,20 @@ const levelLabel = {
   <h1>Bigface for {target.name}</h1>
   <p class="lead">{target.tagline}</p>
 
-  <SyntaxPreview terminal={target.terminalPreview} />
+  {target.screenshot ? (
+    <figure class="shot">
+      <img
+        src={`${base}/${target.screenshot.file}`}
+        alt={target.screenshot.alt}
+        width={target.screenshot.width}
+        height={target.screenshot.height}
+        loading="lazy"
+      />
+      <figcaption class="muted">A real screenshot: Obsidian 1.14.4, reading view, Bigface theme.</figcaption>
+    </figure>
+  ) : (
+    <SyntaxPreview terminal={target.terminalPreview} />
+  )}
 
   <h2>Install</h2>
   <p class="muted">One command:</p>
@@ -67,6 +80,9 @@ const levelLabel = {
   .downloads { padding-left: 1.2rem; display: grid; gap: .4rem; }
   .dl { font-weight: 600; }
   .cmd { border-color: var(--blue); }
+  .shot { margin: 0; }
+  .shot img { width: 100%; height: auto; border: 1px solid var(--border-muted); border-radius: 10px; display: block; }
+  .shot figcaption { margin-top: .5rem; font-size: .85rem; }
   details { margin: 1rem 0; }
   summary { cursor: pointer; color: var(--muted); }
 </style>

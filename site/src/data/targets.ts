@@ -13,6 +13,8 @@ export interface Target {
   /** What the test suite proves for this target — shown on its page, so no claim is stronger than the proof. */
   check: { level: Check; text: string };
   terminalPreview: boolean;
+  /** A real screenshot of the theme in the app (under public/img/). */
+  screenshot?: { file: string; alt: string; width: number; height: number };
 }
 
 export const REPO = "https://github.com/gjuoun/bigface-theme";
@@ -243,6 +245,12 @@ export const targets: Target[] = [
       text: "Format-checked against Obsidian's theme docs (manifest fields, folder name, `.theme-dark` variables). Not opened in Obsidian.",
     },
     terminalPreview: false,
+    screenshot: {
+      file: "img/obsidian-preview.png",
+      alt: "Obsidian in reading view with Bigface: lime headings, orange list markers, a purple blockquote, a table, info and warning callouts and a highlighted code block on a dark green-gray background.",
+      width: 1514,
+      height: 1362,
+    },
   },
   {
     id: "slack",
