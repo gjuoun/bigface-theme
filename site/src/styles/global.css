@@ -479,7 +479,7 @@ pre code {
   font-size: 0.72rem;
   letter-spacing: 0.04em;
   padding: 0.35rem 0.6rem;
-  border-radius: 8px;
+  border-radius: 999px;
   border: 1px solid var(--line-strong);
   background: rgba(126, 176, 240, 0.08);
   color: var(--muted);
@@ -488,6 +488,12 @@ pre code {
     color 0.2s,
     border-color 0.2s,
     background 0.2s;
+}
+
+/* Inside the pill-shaped command line the button has to be a pill too, or the two radii fight. */
+.cmdline .copy {
+  border-radius: 999px;
+  padding: 0.32rem 0.72rem;
 }
 
 .copy:hover {

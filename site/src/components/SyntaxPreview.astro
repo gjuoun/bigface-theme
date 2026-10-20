@@ -7,8 +7,9 @@ interface Props {
 const { terminal = false } = Astro.props;
 
 type Tok = [string, string?];
+// A standard async entry point, so the window carries a real snippet instead of four loose lines.
 const code: Tok[][] = [
-  [["// Greets someone, then counts.", "comment"]],
+  [["// main.ts — colours, not a screenshot.", "comment"]],
   [
     ["import", "keyword"],
     [" { ", "punctuation"],
@@ -21,54 +22,143 @@ const code: Tok[][] = [
   ],
   [],
   [
-    ["const", "keyword"],
+    ["type", "keyword"],
     [" "],
-    ["answer", "variable"],
+    ["User", "type"],
+    [" = ", "operator"],
+    ["{ ", "punctuation"],
+    ["id", "variable"],
     [": ", "punctuation"],
     ["number", "type"],
+    ["; ", "punctuation"],
+    ["name", "variable"],
+    [": ", "punctuation"],
+    ["string", "type"],
+    [" };", "punctuation"],
+  ],
+  [],
+  [
+    ["const", "keyword"],
     [" "],
-    ["=", "operator"],
-    [" "],
-    ["42", "number"],
+    ["ENDPOINT", "variable"],
+    [" = ", "operator"],
+    ['"https://api.example.com/users"', "string"],
     [";", "punctuation"],
   ],
   [],
   [
-    ["export function", "keyword"],
+    ["export async function", "keyword"],
     [" "],
     ["main", "function"],
     ["(", "punctuation"],
-    ["name", "parameter"],
+    ["ids", "parameter"],
     [": ", "punctuation"],
-    ["string", "type"],
-    [") {", "punctuation"],
+    ["number", "type"],
+    ["[]", "punctuation"],
+    ["): ", "punctuation"],
+    ["Promise", "type"],
+    ["<", "operator"],
+    ["void", "type"],
+    [">", "operator"],
+    [" {", "punctuation"],
   ],
   [
     ["  "],
     ["const", "keyword"],
     [" "],
-    ["msg", "variable"],
+    ["res", "variable"],
+    [" = ", "operator"],
+    ["await", "keyword"],
     [" "],
-    ["=", "operator"],
-    [" "],
-    ["`Hello, ${name}`", "string"],
-    [";", "punctuation"],
+    ["fetch", "function"],
+    ["(", "punctuation"],
+    ["ENDPOINT", "variable"],
+    [");", "punctuation"],
   ],
   [
     ["  "],
-    ["return", "keyword"],
+    ["if", "keyword"],
+    [" (", "punctuation"],
+    ["!", "operator"],
+    ["res", "variable"],
+    [".", "punctuation"],
+    ["ok", "variable"],
+    [") ", "punctuation"],
+    ["throw", "keyword"],
     [" "],
+    ["new", "keyword"],
+    [" "],
+    ["Error", "type"],
+    ["(", "punctuation"],
+    ["`users: ${res.status}`", "string"],
+    [");", "punctuation"],
+  ],
+  [
+    ["  "],
+    ["const", "keyword"],
+    [" "],
+    ["all", "variable"],
+    [": ", "punctuation"],
+    ["User", "type"],
+    ["[]", "punctuation"],
+    [" = ", "operator"],
+    ["await", "keyword"],
+    [" "],
+    ["res", "variable"],
+    [".", "punctuation"],
+    ["json", "function"],
+    ["();", "punctuation"],
+  ],
+  [
+    ["  "],
+    ["const", "keyword"],
+    [" "],
+    ["picked", "variable"],
+    [" = ", "operator"],
+    ["all", "variable"],
+    [".", "punctuation"],
+    ["filter", "function"],
+    ["((", "punctuation"],
+    ["u", "parameter"],
+    [") => ", "operator"],
+    ["ids", "variable"],
+    [".", "punctuation"],
+    ["includes", "function"],
+    ["(", "punctuation"],
+    ["u", "variable"],
+    [".", "punctuation"],
+    ["id", "variable"],
+    ["));", "punctuation"],
+  ],
+  [
+    ["  "],
+    ["picked", "variable"],
+    [".", "punctuation"],
+    ["forEach", "function"],
+    ["((", "punctuation"],
+    ["u", "parameter"],
+    [") => ", "operator"],
     ["greet", "function"],
     ["(", "punctuation"],
-    ["msg", "variable"],
-    [", ", "punctuation"],
-    ["answer", "variable"],
-    [");", "punctuation"],
+    ["u", "variable"],
+    [".", "punctuation"],
+    ["name", "variable"],
+    ["));", "punctuation"],
   ],
   [["}", "punctuation"]],
 ];
 const colorOf = (role?: string) => (role ? syntaxHex(role) : hex("fg"));
 const ansi = Object.entries(palette.ansi);
+
+// Rendered as one HTML string per line: template whitespace would otherwise be preserved by
+// `white-space: pre` and turn every source line into three line boxes.
+const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const render = (line: Tok[]): string =>
+  line.length === 0
+    ? " "
+    : line
+        .map(([text, role]) => `<span style="color:${colorOf(role)}">${esc(text)}</span>`)
+        .join("");
 ---
 
 <figure class="window">
@@ -77,13 +167,7 @@ const ansi = Object.entries(palette.ansi);
     <span class="file">main.ts</span>
   </div>
 
-  <pre class="code"><code>{code.map((line) => (
-    <span class="ln">
-      {line.length === 0
-        ? " "
-        : line.map(([text, role]) => <span style={`color:${colorOf(role)}`}>{text}</span>)}
-    </span>
-  ))}</code></pre>
+  <pre class="code"><code>{code.map((line) => <span class="ln" set:html={render(line)} />)}</code></pre>
 
   {terminal && (
     <div class="term">
@@ -97,9 +181,6 @@ const ansi = Object.entries(palette.ansi);
       <div class="out">
         <span style={`color:${hex("green")}`}>On branch</span>
         <span style={`color:${hex("fg")}`}> main</span>
-      </div>
-      <div class="out">
-        <span style={`color:${hex("comment")}`}>nothing to commit, working tree clean</span>
       </div>
       <div class="ansi">
         {ansi.map(([name, c]) => (
@@ -124,7 +205,7 @@ const ansi = Object.entries(palette.ansi);
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.6rem 0.85rem;
+    padding: 0.45rem 0.85rem;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent);
     border-bottom: 1px solid rgba(126, 176, 240, 0.14);
     font-family: var(--font-mono);
@@ -157,26 +238,15 @@ const ansi = Object.entries(palette.ansi);
     opacity: 0.6;
   }
 
-  .bar .badge {
-    margin-left: auto;
-    padding: 0.1rem 0.45rem;
-    border-radius: 999px;
-    border: 1px solid rgba(126, 176, 240, 0.25);
-    color: var(--blue);
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
   .code {
     margin: 0;
     border: 0;
     border-radius: 0;
     background: transparent;
-    padding: 0.85rem 1rem;
+    padding: 0.7rem 1rem 0.75rem;
     counter-reset: line;
-    font-size: 0.8rem;
-    line-height: 1.7;
+    font-size: 0.79rem;
+    line-height: 1.52;
   }
 
   .ln {
@@ -197,10 +267,10 @@ const ansi = Object.entries(palette.ansi);
 
   .term {
     border-top: 1px solid rgba(126, 176, 240, 0.14);
-    padding: 0.8rem 1rem 0.9rem;
+    padding: 0.6rem 1rem 0.7rem;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    line-height: 1.7;
+    font-size: 0.75rem;
+    line-height: 1.6;
   }
 
   .prompt {
