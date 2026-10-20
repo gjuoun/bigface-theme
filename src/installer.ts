@@ -1,13 +1,13 @@
 /**
  * Renders `install.sh`, the one-curl installer served from the Pages site.
  *
- *   curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- ghostty tmux
+ *   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty tmux
  *
  * The script only writes Bigface's own files. It never edits an existing config file; it prints the
  * line you need to add instead.
  */
 
-export const SITE = "https://gjuoun.github.io/bigface-theme";
+export const SITE = "https://bigface.qqntt.com";
 
 export type InstallKind =
   /** Copy files to their standard location. Included in `all` when the app is detected. */

@@ -1,8 +1,7 @@
 name: Deploy to Cloudflare Pages
 
-# The GitHub Pages workflow builds the project-path site (/bigface-theme/). This one builds the same
-# pages for a root domain (/) and pushes them to the bigface-theme Pages project behind
-# https://bigface.qqntt.com/. Both deploys run on every push to main.
+# The only deployment: build the site and push it to the bigface-theme Pages project behind
+# https://bigface.qqntt.com/ (root base). Runs on every push to main.
 
 on:
   push:
@@ -28,7 +27,7 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - run: bun run site:build:pages
+      - run: bun run site:build
 
       - uses: cloudflare/wrangler-action@v3
         with:

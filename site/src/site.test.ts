@@ -7,7 +7,7 @@ import { targets } from "./data/targets.ts";
 const siteDir = join(import.meta.dir, "..");
 const repo = join(siteDir, "..");
 const dist = join(siteDir, "dist");
-const BASE = "/bigface-theme";
+const BASE = "";
 const page = (rel: string) => readFileSync(join(dist, rel, "index.html"), "utf8");
 
 beforeAll(async () => {
@@ -62,11 +62,14 @@ test("the VS Code .vsix is packaged into the site", () => {
   expect(existsSync(join(dist, "downloads/bigface-theme-0.1.0.vsix"))).toBe(true);
 });
 
-test("internal links stay under the Pages base path", () => {
+test("internal links are root-absolute and name no project path", () => {
   for (const rel of ["", "palette", "apps/pi"]) {
     const html = page(rel);
     for (const m of html.matchAll(/href="(\/[^"]*)"/g)) {
-      expect((m[1] as string).startsWith(`${BASE}/`), m[1]).toBe(true);
+      const href = m[1] as string;
+      expect(href.startsWith("/"), href).toBe(true);
+      expect(href.startsWith("/bigface-theme"), href).toBe(false);
+      expect(href.startsWith("//"), href).toBe(false);
     }
   }
 });

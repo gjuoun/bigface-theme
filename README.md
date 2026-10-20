@@ -4,8 +4,8 @@ A dark color theme with **one palette and 14 ports**. It started in 2018 as a
 [JetBrains scheme](https://plugins.jetbrains.com/plugin/10988-bigface-color-scheme) and is now
 generated for your terminal, editors, shell and notes from [`palette/bigface.json`](palette/bigface.json).
 
-Site, previews and install steps: **https://bigface.qqntt.com/** (Cloudflare Pages at the root;
-the same build is mirrored at <https://gjuoun.github.io/bigface-theme/>).
+Site, previews and install steps: **https://bigface.qqntt.com/** — served by Cloudflare Pages from
+the root of that domain; every push to `main` builds and deploys it.
 
 The site is a **blue stage**, not a copy of the theme's own background: every swatch, code sample and
 preview on it is the exact palette, but the chrome is deep blue so the colours read as an object. The
@@ -79,7 +79,7 @@ DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib bun run brand:check  # sizes, opaci
 bun run themes      # regenerate themes/ from the palette
 bun run contrast    # print contrast ratios (informational)
 bun run check       # typecheck + biome + all tests (tools that aren't installed are skipped)
-bun run site:dev    # Astro site on http://localhost:4321/bigface-theme/
+bun run site:dev    # Astro site on http://localhost:4321/
 ```
 
 To add an app: write a generator in `src/generators/`, register it in `src/targets.ts`, add its page

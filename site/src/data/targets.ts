@@ -18,11 +18,8 @@ export interface Target {
 }
 
 export const REPO = "https://github.com/gjuoun/bigface-theme";
-// The install one-liner has to name a host that actually serves install.sh. Default keeps the
-// public domain; a build can override it with PUBLIC_SITE_URL (e.g. a staging host).
-const env: Record<string, string | undefined> =
-  (import.meta as unknown as { env?: Record<string, string | undefined> }).env ?? {};
-export const SITE_URL = env.PUBLIC_SITE_URL ?? "https://bigface.qqntt.com";
+// The install one-liner names the host that actually serves install.sh.
+export const SITE_URL = "https://bigface.qqntt.com";
 export const installCommand = (what = "") =>
   what
     ? `curl -fsSL ${SITE_URL}/install.sh | sh -s -- ${what}`
