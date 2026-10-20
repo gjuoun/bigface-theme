@@ -260,7 +260,7 @@ const next = targets[(index + 1) % targets.length]!;
 
   .panel pre {
     margin: 0;
-    background: rgba(2, 7, 15, 0.85);
+    background: color-mix(in srgb, var(--bg-deep) 85.0%, transparent);
   }
 
   .panel-foot {
@@ -291,7 +291,7 @@ const next = targets[(index + 1) % targets.length]!;
   }
 
   .dl:hover {
-    border-color: rgba(0, 176, 255, 0.45);
+    border-color: color-mix(in srgb, var(--blue) 45.0%, transparent);
     transform: translateY(-2px);
     color: var(--fg);
   }
@@ -302,7 +302,7 @@ const next = targets[(index + 1) % targets.length]!;
     width: 34px;
     height: 34px;
     border-radius: 10px;
-    background: rgba(0, 176, 255, 0.14);
+    background: color-mix(in srgb, var(--blue) 14.0%, transparent);
     color: var(--blue);
     font-size: 0.95rem;
   }
@@ -365,7 +365,7 @@ const next = targets[(index + 1) % targets.length]!;
     margin: 0;
     max-height: 420px;
     overflow: auto;
-    background: rgba(2, 7, 15, 0.85);
+    background: color-mix(in srgb, var(--bg-deep) 85.0%, transparent);
   }
 
   details {
@@ -373,7 +373,7 @@ const next = targets[(index + 1) % targets.length]!;
     padding: 0.9rem 1rem;
     border: 1px solid var(--line);
     border-radius: 14px;
-    background: rgba(9, 22, 42, 0.55);
+    background: color-mix(in srgb, var(--bg-deep) 55.0%, transparent);
   }
 
   summary {
@@ -407,7 +407,7 @@ const next = targets[(index + 1) % targets.length]!;
   }
 
   .next:hover {
-    border-color: rgba(0, 176, 255, 0.45);
+    border-color: color-mix(in srgb, var(--blue) 45.0%, transparent);
     color: var(--fg);
   }
 </style>

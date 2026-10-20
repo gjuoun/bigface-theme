@@ -1,8 +1,7 @@
 import { beforeAll, expect, test } from "bun:test";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-import { stage, stageHue, toOklch } from "./data/stage.ts";
 import { targets } from "./data/targets.ts";
 
 const siteDir = join(import.meta.dir, "..");
@@ -111,25 +110,35 @@ test("the Obsidian page shows a real screenshot that exists and matches its decl
   expect(html).toMatch(/alt="Obsidian in reading view/);
 });
 
-test("the site stage is derived from the palette's blue, not hand-picked", () => {
-  const chrome = stage();
-  const hue = stageHue();
-  // Every stage colour sits on the palette's blue hue, +/- rounding.
-  for (const [name, value] of Object.entries(chrome)) {
-    expect(Math.abs(toOklch(value).h - hue), `${name} ${value}`).toBeLessThan(1.5);
+test("the site only ships colours that exist in the palette", () => {
+  // Chrome included: the site uses the theme's own surfaces. Gradients interpolate between palette
+  // stops, and translucent steps are palette colours with alpha, so no other hex may appear.
+  const palette = JSON.parse(readFileSync(join(repo, "palette/bigface.json"), "utf8")) as {
+    colors: Record<string, { hex: string }>;
+    ansi: Record<string, { hex: string }>;
+  };
+  const known = new Set(
+    [...Object.values(palette.colors), ...Object.values(palette.ansi)].map((c) =>
+      c.hex.toLowerCase(),
+    ),
+  );
+  const scan = (file: string) => {
+    const text = readFileSync(file, "utf8");
+    for (const m of text.matchAll(/#[0-9a-fA-F]{6}\b/g)) {
+      expect(known.has(m[0].toLowerCase()), `${file}: ${m[0]}`).toBe(true);
+    }
+  };
+  scan(join(dist, "index.html"));
+  scan(join(dist, "palette/index.html"));
+  scan(join(dist, "apps/jetbrains/index.html"));
+  for (const css of ["Base", "index"]) {
+    const files = readdirSync(join(dist, "_astro")).filter(
+      (f) => f.startsWith(css) && f.endsWith(".css"),
+    );
+    for (const f of files) scan(join(dist, "_astro", f));
   }
-  // Surfaces stay below the palette's own background in lightness; ink stays above it.
-  const paletteBg = toOklch("#252925").l;
-  for (const name of ["bg", "bg2", "panel", "panel2"]) {
-    expect(toOklch(chrome[name] as string).l, name).toBeLessThan(paletteBg);
-  }
-  for (const name of ["fg", "muted", "dim"]) {
-    expect(toOklch(chrome[name] as string).l, name).toBeGreaterThan(paletteBg);
-  }
-  // And the values the page actually ships are the derived ones.
-  const home = page("");
-  expect(home).toContain(chrome.bg as string);
-  expect(home).not.toContain("#050d1b");
+  // And the theme's own background really is the page background.
+  expect(page("")).toContain("#252925");
 });
 
 test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 social card", () => {

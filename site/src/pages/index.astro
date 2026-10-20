@@ -95,8 +95,9 @@ const removeAll = installCommand("--uninstall all");
       ))}
     </div>
     <p class="dim caption">
-      {colourCount} colours in the palette. Bigface's own background stays <code>{hex("bg")}</code> —
-      this page is only a blue stage for it. Click a swatch to copy its hex.
+      {colourCount} colours in the palette. This page runs on the theme's own background
+      <code>{hex("bg")}</code> — every colour here comes from
+      <code>palette/bigface.json</code>. Click a swatch to copy its hex.
     </p>
   </section>
 
@@ -287,12 +288,12 @@ const removeAll = installCommand("--uninstall all");
     border-radius: 50%;
     background: conic-gradient(
       from 0deg,
-      rgba(0, 176, 255, 0) 0deg,
-      rgba(0, 176, 255, 0.55) 70deg,
-      rgba(198, 255, 0, 0.35) 140deg,
-      rgba(0, 176, 255, 0) 220deg,
-      rgba(174, 129, 255, 0.4) 300deg,
-      rgba(0, 176, 255, 0) 360deg
+      color-mix(in srgb, var(--blue) 0.0%, transparent) 0deg,
+      color-mix(in srgb, var(--blue) 55.0%, transparent) 70deg,
+      color-mix(in srgb, var(--lime) 35.0%, transparent) 140deg,
+      color-mix(in srgb, var(--blue) 0.0%, transparent) 220deg,
+      color-mix(in srgb, var(--purple) 40.0%, transparent) 300deg,
+      color-mix(in srgb, var(--blue) 0.0%, transparent) 360deg
     );
     filter: blur(26px);
     opacity: 0.75;
@@ -315,8 +316,8 @@ const removeAll = installCommand("--uninstall all");
     border-radius: 30px;
     rotate: -6deg;
     z-index: 3;
-    box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px rgba(146, 200, 255, 0.3),
-      0 30px 70px -22px rgba(0, 150, 255, 0.85);
+    box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px color-mix(in srgb, var(--sky) 30.0%, transparent),
+      0 30px 70px -22px color-mix(in srgb, var(--blue) 85.0%, transparent);
     transition: rotate 0.6s var(--ease);
   }
 
@@ -330,7 +331,7 @@ const removeAll = installCommand("--uninstall all");
     width: 100%;
     transform: perspective(1400px) rotateY(-7deg) rotateX(3deg);
     transition: transform 0.6s var(--ease);
-    filter: drop-shadow(0 40px 60px rgba(0, 10, 30, 0.7));
+    filter: drop-shadow(0 40px 60px color-mix(in srgb, var(--bg-deep) 70.0%, transparent));
   }
 
   .stage:hover .float-window {
@@ -352,10 +353,10 @@ const removeAll = installCommand("--uninstall all");
     width: max-content;
     animation: slide 42s linear infinite;
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: color-mix(in srgb, var(--fg) 72%, transparent);
   }
 
   .track span {
@@ -420,7 +421,7 @@ const removeAll = installCommand("--uninstall all");
     letter-spacing: 0.04em;
     opacity: 0;
     transition: opacity 0.3s;
-    color: #04121f;
+    color: var(--search-fg);
   }
 
   .swatch .name {
@@ -455,7 +456,7 @@ const removeAll = installCommand("--uninstall all");
   }
 
   .stats div {
-    background: rgba(6, 16, 32, 0.72);
+    background: color-mix(in srgb, var(--bg-deep) 72.0%, transparent);
     padding: 1.2rem 1.1rem;
     display: flex;
     flex-direction: column;
@@ -534,7 +535,7 @@ const removeAll = installCommand("--uninstall all");
 
   .panel pre {
     margin: 0;
-    background: rgba(2, 7, 15, 0.85);
+    background: color-mix(in srgb, var(--bg-deep) 85.0%, transparent);
   }
 
   .panel-foot {
@@ -574,7 +575,7 @@ const removeAll = installCommand("--uninstall all");
   }
 
   .filters button[aria-pressed="true"] {
-    color: #04121f;
+    color: var(--search-fg);
     background: var(--blue);
     border-color: var(--blue);
   }
@@ -602,8 +603,8 @@ const removeAll = installCommand("--uninstall all");
 
   .app-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(0, 176, 255, 0.45);
-    box-shadow: 0 26px 50px -28px rgba(0, 140, 255, 0.65);
+    border-color: color-mix(in srgb, var(--blue) 45.0%, transparent);
+    box-shadow: 0 26px 50px -28px color-mix(in srgb, var(--blue) 65.0%, transparent);
     color: var(--fg);
   }
 
@@ -648,17 +649,17 @@ const removeAll = installCommand("--uninstall all");
 
   .dot.tool {
     background: var(--green);
-    box-shadow: 0 0 8px rgba(0, 200, 83, 0.7);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--green) 70.0%, transparent);
   }
 
   .dot.schema {
     background: var(--cyan);
-    box-shadow: 0 0 8px rgba(102, 217, 239, 0.7);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--cyan) 70.0%, transparent);
   }
 
   .dot.format {
     background: var(--orange);
-    box-shadow: 0 0 8px rgba(252, 93, 35, 0.7);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--burnt) 70.0%, transparent);
   }
 
   .app-tag code {

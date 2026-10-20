@@ -1,30 +1,53 @@
-/* Bigface site — blue stage, palette-true swatches.
-   The site chrome is a blue-shifted stage for the 2018 palette; every swatch, code sample and
-   preview on these pages still uses the exact values from palette/bigface.json. */
+/* Bigface site.
+   Every colour in this file is a value from palette/bigface.json. The chrome is the theme's own
+   surface ladder (bg / bgDeep / bgPanel / cursorLine), not a tinted stage; Base.astro injects the
+   values at build time and the tokens below are the fallback. Translucent steps are those same
+   palette colours with alpha, and gradients interpolate between palette stops only. */
 
 :root {
-  /* Derived from palette/bigface.json by site/src/data/stage.ts; these are only fallbacks. */
-  --bg: #010e19;
-  --bg-2: #011624;
-  --panel: #001b2d;
-  --panel-2: #00243a;
-  --fg: #e8f3fb;
-  --muted: #9fbed5;
-  --dim: #83a6be;
-  --line-rgb: 120, 172, 207;
-  --line: rgba(var(--line-rgb), 0.14);
-  --line-strong: rgba(var(--line-rgb), 0.28);
-
+  /* surfaces */
+  --bg: #252925;
+  --bg-2: #1f231f;
+  --bg-deep: #1f231f;
+  --panel: #2e332e;
+  --panel-2: #3b3c32;
+  --panel-3: #3b514d;
+  --selection: #646464;
+  /* ink */
+  --fg: #d9d9d4;
+  --cream: #d9d9d4;
+  --muted: #9c9a8f;
+  --dim: #6e6b68;
+  --comment: #75715e;
+  --caret: #f8f8f0;
+  /* lines */
+  --border: #494848;
+  --border-muted: #333333;
+  --line-rgb: 73, 72, 72;
+  --line: var(--border);
+  --line-strong: var(--selection);
+  /* accents */
   --blue: #00b0ff;
-  --cyan: #66d9ef;
   --sky: #81d4fa;
-  --lime: #c6ff00;
+  --light-blue: #40c4ff;
+  --pale-blue: #b3e5fc;
+  --cyan: #66d9ef;
   --green: #00c853;
+  --lime-green: #8bc34a;
+  --lime: #c6ff00;
   --yellow: #e5e500;
-  --orange: #fc5d23;
+  --bright-yellow: #ffeb3b;
+  --orange: #ff9800;
+  --burnt: #fc5d23;
   --pink: #f52670;
   --purple: #ae81ff;
-  --cream: #d9d9d4;
+  /* the tints the theme itself defines */
+  --tool-pending: #2f2f22;
+  --tool-success: #1f3320;
+  --tool-error: #3a2028;
+  --custom-message: #2b2740;
+  --search-bg: #ffe792;
+  --search-fg: #252621;
 
   --r-sm: 10px;
   --r: 16px;
@@ -69,10 +92,26 @@ body::before {
   inset: -20vmax;
   z-index: -2;
   background:
-    radial-gradient(38vmax 30vmax at 12% 4%, rgba(0, 176, 255, 0.22), transparent 62%),
-    radial-gradient(34vmax 26vmax at 88% 12%, rgba(174, 129, 255, 0.16), transparent 60%),
-    radial-gradient(46vmax 34vmax at 62% 86%, rgba(0, 200, 255, 0.13), transparent 64%),
-    radial-gradient(30vmax 24vmax at 20% 76%, rgba(198, 255, 0, 0.07), transparent 60%);
+    radial-gradient(
+      38vmax 30vmax at 12% 4%,
+      color-mix(in srgb, var(--blue) 22.0%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      34vmax 26vmax at 88% 12%,
+      color-mix(in srgb, var(--purple) 16.0%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      46vmax 34vmax at 62% 86%,
+      color-mix(in srgb, var(--blue) 13.0%, transparent),
+      transparent 64%
+    ),
+    radial-gradient(
+      30vmax 24vmax at 20% 76%,
+      color-mix(in srgb, var(--lime) 7.0%, transparent),
+      transparent 60%
+    );
   filter: blur(8px);
   animation: drift 26s var(--ease) infinite alternate;
   pointer-events: none;
@@ -160,7 +199,7 @@ main {
   border-radius: 9px;
   box-shadow:
     0 0 0 1px var(--line-strong),
-    0 6px 18px rgba(0, 140, 255, 0.35);
+    0 6px 18px color-mix(in srgb, var(--blue) 35.0%, transparent);
   transition: transform 0.4s var(--ease);
 }
 
@@ -273,11 +312,17 @@ a:hover {
   height: 6px;
   border-radius: 50%;
   background: var(--blue);
-  box-shadow: 0 0 0 4px rgba(0, 176, 255, 0.16);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue) 16.0%, transparent);
 }
 
 .grad {
-  background: linear-gradient(100deg, #ffffff 6%, #b9e6ff 30%, var(--blue) 55%, var(--lime) 96%);
+  background: linear-gradient(
+    100deg,
+    var(--caret) 6%,
+    var(--pale-blue) 30%,
+    var(--blue) 55%,
+    var(--lime) 96%
+  );
   background-size: 220% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -313,7 +358,7 @@ kbd {
 }
 
 pre {
-  background: rgba(3, 9, 18, 0.72);
+  background: color-mix(in srgb, var(--bg-deep) 72.0%, transparent);
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
   padding: 1rem 1.1rem;
@@ -340,11 +385,11 @@ pre code {
   border: 1px solid transparent;
   font-weight: 600;
   font-size: 0.94rem;
-  color: #04121f;
-  background: linear-gradient(135deg, #7fe0ff, var(--blue) 55%, #1e8bff);
+  color: var(--search-fg);
+  background: linear-gradient(135deg, var(--sky), var(--blue) 55%, var(--light-blue));
   box-shadow:
-    0 8px 26px rgba(0, 140, 255, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    0 8px 26px color-mix(in srgb, var(--blue) 30.0%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--caret) 50.0%, transparent);
   transition:
     transform 0.25s var(--ease),
     box-shadow 0.25s var(--ease),
@@ -354,10 +399,10 @@ pre code {
 
 .btn:hover {
   transform: translateY(-2px);
-  color: #04121f;
+  color: var(--search-fg);
   box-shadow:
-    0 14px 34px rgba(0, 160, 255, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 14px 34px color-mix(in srgb, var(--blue) 40.0%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--caret) 60.0%, transparent);
 }
 
 .btn.ghost {
@@ -370,17 +415,21 @@ pre code {
 .btn.ghost:hover {
   border-color: var(--blue);
   color: var(--blue);
-  background: rgba(0, 176, 255, 0.08);
+  background: color-mix(in srgb, var(--blue) 8.0%, transparent);
 }
 
 /* ---------- surfaces ---------- */
 
 .card {
   position: relative;
-  background: linear-gradient(160deg, rgba(18, 38, 70, 0.85), rgba(8, 20, 38, 0.9));
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--bg-deep) 85.0%, transparent),
+    color-mix(in srgb, var(--bg-deep) 90.0%, transparent)
+  );
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 24px 60px -30px color-mix(in srgb, var(--bg-deep) 90.0%, transparent);
 }
 
 .card.glow::before {
@@ -391,8 +440,8 @@ pre code {
   padding: 1px;
   background: linear-gradient(
     140deg,
-    rgba(0, 176, 255, 0.55),
-    rgba(198, 255, 0, 0.12) 45%,
+    color-mix(in srgb, var(--blue) 55.0%, transparent),
+    color-mix(in srgb, var(--lime) 12.0%, transparent) 45%,
     transparent 70%
   );
   -webkit-mask:
@@ -418,7 +467,7 @@ pre code {
   border-radius: inherit;
   background: radial-gradient(
     260px circle at var(--mx, 50%) var(--my, 0%),
-    rgba(0, 176, 255, 0.16),
+    color-mix(in srgb, var(--blue) 16.0%, transparent),
     transparent 68%
   );
   opacity: 0;
@@ -458,17 +507,17 @@ pre code {
 
 .pill.tool {
   color: var(--green);
-  border-color: rgba(0, 200, 83, 0.4);
+  border-color: color-mix(in srgb, var(--green) 40.0%, transparent);
 }
 
 .pill.schema {
   color: var(--cyan);
-  border-color: rgba(102, 217, 239, 0.4);
+  border-color: color-mix(in srgb, var(--cyan) 40.0%, transparent);
 }
 
 .pill.format {
   color: var(--orange);
-  border-color: rgba(252, 93, 35, 0.4);
+  border-color: color-mix(in srgb, var(--burnt) 40.0%, transparent);
 }
 
 /* ---------- copy button ---------- */
@@ -501,7 +550,7 @@ pre code {
 .copy:hover {
   color: var(--fg);
   border-color: var(--blue);
-  background: rgba(0, 176, 255, 0.12);
+  background: color-mix(in srgb, var(--blue) 12.0%, transparent);
 }
 
 .copy.done {
@@ -518,7 +567,7 @@ pre code {
   padding: 0.65rem 0.7rem 0.65rem 1rem;
   border-radius: 999px;
   border: 1px solid var(--line-strong);
-  background: rgba(3, 9, 18, 0.75);
+  background: color-mix(in srgb, var(--bg-deep) 75.0%, transparent);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   overflow: hidden;
@@ -550,7 +599,7 @@ pre code {
   padding: 0.4rem;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(3, 9, 18, 0.55);
+  background: color-mix(in srgb, var(--bg-deep) 55.0%, transparent);
 }
 
 .tabs button {
@@ -573,9 +622,9 @@ pre code {
 }
 
 .tabs button[aria-selected="true"] {
-  color: #04121f;
-  background: linear-gradient(135deg, #9fe4ff, var(--blue));
-  box-shadow: 0 6px 18px rgba(0, 140, 255, 0.3);
+  color: var(--search-fg);
+  background: linear-gradient(135deg, var(--pale-blue), var(--blue));
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--blue) 30.0%, transparent);
 }
 
 .panel[hidden] {
@@ -608,8 +657,8 @@ pre code {
   z-index: 90;
   padding: 0.6rem 1rem;
   border-radius: 999px;
-  border: 1px solid rgba(198, 255, 0, 0.45);
-  background: rgba(6, 18, 34, 0.92);
+  border: 1px solid color-mix(in srgb, var(--lime) 45.0%, transparent);
+  background: color-mix(in srgb, var(--bg-deep) 92.0%, transparent);
   backdrop-filter: blur(12px);
   color: var(--lime);
   font-family: var(--font-mono);
@@ -631,7 +680,11 @@ pre code {
 
 footer {
   border-top: 1px solid var(--line);
-  background: linear-gradient(to bottom, rgba(5, 13, 27, 0.2), rgba(3, 8, 16, 0.85));
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 13, 27, 0.2),
+    color-mix(in srgb, var(--bg-deep) 85.0%, transparent)
+  );
 }
 
 footer .inner {

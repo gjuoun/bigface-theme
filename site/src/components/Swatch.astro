@@ -38,15 +38,15 @@ const ink = lum > 0.55 ? "#111" : "#fff";
     border: 1px solid var(--line);
     border-radius: 14px;
     overflow: hidden;
-    background: rgba(9, 22, 42, 0.72);
+    background: color-mix(in srgb, var(--bg-deep) 72.0%, transparent);
     cursor: pointer;
     transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s;
   }
 
   .swatch:hover {
     transform: translateY(-3px);
-    border-color: rgba(0, 176, 255, 0.4);
-    box-shadow: 0 22px 40px -30px rgba(0, 140, 255, 0.9);
+    border-color: color-mix(in srgb, var(--blue) 40.0%, transparent);
+    box-shadow: 0 22px 40px -30px color-mix(in srgb, var(--blue) 90.0%, transparent);
   }
 
   .chip {
