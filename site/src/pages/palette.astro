@@ -6,13 +6,18 @@ import { hex, palette } from "../data/palette.ts";
 import { REPO } from "../data/targets.ts";
 import Base from "../layouts/Base.astro";
 
+const isDerived = (name: string) => palette.colors[name]?.source === "derived";
+// Groups show only what the 2018 scheme actually defines; the blends get their own block below so
+// nobody mistakes them for original colours.
 const groups: [string, string, string[]][] = [
   [
     "surfaces",
     "Surfaces",
-    ["bg", "bgPanel", "bgDeep", "cursorLine", "braceMatch", "selection", "border", "borderMuted"],
+    ["bg", "bgDeep", "cursorLine", "braceMatch", "selection", "border", "borderMuted"].filter(
+      (n) => !isDerived(n),
+    ),
   ],
-  ["text", "Text", ["fg", "fgMuted", "fgDim", "comment", "caret"]],
+  ["text", "Text", ["fg", "fgMuted", "fgDim", "comment", "caret"].filter((n) => !isDerived(n))],
   [
     "accents",
     "Accents",
@@ -33,15 +38,15 @@ const groups: [string, string, string[]][] = [
       "purple",
     ],
   ],
-  [
-    "tints",
-    "Search & tool tints",
-    ["searchBg", "searchFg", "toolPending", "toolSuccess", "toolError", "customMessage"],
-  ],
+  ["tints", "Search tints", ["searchBg", "searchFg"].filter((n) => !isDerived(n))],
 ];
 const syntaxRows = Object.entries(palette.syntax);
 const ansiRows = Object.entries(palette.ansi);
-const derived = Object.values(palette.colors).filter((c) => c.source === "derived").length;
+const derivedNames = Object.entries(palette.colors)
+  .filter(([, c]) => c.source === "derived")
+  .map(([name]) => name);
+const derived = derivedNames.length;
+const fromScheme = Object.keys(palette.colors).length - derived;
 ---
 
 <Base title="Bigface palette" description="Every colour in the Bigface theme, with the original JetBrains source for each one.">
@@ -49,10 +54,13 @@ const derived = Object.values(palette.colors).filter((c) => c.source === "derive
     <p class="eyebrow">the source of truth</p>
     <h1>One palette.<br /><span class="grad">Nothing else.</span></h1>
     <p class="lead">
-      Every theme in the repo is generated from <code>palette/bigface.json</code>. Colours labelled
-      with an original <code>OPTION#FIELD</code> come straight from the 2018 JetBrains scheme and are
-      never adjusted. The ones marked <span class="derived">derived</span> are blends the scheme has
-      no equivalent for.
+      Every theme in the repo is generated from <code>palette/bigface.json</code>. <strong
+        >{fromScheme} of these {Object.keys(palette.colors).length} colours are byte-for-byte from the
+        2018 JetBrains scheme</strong
+      > — each one labelled with the exact <code>OPTION#FIELD</code> it came from, checked against the
+      original XML by a test. The remaining <span class="derived">{derived}</span> are blends the
+      scheme has no equivalent for; they sit in their own block near the bottom instead of being
+      mixed in.
     </p>
     <div class="counts">
       <span><strong>{Object.keys(palette.colors).length}</strong> colours</span>
@@ -69,6 +77,7 @@ const derived = Object.values(palette.colors).filter((c) => c.source === "derive
   <nav class="subnav" aria-label="Palette sections">
     {groups.map(([id, title]) => <a href={`#${id}`}>{title}</a>)}
     <a href="#ansi">Terminal</a>
+    <a href="#derived">Added</a>
     <a href="#syntax">Syntax</a>
     <a href="#contrast">Contrast</a>
   </nav>
@@ -81,6 +90,19 @@ const derived = Object.values(palette.colors).filter((c) => c.source === "derive
       </div>
     </section>
   ))}
+
+  <section id="derived" class="group derived-block" data-reveal>
+    <h2>Added for tools <span class="count">{derivedNames.length}</span></h2>
+    <p class="muted">
+      The 2018 scheme has no equivalent for these {derivedNames.length} values, so they were blended
+      by hand: a panel step and a deeper step around <code>{hex("bg")}</code>, a muted ink, and four
+      8–10% tints of an accent over the background. They are the only colours in the repo that did
+      not come out of <code>Bigface.original.xml</code> — everything above is byte-for-byte from it.
+    </p>
+    <div class="swatches">
+      {derivedNames.map((n) => <Swatch name={n} color={palette.colors[n]!} />)}
+    </div>
+  </section>
 
   <section id="ansi" class="group" data-reveal>
     <h2>Terminal (ANSI) <span class="count">{ansiRows.length}</span></h2>

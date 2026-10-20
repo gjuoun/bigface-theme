@@ -13,7 +13,7 @@ const ink = lum > 0.55 ? "#111" : "#fff";
 
 <button
   type="button"
-  class="swatch"
+  class:list={["swatch", { derived: color.source === "derived" }]}
   data-copy={color.hex}
   data-swap="off"
   aria-label={`Copy ${name} ${color.hex}`}
@@ -21,6 +21,7 @@ const ink = lum > 0.55 ? "#111" : "#fff";
   <span class="chip" style={`background:${color.hex};color:${ink}`}>
     <span class="hex">{color.hex}</span>
     <span class="copied">copy</span>
+    {color.source === "derived" && <span class="flag">derived</span>}
   </span>
   <span class="meta">
     <strong>{name}</strong>
@@ -59,6 +60,25 @@ const ink = lum > 0.55 ? "#111" : "#fff";
     font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
     font-size: 0.72rem;
     font-weight: 600;
+  }
+
+  .swatch.derived {
+    border-style: dashed;
+    border-color: color-mix(in srgb, var(--orange) 55%, var(--border));
+  }
+
+  .chip .flag {
+    position: absolute;
+    top: 0.4rem;
+    left: 0.5rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .chip {
+    position: relative;
   }
 
   .chip .copied {
