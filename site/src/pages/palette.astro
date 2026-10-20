@@ -3,15 +3,18 @@ import ContrastTable from "../components/ContrastTable.astro";
 import Swatch from "../components/Swatch.astro";
 import SyntaxPreview from "../components/SyntaxPreview.astro";
 import { hex, palette } from "../data/palette.ts";
+import { REPO } from "../data/targets.ts";
 import Base from "../layouts/Base.astro";
 
-const groups: [string, string[]][] = [
+const groups: [string, string, string[]][] = [
   [
+    "surfaces",
     "Surfaces",
     ["bg", "bgPanel", "bgDeep", "cursorLine", "braceMatch", "selection", "border", "borderMuted"],
   ],
-  ["Text", ["fg", "fgMuted", "fgDim", "comment", "caret"]],
+  ["text", "Text", ["fg", "fgMuted", "fgDim", "comment", "caret"]],
   [
+    "accents",
     "Accents",
     [
       "blue",
@@ -31,59 +34,220 @@ const groups: [string, string[]][] = [
     ],
   ],
   [
+    "tints",
     "Search & tool tints",
     ["searchBg", "searchFg", "toolPending", "toolSuccess", "toolError", "customMessage"],
   ],
 ];
 const syntaxRows = Object.entries(palette.syntax);
+const ansiRows = Object.entries(palette.ansi);
+const derived = Object.values(palette.colors).filter((c) => c.source === "derived").length;
 ---
-<Base title="Bigface palette">
-  <h1>Palette</h1>
-  <p>
-    Every theme is generated from <code>palette/bigface.json</code>. Colours marked with an
-    original <code>OPTION#FIELD</code> label come straight from the 2018 JetBrains scheme and are
-    never adjusted. Those marked <span class="derived">derived</span> are blends the scheme has no
-    equivalent for.
-  </p>
 
-  <SyntaxPreview terminal />
+<Base title="Bigface palette" description="Every colour in the Bigface theme, with the original JetBrains source for each one.">
+  <section class="pal-hero" data-reveal>
+    <p class="eyebrow">the source of truth</p>
+    <h1>One palette.<br /><span class="grad">Nothing else.</span></h1>
+    <p class="lead">
+      Every theme in the repo is generated from <code>palette/bigface.json</code>. Colours labelled
+      with an original <code>OPTION#FIELD</code> come straight from the 2018 JetBrains scheme and are
+      never adjusted. The ones marked <span class="derived">derived</span> are blends the scheme has
+      no equivalent for.
+    </p>
+    <div class="counts">
+      <span><strong>{Object.keys(palette.colors).length}</strong> colours</span>
+      <span><strong>{ansiRows.length}</strong> ANSI</span>
+      <span><strong>{syntaxRows.length}</strong> syntax roles</span>
+      <span><strong>{derived}</strong> derived</span>
+    </div>
+  </section>
 
-  {groups.map(([title, names]) => (
-    <>
-      <h2>{title}</h2>
+  <div class="preview" data-reveal>
+    <SyntaxPreview terminal />
+  </div>
+
+  <nav class="subnav" aria-label="Palette sections">
+    {groups.map(([id, title]) => <a href={`#${id}`}>{title}</a>)}
+    <a href="#ansi">Terminal</a>
+    <a href="#syntax">Syntax</a>
+    <a href="#contrast">Contrast</a>
+  </nav>
+
+  {groups.map(([id, title, names]) => (
+    <section id={id} class="group" data-reveal>
+      <h2>{title} <span class="count">{names.length}</span></h2>
       <div class="swatches">
         {names.map((n) => <Swatch name={n} color={palette.colors[n]!} />)}
       </div>
-    </>
+    </section>
   ))}
 
-  <h2>Terminal (ANSI)</h2>
-  <div class="swatches">
-    {Object.entries(palette.ansi).map(([n, c]) => <Swatch name={n} color={c} />)}
-  </div>
+  <section id="ansi" class="group" data-reveal>
+    <h2>Terminal (ANSI) <span class="count">{ansiRows.length}</span></h2>
+    <div class="swatches">
+      {ansiRows.map(([n, c]) => <Swatch name={n} color={c} />)}
+    </div>
+  </section>
 
-  <h2>Syntax roles</h2>
-  <table class="roles">
-    <thead><tr><th>Role</th><th>Colour</th><th>Hex</th></tr></thead>
-    <tbody>
-      {syntaxRows.map(([role, name]) => (
-        <tr><td>{role}</td><td><i style={`background:${hex(name)}`} /> {name}</td><td><code>{hex(name)}</code></td></tr>
-      ))}
-    </tbody>
-  </table>
+  <section id="syntax" class="group" data-reveal>
+    <h2>Syntax roles <span class="count">{syntaxRows.length}</span></h2>
+    <table class="roles">
+      <thead>
+        <tr><th>Role</th><th>Colour</th><th>Hex</th></tr>
+      </thead>
+      <tbody>
+        {syntaxRows.map(([role, name]) => (
+          <tr>
+            <td class="role">{role}</td>
+            <td><i style={`background:${hex(name)}`} /> {name}</td>
+            <td><code>{hex(name)}</code></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
 
-  <h2>Contrast</h2>
-  <p class="muted">
-    Informational only. The colours are kept as designed, so a few roles (<code>fgDim</code>,
-    <code>comment</code>) sit below the WCAG 4.5:1 body-text guideline by intent.
+  <section id="contrast" class="group" data-reveal>
+    <h2>Contrast</h2>
+    <p class="muted">
+      Informational only. The colours are kept as designed, so a few roles (<code>fgDim</code>,
+      <code>comment</code>) sit below the WCAG 4.5:1 body-text guideline by intent.
+    </p>
+    <ContrastTable />
+  </section>
+
+  <p class="dim foot" data-reveal>
+    Raw file:
+    <a href={`${REPO}/blob/main/palette/bigface.json`}>palette/bigface.json</a> ·
+    <a href={`${REPO}/blob/main/src/targets.ts`}>generator targets</a> · Click any swatch to copy its
+    hex.
   </p>
-  <ContrastTable />
 </Base>
 
 <style>
-  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .7rem; }
-  .derived { color: var(--orange); }
-  .roles { width: 100%; border-collapse: collapse; font-size: .9rem; }
-  .roles th, .roles td { text-align: left; padding: .4rem .6rem; border-bottom: 1px solid var(--border-muted); }
-  .roles i { display: inline-block; width: .8em; height: .8em; border-radius: 3px; }
+  .pal-hero {
+    padding-top: clamp(0.5rem, 3vw, 2rem);
+  }
+
+  .pal-hero h1 {
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+    font-weight: 800;
+    line-height: 1.02;
+  }
+
+  .counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.4rem 0 0;
+  }
+
+  .counts span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: rgba(126, 176, 240, 0.04);
+  }
+
+  .counts strong {
+    color: var(--fg);
+    font-family: var(--font-mono);
+  }
+
+  .preview {
+    margin: 2rem 0 0;
+    max-width: 640px;
+  }
+
+  .subnav {
+    position: sticky;
+    top: 3.9rem;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 2.2rem 0 0;
+    padding: 0.55rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(6, 16, 32, 0.82);
+    backdrop-filter: blur(14px);
+    font-size: 0.8rem;
+  }
+
+  .subnav a {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    color: var(--muted);
+  }
+
+  .subnav a:hover {
+    color: var(--fg);
+    background: rgba(126, 176, 240, 0.1);
+  }
+
+  .group {
+    margin-top: 2.8rem;
+  }
+
+  .group h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+    margin-bottom: 1rem;
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.7rem;
+  }
+
+  .derived {
+    color: var(--orange);
+  }
+
+  .roles {
+    max-width: 640px;
+  }
+
+  .roles .role {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .roles i {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    border-radius: 3px;
+    vertical-align: -0.06em;
+    margin-right: 0.3rem;
+  }
+
+  .foot {
+    margin-top: 3rem;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 700px) {
+    .subnav {
+      position: static;
+      border-radius: 16px;
+    }
+  }
 </style>

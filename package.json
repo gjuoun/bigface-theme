@@ -17,7 +17,9 @@
     "check": "bun run typecheck && bun run lint && bun test src site/src",
     "site:dev": "bun run --cwd site dev",
     "site:build": "bun run --cwd site build",
-    "site:preview": "bun run --cwd site preview"
+    "site:preview": "bun run --cwd site preview",
+    "brand": "uv run --with cairosvg --with pillow python3 brand/export-avatar.py",
+    "brand:check": "uv run --with cairosvg --with pillow python3 brand/validate-avatar.py"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.0",

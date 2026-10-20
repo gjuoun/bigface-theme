@@ -106,3 +106,26 @@ test("the Obsidian page shows a real screenshot that exists and matches its decl
   expect(buf.length).toBeLessThan(400 * 1024);
   expect(html).toMatch(/alt="Obsidian in reading view/);
 });
+
+test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 social card", () => {
+  const svg = readFileSync(join(dist, "favicon.svg"), "utf8");
+  expect(svg).toContain("<svg");
+  expect(svg).toContain('viewBox="0 0 512 512"');
+  expect(svg).toContain("Bigface polar bear mark");
+
+  for (const icon of ["favicon-32.png", "apple-touch-icon.png"]) {
+    const buf = readFileSync(join(dist, icon));
+    expect(buf.subarray(1, 4).toString(), icon).toBe("PNG");
+  }
+
+  const og = readFileSync(join(dist, "img/og.png"));
+  expect(og.subarray(1, 4).toString()).toBe("PNG");
+  expect(og.readUInt32BE(16)).toBe(1200);
+  expect(og.readUInt32BE(20)).toBe(630);
+
+  const home = page("");
+  expect(home).toContain('rel="icon"');
+  expect(home).toContain("img/bigface-avatar.svg");
+  expect(home).toContain('property="og:image"');
+  expect(home).toContain("img/og.png");
+});

@@ -1,6 +1,7 @@
 ---
+import "../styles/global.css";
 import { hex } from "../data/palette.ts";
-import { REPO } from "../data/targets.ts";
+import { REPO, targets } from "../data/targets.ts";
 
 interface Props {
   title: string;
@@ -9,77 +10,227 @@ interface Props {
 const { title, description = "Bigface — one dark palette, ported to the tools you use." } =
   Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const origin = "https://gjuoun.github.io";
+
+// Palette-true accents only. The site chrome lives in global.css; every colour that stands for
+// the theme itself is read from palette/bigface.json at build time so it can never drift.
 const vars = {
-  "--bg": hex("bg"),
-  "--bg-panel": hex("bgPanel"),
-  "--bg-deep": hex("bgDeep"),
-  "--fg": hex("fg"),
-  "--muted": hex("fgMuted"),
-  "--dim": hex("fgDim"),
-  "--border": hex("border"),
-  "--border-muted": hex("borderMuted"),
   "--blue": hex("blue"),
-  "--lime": hex("lime"),
+  "--sky": hex("skyBlue"),
+  "--cyan": hex("cyan"),
   "--green": hex("green"),
+  "--lime": hex("lime"),
   "--yellow": hex("yellow"),
   "--orange": hex("burntOrange"),
   "--pink": hex("pink"),
-  "--cyan": hex("cyan"),
   "--purple": hex("purple"),
-  "--comment": hex("comment"),
+  "--cream": hex("fg"),
+  "--palette-bg": hex("bg"),
+  "--palette-panel": hex("bgPanel"),
+  "--palette-deep": hex("bgDeep"),
 };
 const style = Object.entries(vars)
   .map(([k, v]) => `${k}:${v}`)
   .join(";");
 ---
+
 <!doctype html>
 <html lang="en" style={style}>
   <head>
     <meta charset="utf-8" />
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content={hex("bg")} />
+    <meta name="theme-color" content="#050d1b" />
     <title>{title}</title>
+
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <link rel="icon" href={`${base}/favicon-32.png`} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${origin}${base}/img/og.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={`${origin}${base}/img/og.png`} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+    />
   </head>
   <body>
-    <header class="top">
-      <a class="brand" href={`${base}/`}>Bigface</a>
-      <nav>
-        <a href={`${base}/#apps`}>Apps</a>
-        <a href={`${base}/palette/`}>Palette</a>
-        <a href={REPO}>GitHub</a>
-      </nav>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="top" id="site-header">
+      <div class="wrap bar">
+        <a class="brand" href={`${base}/`}>
+          <img src={`${base}/img/bigface-avatar.svg`} alt="" width="34" height="34" />
+          Bigface
+        </a>
+        <nav aria-label="Main">
+          <a href={`${base}/#apps`}>Apps</a>
+          <a href={`${base}/palette/`}>Palette</a>
+          <a href={`${base}/#install`}>Install</a>
+          <a class="cta" href={REPO}>GitHub</a>
+        </nav>
+      </div>
     </header>
-    <main><slot /></main>
+    <main id="main"><slot /></main>
     <footer>
-      <span>Bigface — MIT licensed. Started in 2018 as a JetBrains scheme.</span>
-      <a href={REPO}>github.com/gjuoun/bigface-theme</a>
+      <div class="inner">
+        <div>
+          <div class="mark">
+            <img src={`${base}/img/bigface-avatar.svg`} alt="" width="40" height="40" />
+            Bigface
+          </div>
+          <p class="dim" style="margin:.6rem 0 0;font-size:.85rem;max-width:34ch">
+            One dark palette, {targets.length} ports, no per-tool adjustments. Started in 2018 as a
+            JetBrains scheme.
+          </p>
+        </div>
+        <nav aria-label="Footer">
+          <a href={`${base}/#apps`}>Apps</a>
+          <a href={`${base}/palette/`}>Palette</a>
+          <a href={`${base}/#install`}>Install</a>
+          <a href={`${base}/install.sh`}>install.sh</a>
+          <a href={REPO}>GitHub</a>
+          <a href={`${REPO}/blob/main/LICENSE`}>MIT licence</a>
+        </nav>
+      </div>
     </footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const toast = document.getElementById("toast");
+      let toastTimer: number | undefined;
+
+      const say = (message: string) => {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.remove("show"), 1900);
+      };
+
+      // Copy anything carrying data-copy; buttons without data-swap keep their own label.
+      document.addEventListener("click", async (event) => {
+        const target = event.target as HTMLElement | null;
+        const trigger = target?.closest?.<HTMLElement>("[data-copy]");
+        if (!trigger) return;
+        event.preventDefault();
+        const value = trigger.getAttribute("data-copy") ?? "";
+        try {
+          await navigator.clipboard.writeText(value);
+        } catch {
+          const box = document.createElement("textarea");
+          box.value = value;
+          document.body.append(box);
+          box.select();
+          document.execCommand("copy");
+          box.remove();
+        }
+        const label = trigger.getAttribute("data-label") ?? "";
+        trigger.classList.add("done");
+        if (trigger.dataset.swap !== "off" && label) trigger.textContent = "copied";
+        const shown = value.length > 44 ? `${value.slice(0, 44)}…` : value;
+        say(`copied ${shown}`);
+        window.setTimeout(() => {
+          trigger.classList.remove("done");
+          if (trigger.dataset.swap !== "off" && label) trigger.textContent = label;
+        }, 1500);
+      });
+
+      // Header gains its hairline only once the page has moved.
+      const header = document.getElementById("site-header");
+      const onScroll = () => header?.classList.toggle("scrolled", window.scrollY > 8);
+      onScroll();
+      addEventListener("scroll", onScroll, { passive: true });
+
+      // Reveal on scroll.
+      const revealables = document.querySelectorAll("[data-reveal]");
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add("in");
+              io.unobserve(entry.target);
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        for (const el of revealables) io.observe(el);
+      } else {
+        for (const el of revealables) el.classList.add("in");
+      }
+
+      // Cursor spotlight on cards, plus a gentle parallax for the hero stage.
+      if (matchMedia("(pointer: fine)").matches) {
+        for (const card of document.querySelectorAll<HTMLElement>(".spotlight")) {
+          card.addEventListener("pointermove", (event) => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+            card.style.setProperty("--my", `${event.clientY - rect.top}px`);
+          });
+        }
+        const stage = document.querySelector<HTMLElement>("[data-parallax]");
+        if (stage) {
+          const layers = [...stage.querySelectorAll<HTMLElement>("[data-depth]")];
+          stage.addEventListener("pointermove", (event) => {
+            const rect = stage.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width - 0.5;
+            const y = (event.clientY - rect.top) / rect.height - 0.5;
+            for (const layer of layers) {
+              const depth = Number(layer.dataset.depth ?? 0);
+              layer.style.transform = `translate3d(${x * depth * 26}px, ${y * depth * 26}px, 0)`;
+            }
+          });
+          stage.addEventListener("pointerleave", () => {
+            for (const layer of layers) layer.style.transform = "";
+          });
+        }
+      }
+
+      // Tab groups: buttons carry data-tab + aria-controls, panels carry ids.
+      for (const group of document.querySelectorAll<HTMLElement>("[data-tabs]")) {
+        const buttons = [...group.querySelectorAll<HTMLButtonElement>("[data-tab]")];
+        const select = (button: HTMLButtonElement) => {
+          for (const other of buttons) {
+            const on = other === button;
+            other.setAttribute("aria-selected", String(on));
+            const panel = document.getElementById(other.getAttribute("aria-controls") ?? "");
+            if (panel) panel.hidden = !on;
+          }
+        };
+        for (const button of buttons) button.addEventListener("click", () => select(button));
+        const initial = buttons.find((b) => b.getAttribute("aria-selected") === "true") ?? buttons[0];
+        if (initial) select(initial);
+      }
+
+      // App grid filter.
+      for (const filter of document.querySelectorAll<HTMLElement>("[data-filter]")) {
+        const chips = [...filter.querySelectorAll<HTMLButtonElement>("[data-kind]")];
+        const grid = document.querySelector<HTMLElement>("[data-cards]");
+        if (!grid) continue;
+        for (const chip of chips) {
+          chip.addEventListener("click", () => {
+            const kind = chip.dataset.kind ?? "all";
+            for (const other of chips) {
+              other.setAttribute("aria-pressed", String(other === chip));
+            }
+            for (const card of grid.querySelectorAll<HTMLElement>("[data-card-kind]")) {
+              card.hidden = kind !== "all" && card.dataset.cardKind !== kind;
+            }
+          });
+        }
+      }
+    </script>
   </body>
 </html>
-
-<style is:global>
-  * { box-sizing: border-box; }
-  html { background: var(--bg); color: var(--fg); font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
-  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-  main { flex: 1; width: min(1040px, 100% - 2.5rem); margin: 0 auto; padding: 2rem 0 4rem; }
-  a { color: var(--blue); text-decoration: none; }
-  a:hover { color: var(--lime); }
-  h1, h2, h3 { color: var(--lime); line-height: 1.2; margin: 2rem 0 .75rem; }
-  h1 { font-size: 2.6rem; margin-top: 0; }
-  h2 { font-size: 1.5rem; }
-  h3 { font-size: 1.1rem; color: var(--fg); }
-  code, pre, kbd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .9em; }
-  code { color: var(--yellow); background: var(--bg-deep); padding: .1em .35em; border-radius: 4px; }
-  pre { background: var(--bg-deep); border: 1px solid var(--border-muted); border-radius: 8px; padding: 1rem; overflow-x: auto; line-height: 1.5; }
-  pre code { background: none; padding: 0; color: inherit; }
-  .top { display: flex; justify-content: space-between; align-items: center; width: min(1040px, 100% - 2.5rem); margin: 0 auto; padding: 1.25rem 0; border-bottom: 1px solid var(--border-muted); }
-  .top nav { display: flex; gap: 1.25rem; }
-  .brand { font-weight: 700; font-size: 1.15rem; color: var(--fg); letter-spacing: .02em; }
-  footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; width: min(1040px, 100% - 2.5rem); margin: 0 auto; padding: 1.5rem 0; border-top: 1px solid var(--border-muted); color: var(--muted); font-size: .9rem; }
-  .muted { color: var(--muted); }
-  .pill { display: inline-block; font-size: .75rem; padding: .1rem .55rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
-  .pill.tool { color: var(--green); border-color: var(--green); }
-  .pill.schema { color: var(--cyan); border-color: var(--cyan); }
-  .pill.format { color: var(--orange); border-color: var(--orange); }
-</style>

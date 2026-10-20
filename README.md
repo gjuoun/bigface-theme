@@ -6,6 +6,11 @@ generated for your terminal, editors, shell and notes from [`palette/bigface.jso
 
 Site, previews and install steps: **https://gjuoun.github.io/bigface-theme/**
 
+The site is a **blue stage**, not a copy of the theme's own background: every swatch, code sample and
+preview on it is the exact palette, but the chrome is deep blue so the colours read as an object. The
+mark — a polar bear on a blue field — and its export/validation pipeline live in
+[`brand/`](brand/README.md).
+
 | | |
 |---|---|
 | Background | `#252925` |
@@ -68,6 +73,8 @@ matches the tool's documented format; it was not opened in the app.
 
 ```sh
 bun install
+DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib bun run brand        # mark → favicons, site copies, OG card
+DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib bun run brand:check  # sizes, opacity, contrast, ink survival
 bun run themes      # regenerate themes/ from the palette
 bun run contrast    # print contrast ratios (informational)
 bun run check       # typecheck + biome + all tests (tools that aren't installed are skipped)

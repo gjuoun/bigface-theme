@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Bigface — one dark palette, fourteen ports">
+  <defs>
+    <linearGradient id="og-bg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="630">
+      <stop offset="0" stop-color="#061426"/>
+      <stop offset="0.55" stop-color="#0A2247"/>
+      <stop offset="1" stop-color="#04101F"/>
+    </linearGradient>
+    <radialGradient id="og-glow" gradientUnits="userSpaceOnUse" cx="230" cy="315" r="330">
+      <stop offset="0" stop-color="#1E7BE0" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#1E7BE0" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="og-mark">
+      <rect x="80" y="165" width="300" height="300" rx="72"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#og-bg)"/>
+  <rect width="1200" height="630" fill="url(#og-glow)"/>
+
+  <g clip-path="url(#og-mark)">
+    <image href="exports/bigface-avatar-512.png" xlink:href="exports/bigface-avatar-512.png" x="80" y="165" width="300" height="300"/>
+  </g>
+  <rect x="80" y="165" width="300" height="300" rx="72" fill="none" stroke="#2E7BE6" stroke-width="2" stroke-opacity="0.55"/>
+
+  <text x="440" y="330" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="124" font-weight="700" letter-spacing="-4" fill="#EAF4FF">Bigface</text>
+  <text x="446" y="392" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="600" fill="#00B0FF">One dark palette. Fourteen ports.</text>
+  <text x="446" y="446" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="25" fill="#8FB6DE">Terminal, editors, shell and notes — one palette file.</text>
+
+  <g>
+    <rect x="446" y="486" width="46" height="46" rx="10" fill="#00B0FF"/>
+    <rect x="502" y="486" width="46" height="46" rx="10" fill="#C6FF00"/>
+    <rect x="558" y="486" width="46" height="46" rx="10" fill="#E5E500"/>
+    <rect x="614" y="486" width="46" height="46" rx="10" fill="#FC5D23"/>
+    <rect x="670" y="486" width="46" height="46" rx="10" fill="#66D9EF"/>
+    <rect x="726" y="486" width="46" height="46" rx="10" fill="#F52670"/>
+    <rect x="782" y="486" width="46" height="46" rx="10" fill="#AE81FF"/>
+    <rect x="838" y="486" width="46" height="46" rx="10" fill="#D9D9D4"/>
+  </g>
+
+  <text x="446" y="572" font-family="SF Mono, Menlo, monospace" font-size="24" fill="#7EA6D8">gjuoun.github.io/bigface-theme</text>
+</svg>

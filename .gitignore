@@ -1,8 +1,10 @@
 node_modules
 site/dist
 site/.astro
+.shots
 *.vsix
 .DS_Store
 public/themes
 public/downloads
 public/install.sh
+preview-512.png
