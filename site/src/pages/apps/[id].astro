@@ -57,13 +57,24 @@ const next = targets[(index + 1) % targets.length]!;
           loading="lazy"
         />
         <figcaption class="dim">
-          A real screenshot: Obsidian 1.14.4, reading view, Bigface theme.
+          {target.screenshot.caption ?? `A real screenshot: ${target.name}, Bigface applied.`}
         </figcaption>
       </figure>
     ) : (
       <SyntaxPreview terminal={target.terminalPreview} />
     )}
   </section>
+
+  {target.market && (
+    <section class="market card" data-reveal>
+      <div>
+        <p class="eyebrow">published</p>
+        <strong>{target.market.label}</strong>
+        <span class="dim">{target.name} installs and updates it from its own gallery.</span>
+      </div>
+      <a class="btn" href={target.market.url}>Open listing <span aria-hidden="true">↗</span></a>
+    </section>
+  )}
 
   <section id="install" data-reveal>
     <h2>Install</h2>
@@ -194,6 +205,31 @@ const next = targets[(index + 1) % targets.length]!;
 
   .preview {
     margin: 1.8rem 0 0;
+  }
+
+  .market {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1.6rem 0 0;
+    padding: 1rem 1.2rem;
+  }
+
+  .market div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .market strong {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+  }
+
+  .market .eyebrow {
+    margin-bottom: 0.25rem;
   }
 
   .shot {

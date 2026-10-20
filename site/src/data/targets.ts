@@ -14,7 +14,16 @@ export interface Target {
   check: { level: Check; text: string };
   terminalPreview: boolean;
   /** A real screenshot of the theme in the app (under public/img/). */
-  screenshot?: { file: string; alt: string; width: number; height: number };
+  screenshot?: {
+    file: string;
+    alt: string;
+    width: number;
+    height: number;
+    /** Overrides the default "a real screenshot" line. */
+    caption?: string;
+  };
+  /** The platform's own gallery listing, when the theme is published there. */
+  market?: { label: string; url: string };
 }
 
 export const REPO = "https://github.com/gjuoun/bigface-theme";
@@ -130,6 +139,10 @@ export const targets: Target[] = [
       text: "Regenerated from the palette; colour for colour identical to the original scheme file.",
     },
     terminalPreview: false,
+    market: {
+      label: "JetBrains Marketplace",
+      url: "https://plugins.jetbrains.com/plugin/10988-bigface-color-scheme",
+    },
   },
   {
     id: "zellij",
