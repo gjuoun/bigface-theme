@@ -1,0 +1,37 @@
+name: Deploy to Cloudflare Pages
+
+# The GitHub Pages workflow builds the project-path site (/bigface-theme/). This one builds the same
+# pages for a root domain (/) and pushes them to the bigface-theme Pages project behind
+# https://bigface.qqntt.com/. Both deploys run on every push to main.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run site:build:pages
+
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 20045ddbb9002faab76593c79956a347
+          command: pages deploy site/dist --project-name bigface-theme --branch main

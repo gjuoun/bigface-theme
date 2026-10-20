@@ -4,7 +4,8 @@ A dark color theme with **one palette and 14 ports**. It started in 2018 as a
 [JetBrains scheme](https://plugins.jetbrains.com/plugin/10988-bigface-color-scheme) and is now
 generated for your terminal, editors, shell and notes from [`palette/bigface.json`](palette/bigface.json).
 
-Site, previews and install steps: **https://gjuoun.github.io/bigface-theme/**
+Site, previews and install steps: **https://bigface.qqntt.com/** (Cloudflare Pages at the root;
+the same build is mirrored at <https://gjuoun.github.io/bigface-theme/>).
 
 The site is a **blue stage**, not a copy of the theme's own background: every swatch, code sample and
 preview on it is the exact palette, but the chrome is deep blue so the colours read as an object. The
@@ -27,17 +28,17 @@ are low-contrast by design.
 ## Install
 
 ```sh
-curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh
+curl -fsSL https://bigface.qqntt.com/install.sh | sh
 ```
 
 With no arguments it is interactive: it asks whether to install or uninstall, shows every app marked
 `installed` or `detected`, and lets you pick by number or name (Enter = all detected). Or skip the questions:
 
 ```sh
-curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- ghostty tmux zed
-curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- all                # every supported app it detects
-curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- --uninstall all   # remove what it installed
-curl -fsSL https://gjuoun.github.io/bigface-theme/install.sh | sh -s -- --list
+curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty tmux zed
+curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- all                # every supported app it detects
+curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --uninstall all   # remove what it installed
+curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --list
 ```
 
 The installer writes (and on uninstall removes) Bigface's own files only, for example
