@@ -18,6 +18,7 @@
     "site:dev": "bun run --cwd site dev",
     "site:build": "bun run --cwd site build",
     "site:preview": "bun run --cwd site preview",
+    "site:build:pages": "SITE_BASE=/ SITE_ORIGIN=https://bigface.qqntt.com PUBLIC_SITE_URL=https://bigface.qqntt.com bun run --cwd site build",
     "brand": "uv run --with cairosvg --with pillow python3 brand/export-avatar.py",
     "brand:check": "uv run --with cairosvg --with pillow python3 brand/validate-avatar.py"
   },
