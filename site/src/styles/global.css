@@ -54,8 +54,9 @@
   --r-lg: 24px;
   --max: 1180px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  /* One family, two modes: Recursive Linear (CASL 0) as sans, and the same file with the MONO axis
-     on for code. Set on the element, because the axis is a property of the rendered text. */
+  /* One family, three settings: Casual (CASL 1) for display and body, and the same file with the
+     MONO axis on plus CASL 0 for code, so source stays Linear and machine-aligned. The axes are set
+     on the element, because they are properties of the rendered text. */
   --font-display: "Recursive", "Helvetica Neue", system-ui, sans-serif;
   --font-body: "Recursive", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Recursive", ui-monospace, "SF Mono", Menlo, monospace;
@@ -70,10 +71,10 @@
 html {
   background: var(--bg);
   color: var(--fg);
-  font: 16px / 1.65 var(--font-body);
+  font: 450 16px / 1.65 var(--font-body);
   font-variation-settings:
     "MONO" 0,
-    "CASL" 0,
+    "CASL" 1,
     "slnt" 0,
     "CRSV" 0.5;
   -webkit-text-size-adjust: 100%;
@@ -255,7 +256,7 @@ h3 {
   font-family: var(--font-display);
   font-weight: 700;
   line-height: 1.08;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   margin: 2.5rem 0 0.9rem;
   text-wrap: balance;
 }
