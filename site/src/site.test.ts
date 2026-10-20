@@ -122,10 +122,19 @@ test("the site only ships colours that exist in the palette", () => {
       c.hex.toLowerCase(),
     ),
   );
+  const triplets = new Set(
+    [...known].map((h) => [1, 3, 5].map((i) => Number.parseInt(h.slice(i, i + 2), 16)).join(",")),
+  );
   const scan = (file: string) => {
     const text = readFileSync(file, "utf8");
     for (const m of text.matchAll(/#[0-9a-fA-F]{6}\b/g)) {
       expect(known.has(m[0].toLowerCase()), `${file}: ${m[0]}`).toBe(true);
+    }
+    // rgb()/rgba() triples are palette colours too — a stray rgba(5,13,27,…) once slipped past.
+    for (const m of text.matchAll(/rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/g)) {
+      expect(triplets.has(`${m[1]},${m[2]},${m[3]}`), `${file}: rgb(${m[1]},${m[2]},${m[3]})`).toBe(
+        true,
+      );
     }
   };
   scan(join(dist, "index.html"));

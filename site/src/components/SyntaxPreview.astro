@@ -209,6 +209,7 @@ const render = (line: Tok[]): string =>
     background: linear-gradient(to bottom, color-mix(in srgb, var(--caret) 5.0%, transparent), transparent);
     border-bottom: 1px solid rgba(var(--line-rgb), 0.14);
     font-family: var(--font-mono);
+    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
     font-size: 0.72rem;
     color: #6e6b68;
   }
@@ -269,6 +270,7 @@ const render = (line: Tok[]): string =>
     border-top: 1px solid rgba(var(--line-rgb), 0.14);
     padding: 0.6rem 1rem 0.7rem;
     font-family: var(--font-mono);
+    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
     font-size: 0.75rem;
     line-height: 1.6;
   }
