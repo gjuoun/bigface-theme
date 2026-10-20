@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import { hex } from "../data/palette.ts";
+import { stage, stageLine } from "../data/stage.ts";
 import { REPO, targets } from "../data/targets.ts";
 
 interface Props {
@@ -13,9 +14,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 // Set by `site` in astro.config.mjs, so the og:image is right on both deployments.
 const origin = Astro.site ? new URL(Astro.site).origin : "";
 
-// Palette-true accents only. The site chrome lives in global.css; every colour that stands for
-// the theme itself is read from palette/bigface.json at build time so it can never drift.
-const vars = {
+// Accents are palette-true, and the stage (surfaces + ink) is derived from the palette's own blue
+// by stage.ts — so the only hand-authored values on the site are the step offsets in that file.
+const chrome = stage();
+const vars: Record<string, string> = {
+  "--bg": chrome.bg!,
+  "--bg-2": chrome.bg2!,
+  "--panel": chrome.panel!,
+  "--panel-2": chrome.panel2!,
+  "--fg": chrome.fg!,
+  "--muted": chrome.muted!,
+  "--dim": chrome.dim!,
+  "--line-rgb": stageLine(),
   "--blue": hex("blue"),
   "--sky": hex("skyBlue"),
   "--cyan": hex("cyan"),
@@ -44,7 +54,7 @@ const style = Object.entries(vars)
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#050d1b" />
+    <meta name="theme-color" content={chrome.bg} />
     <title>{title}</title>
 
     <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />

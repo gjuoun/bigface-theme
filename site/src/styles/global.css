@@ -3,15 +3,17 @@
    preview on these pages still uses the exact values from palette/bigface.json. */
 
 :root {
-  --bg: #050d1b;
-  --bg-2: #081426;
-  --panel: #0a1830;
-  --panel-2: #0d2140;
-  --fg: #eaf2fc;
-  --muted: #a5bcd8;
-  --dim: #8aa3c1;
-  --line: rgba(126, 176, 240, 0.14);
-  --line-strong: rgba(126, 176, 240, 0.28);
+  /* Derived from palette/bigface.json by site/src/data/stage.ts; these are only fallbacks. */
+  --bg: #010e19;
+  --bg-2: #011624;
+  --panel: #001b2d;
+  --panel-2: #00243a;
+  --fg: #e8f3fb;
+  --muted: #9fbed5;
+  --dim: #83a6be;
+  --line-rgb: 120, 172, 207;
+  --line: rgba(var(--line-rgb), 0.14);
+  --line-strong: rgba(var(--line-rgb), 0.28);
 
   --blue: #00b0ff;
   --cyan: #66d9ef;
@@ -84,8 +86,8 @@ body::after {
   pointer-events: none;
   opacity: 0.55;
   background-image:
-    linear-gradient(to right, rgba(126, 176, 240, 0.055) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(126, 176, 240, 0.055) 1px, transparent 1px);
+    linear-gradient(to right, rgba(var(--line-rgb), 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(var(--line-rgb), 0.055) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: radial-gradient(120% 90% at 50% 0%, #000 25%, transparent 78%);
 }
@@ -185,7 +187,7 @@ main {
 
 .top nav a:hover {
   color: var(--fg);
-  background: rgba(126, 176, 240, 0.1);
+  background: rgba(var(--line-rgb), 0.1);
 }
 
 .top nav a.cta {
@@ -304,7 +306,7 @@ kbd {
 
 :not(pre) > code {
   color: var(--yellow);
-  background: rgba(126, 176, 240, 0.08);
+  background: rgba(var(--line-rgb), 0.08);
   border: 1px solid var(--line);
   padding: 0.1em 0.4em;
   border-radius: 6px;
@@ -359,7 +361,7 @@ pre code {
 }
 
 .btn.ghost {
-  background: rgba(126, 176, 240, 0.06);
+  background: rgba(var(--line-rgb), 0.06);
   border-color: var(--line-strong);
   color: var(--fg);
   box-shadow: none;
@@ -442,7 +444,7 @@ pre code {
   border-radius: 999px;
   border: 1px solid var(--line-strong);
   color: var(--muted);
-  background: rgba(126, 176, 240, 0.05);
+  background: rgba(var(--line-rgb), 0.05);
   white-space: nowrap;
 }
 
@@ -481,7 +483,7 @@ pre code {
   padding: 0.35rem 0.6rem;
   border-radius: 999px;
   border: 1px solid var(--line-strong);
-  background: rgba(126, 176, 240, 0.08);
+  background: rgba(var(--line-rgb), 0.08);
   color: var(--muted);
   cursor: pointer;
   transition:
@@ -699,7 +701,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: rgba(126, 176, 240, 0.05);
+  background: rgba(var(--line-rgb), 0.05);
 }
 
 /* ---------- utility ---------- */

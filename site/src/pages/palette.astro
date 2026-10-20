@@ -151,7 +151,7 @@ const derived = Object.values(palette.colors).filter((c) => c.source === "derive
     border-radius: 999px;
     font-size: 0.78rem;
     color: var(--muted);
-    background: rgba(126, 176, 240, 0.04);
+    background: rgba(var(--line-rgb), 0.04);
   }
 
   .counts strong {
@@ -188,7 +188,7 @@ const derived = Object.values(palette.colors).filter((c) => c.source === "derive
 
   .subnav a:hover {
     color: var(--fg);
-    background: rgba(126, 176, 240, 0.1);
+    background: rgba(var(--line-rgb), 0.1);
   }
 
   .group {

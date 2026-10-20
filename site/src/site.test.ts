@@ -2,6 +2,7 @@ import { beforeAll, expect, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
+import { stage, stageHue, toOklch } from "./data/stage.ts";
 import { targets } from "./data/targets.ts";
 
 const siteDir = join(import.meta.dir, "..");
@@ -108,6 +109,27 @@ test("the Obsidian page shows a real screenshot that exists and matches its decl
   expect(w).toBeGreaterThanOrEqual(1200);
   expect(buf.length).toBeLessThan(400 * 1024);
   expect(html).toMatch(/alt="Obsidian in reading view/);
+});
+
+test("the site stage is derived from the palette's blue, not hand-picked", () => {
+  const chrome = stage();
+  const hue = stageHue();
+  // Every stage colour sits on the palette's blue hue, +/- rounding.
+  for (const [name, value] of Object.entries(chrome)) {
+    expect(Math.abs(toOklch(value).h - hue), `${name} ${value}`).toBeLessThan(1.5);
+  }
+  // Surfaces stay below the palette's own background in lightness; ink stays above it.
+  const paletteBg = toOklch("#252925").l;
+  for (const name of ["bg", "bg2", "panel", "panel2"]) {
+    expect(toOklch(chrome[name] as string).l, name).toBeLessThan(paletteBg);
+  }
+  for (const name of ["fg", "muted", "dim"]) {
+    expect(toOklch(chrome[name] as string).l, name).toBeGreaterThan(paletteBg);
+  }
+  // And the values the page actually ships are the derived ones.
+  const home = page("");
+  expect(home).toContain(chrome.bg as string);
+  expect(home).not.toContain("#050d1b");
 });
 
 test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 social card", () => {
