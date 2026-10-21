@@ -37,7 +37,7 @@ describe("scheme tokens match original XML", () => {
     const p = await loadPalette();
     const entries = [...Object.entries(p.colors), ...Object.entries(p.ansi)];
     const sourced = entries.filter(([, c]) => c.source.startsWith("jetbrains:"));
-    expect(sourced.length).toBeGreaterThan(20);
+    expect(sourced.length).toBe(20);
     const mismatches = sourced
       .map(([name, c]) => ({ name, want: lookupSource(xml, c.source), got: c.hex, src: c.source }))
       .filter((r) => r.want !== r.got);

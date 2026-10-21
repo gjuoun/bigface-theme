@@ -27,7 +27,7 @@ export const vscode: Target = {
       "editor.lineHighlightBackground": c("cursorLine"),
       "editor.selectionBackground": c("selection"),
       "editor.inactiveSelectionBackground": c("braceMatch"),
-      "editor.findMatchBackground": c("searchBg"),
+      "editor.findMatchBackground": c("selection"),
       "editor.findMatchHighlightBackground": c("braceMatch"),
       "editorLineNumber.foreground": c("fgDim"),
       "editorLineNumber.activeForeground": c("fg"),

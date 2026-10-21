@@ -21,8 +21,6 @@
     "burntOrange": "#fc5d23",
     "purple": "#ae81ff",
     "comment": "#75715e",
-    "searchBg": "#ffe792",
-    "searchFg": "#252621",
     "caret": "#f8f8f0"
   },
   "colors": {
@@ -39,8 +37,8 @@
     "thinkingText": "comment",
     "selectedBg": "braceMatch",
     "scrollbarThumb": "fgDim",
-    "searchMatchBg": "searchBg",
-    "searchMatchText": "searchFg",
+    "searchMatchBg": "selection",
+    "searchMatchText": "fg",
     "userMessageBg": "cursorLine",
     "userMessageText": "fg",
     "customMessageBg": "cursorLine",

@@ -32,7 +32,7 @@ export const vim: Target = {
       hi("VertSplit", c("borderMuted"), c("bg")),
       hi("WinSeparator", c("borderMuted"), c("bg")),
       hi("Visual", undefined, c("selection")),
-      hi("Search", c("searchFg"), c("searchBg")),
+      hi("Search", c("fg"), c("selection")),
       hi("IncSearch", c("bg"), c("burntOrange")),
       hi("MatchParen", c("fg"), c("braceMatch")),
       hi("Pmenu", c("fg"), c("cursorLine")),

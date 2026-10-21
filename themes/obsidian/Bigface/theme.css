@@ -74,7 +74,7 @@
   --text-warning: #ffeb3b;
   --text-error: #fc5d23;
   --text-selection: #64646499;
-  --text-highlight-bg: #ffe792;
+  --text-highlight-bg: #646464;
   --caret-color: #f8f8f0;
 
   /* Headings (lime like functions, then cyan and blue) */
@@ -197,7 +197,7 @@
 /* Highlights (==text==): dark text on the scheme's search-yellow. */
 .markdown-rendered mark,
 .cm-s-obsidian span.cm-highlight {
-  color: #252621;
+  color: #d9d9d4;
 }
 
 /* Empty tab ('no file open') title. */

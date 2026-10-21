@@ -34,7 +34,7 @@ export const micro: Target = {
       ["underlined", `"underline ${c("blue")},${bg}"`],
       ["error", `"bold ${c("burntOrange")},${bg}"`],
       ["todo", `"bold ${c("burntOrange")},${bg}"`],
-      ["hlsearch", fgbg(c("searchFg"), c("searchBg"))],
+      ["hlsearch", fgbg(c("fg"), c("selection"))],
       ["selection", fgbg(c("fg"), c("selection"))],
       ["statusline", fgbg(c("comment"), c("borderMuted"))],
       ["statusline.inactive", fgbg(c("fgDim"), c("borderMuted"))],

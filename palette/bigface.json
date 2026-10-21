@@ -78,14 +78,6 @@
       "hex": "#75715e",
       "source": "jetbrains:OC.LINE_COMMENT#FOREGROUND"
     },
-    "searchBg": {
-      "hex": "#ffe792",
-      "source": "jetbrains:TEXT_SEARCH_RESULT_ATTRIBUTES#BACKGROUND"
-    },
-    "searchFg": {
-      "hex": "#252621",
-      "source": "jetbrains:TEXT_SEARCH_RESULT_ATTRIBUTES#FOREGROUND"
-    },
     "caret": {
       "hex": "#f8f8f0",
       "source": "jetbrains:colors#CARET_COLOR"

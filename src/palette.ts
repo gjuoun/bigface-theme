@@ -38,8 +38,6 @@ export const REQUIRED_COLORS = [
   "burntOrange",
   "purple",
   "comment",
-  "searchBg",
-  "searchFg",
   "caret",
 ] as const;
 

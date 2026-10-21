@@ -53,7 +53,7 @@ export const zed: Target = {
       "tab_bar.background": c("borderMuted"),
       "tab.inactive_background": c("borderMuted"),
       "tab.active_background": c("bg"),
-      "search.match_background": `${c("searchBg")}60`,
+      "search.match_background": `${c("selection")}60`,
       "panel.background": c("borderMuted"),
       "panel.focused_border": c("blue"),
       "pane.focused_border": c("blue"),

@@ -24,7 +24,7 @@ export const tmux: Target = {
       `set -g clock-mode-colour "${c("blue")}"`,
       `set -g display-panes-colour "${c("fgDim")}"`,
       `set -g display-panes-active-colour "${c("burntOrange")}"`,
-      `set -g copy-mode-match-style "bg=${c("searchBg")},fg=${c("searchFg")}"`,
+      `set -g copy-mode-match-style "bg=${c("selection")},fg=${c("fg")}"`,
       `set -g copy-mode-current-match-style "bg=${c("burntOrange")},fg=${c("bg")}"`,
     ];
     return { "bigface.conf": `${lines.join("\n")}\n` };

@@ -20,7 +20,7 @@ hi ColorColumn guifg=NONE guibg=#333333 gui=NONE cterm=NONE
 hi VertSplit guifg=#333333 guibg=#252925 gui=NONE cterm=NONE
 hi WinSeparator guifg=#333333 guibg=#252925 gui=NONE cterm=NONE
 hi Visual guifg=NONE guibg=#646464 gui=NONE cterm=NONE
-hi Search guifg=#252621 guibg=#ffe792 gui=NONE cterm=NONE
+hi Search guifg=#d9d9d4 guibg=#646464 gui=NONE cterm=NONE
 hi IncSearch guifg=#252925 guibg=#fc5d23 gui=NONE cterm=NONE
 hi MatchParen guifg=#d9d9d4 guibg=#3b514d gui=NONE cterm=NONE
 hi Pmenu guifg=#d9d9d4 guibg=#3b3c32 gui=NONE cterm=NONE

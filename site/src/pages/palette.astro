@@ -31,7 +31,6 @@ const groups: [string, string, string[]][] = [
       "purple",
     ],
   ],
-  ["tints", "Search tints", ["searchBg", "searchFg"]],
 ];
 const syntaxRows = Object.entries(palette.syntax);
 const ansiRows = Object.entries(palette.ansi);
@@ -52,9 +51,9 @@ const colourCount = Object.keys(palette.colors).length;
     </p>
     <div class="counts">
       <span><strong>{Object.keys(palette.colors).length}</strong> colours</span>
-      <span><strong>{ansiRows.length}</strong> ANSI</span>
+      <span><strong>{ansiRows.length}</strong> ANSI slots, all aliases</span>
       <span><strong>{syntaxRows.length}</strong> syntax roles</span>
-      <span><strong>{colourCount + ansiRows.length}</strong> from the scheme</span>
+      <span><strong>{colourCount}</strong> distinct colours, total</span>
     </div>
   </section>
 
