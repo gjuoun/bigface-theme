@@ -21,7 +21,7 @@ themes {
         ribbon_selected {
             base "#252925"
             background "#00b0ff"
-            emphasis_0 "#f52670"
+            emphasis_0 "#fc5d23"
             emphasis_1 "#fc5d23"
             emphasis_2 "#c6ff00"
             emphasis_3 "#00c853"
@@ -29,7 +29,7 @@ themes {
         ribbon_unselected {
             base "#d9d9d4"
             background "#494848"
-            emphasis_0 "#f52670"
+            emphasis_0 "#fc5d23"
             emphasis_1 "#d9d9d4"
             emphasis_2 "#00b0ff"
             emphasis_3 "#c6ff00"
@@ -99,7 +99,7 @@ themes {
             emphasis_3 "#00b0ff"
         }
         exit_code_error {
-            base "#f52670"
+            base "#fc5d23"
             background "#252925"
             emphasis_0 "#fc5d23"
             emphasis_1 "#252925"
@@ -113,10 +113,10 @@ themes {
             player_4 "#fc5d23"
             player_5 "#00c853"
             player_6 "#66d9ef"
-            player_7 "#f52670"
+            player_7 "#fc5d23"
             player_8 "#e5e500"
-            player_9 "#81d4fa"
-            player_10 "#ff9800"
+            player_9 "#40c4ff"
+            player_10 "#ffeb3b"
         }
     }
 }

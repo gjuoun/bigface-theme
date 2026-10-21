@@ -26,7 +26,7 @@ export const slack: Target = {
       c("braceMatch"), // Hover Item
       c("fg"), // Text Color
       c("green"), // Active Presence
-      c("pink"), // Mention Badge
+      c("burntOrange"), // Mention Badge
     ];
     return { "theme.txt": `${values.join(",")}\n` };
   },

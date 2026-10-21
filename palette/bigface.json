@@ -38,10 +38,6 @@
       "hex": "#00b0ff",
       "source": "jetbrains:DEFAULT_KEYWORD#FOREGROUND"
     },
-    "skyBlue": {
-      "hex": "#81d4fa",
-      "source": "jetbrains:CONSOLE_BLUE_OUTPUT#FOREGROUND"
-    },
     "lightBlue": {
       "hex": "#40c4ff",
       "source": "jetbrains:DEFAULT_TAG#FOREGROUND"
@@ -58,10 +54,6 @@
       "hex": "#00c853",
       "source": "jetbrains:DEFAULT_IDENTIFIER#FOREGROUND"
     },
-    "limeGreen": {
-      "hex": "#8bc34a",
-      "source": "jetbrains:CONSOLE_GREEN_OUTPUT#FOREGROUND"
-    },
     "lime": {
       "hex": "#c6ff00",
       "source": "jetbrains:DEFAULT_FUNCTION_CALL#FOREGROUND"
@@ -74,17 +66,9 @@
       "hex": "#ffeb3b",
       "source": "jetbrains:DEFAULT_OPERATION_SIGN#FOREGROUND"
     },
-    "orange": {
-      "hex": "#ff9800",
-      "source": "jetbrains:LOG_WARNING_OUTPUT#FOREGROUND"
-    },
     "burntOrange": {
       "hex": "#fc5d23",
       "source": "jetbrains:DEFAULT_NUMBER#FOREGROUND"
-    },
-    "pink": {
-      "hex": "#f52670",
-      "source": "jetbrains:CONSOLE_ERROR_OUTPUT#FOREGROUND"
     },
     "purple": {
       "hex": "#ae81ff",
@@ -110,67 +94,67 @@
   "ansi": {
     "black": {
       "hex": "#494848",
-      "source": "jetbrains:colors#INDENT_GUIDE"
+      "source": "alias:border"
     },
     "red": {
-      "hex": "#f44336",
-      "source": "jetbrains:CONSOLE_RED_OUTPUT#FOREGROUND"
+      "hex": "#fc5d23",
+      "source": "alias:burntOrange"
     },
     "green": {
-      "hex": "#8bc34a",
-      "source": "jetbrains:CONSOLE_GREEN_OUTPUT#FOREGROUND"
+      "hex": "#00c853",
+      "source": "alias:green"
     },
     "yellow": {
-      "hex": "#ffeb3b",
-      "source": "jetbrains:CONSOLE_YELLOW_OUTPUT#FOREGROUND"
+      "hex": "#e5e500",
+      "source": "alias:yellow"
     },
     "blue": {
-      "hex": "#81d4fa",
-      "source": "jetbrains:CONSOLE_BLUE_OUTPUT#FOREGROUND"
+      "hex": "#00b0ff",
+      "source": "alias:blue"
     },
     "magenta": {
-      "hex": "#e91e63",
-      "source": "jetbrains:CONSOLE_MAGENTA_OUTPUT#FOREGROUND"
+      "hex": "#ae81ff",
+      "source": "alias:purple"
     },
     "cyan": {
-      "hex": "#00bcd4",
-      "source": "jetbrains:CONSOLE_CYAN_OUTPUT#FOREGROUND"
+      "hex": "#66d9ef",
+      "source": "alias:cyan"
     },
     "white": {
-      "hex": "#9e9e9e",
-      "source": "jetbrains:CONSOLE_GRAY_OUTPUT#FOREGROUND"
+      "hex": "#d9d9d4",
+      "source": "alias:fg"
     },
     "brightBlack": {
       "hex": "#6e6b68",
-      "source": "jetbrains:colors#LINE_NUMBERS_COLOR"
+      "source": "alias:fgDim"
     },
     "brightRed": {
-      "hex": "#ff0000",
-      "source": "jetbrains:CONSOLE_RED_BRIGHT_OUTPUT#FOREGROUND"
+      "hex": "#fc5d23",
+      "source": "alias:burntOrange"
     },
     "brightGreen": {
-      "hex": "#00ff00",
-      "source": "jetbrains:CONSOLE_GREEN_BRIGHT_OUTPUT#FOREGROUND"
+      "hex": "#c6ff00",
+      "source": "alias:lime"
     },
     "brightYellow": {
-      "hex": "#ccff90",
-      "source": "jetbrains:CONSOLE_YELLOW_BRIGHT_OUTPUT#FOREGROUND"
+      "hex": "#ffeb3b",
+      "source": "alias:brightYellow"
     },
     "brightBlue": {
       "hex": "#40c4ff",
-      "source": "jetbrains:CONSOLE_BLUE_BRIGHT_OUTPUT#FOREGROUND"
+      "source": "alias:lightBlue"
     },
     "brightMagenta": {
-      "hex": "#7e57c2",
-      "source": "jetbrains:CONSOLE_MAGENTA_BRIGHT_OUTPUT#FOREGROUND"
+      "hex": "#ae81ff",
+      "source": "alias:purple"
     },
     "brightCyan": {
-      "hex": "#00ffff",
-      "source": "jetbrains:CONSOLE_CYAN_BRIGHT_OUTPUT#FOREGROUND"
+      "hex": "#b3e5fc",
+      "source": "alias:paleBlue"
     },
     "brightWhite": {
-      "hex": "#ffffff",
-      "source": "jetbrains:CONSOLE_WHITE_OUTPUT#FOREGROUND"
+      "hex": "#f8f8f0",
+      "source": "alias:caret"
     }
   },
   "syntax": {

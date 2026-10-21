@@ -31,6 +31,7 @@ test("control: changing one token changes only that colour (and restores strippe
 
 test("two tokens that share a source must agree", async () => {
   const p = await loadPalette();
-  p.ansi.black.hex = "#010101"; // shares INDENT_GUIDE with colors.border
+  // border and ansi.black both come from INDENT_GUIDE; make them disagree.
+  p.ansi.black = { hex: "#010101", source: "jetbrains:colors#INDENT_GUIDE" };
   expect(() => renderJetBrains(p)).toThrow(/disagrees/);
 });

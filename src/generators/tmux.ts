@@ -15,7 +15,7 @@ export const tmux: Target = {
       `set -g window-status-style "bg=${c("borderMuted")},fg=${c("fgDim")}"`,
       `set -g window-status-current-style "bg=${c("cursorLine")},fg=${c("lime")},bold"`,
       `set -g window-status-activity-style "bg=${c("borderMuted")},fg=${c("burntOrange")}"`,
-      `set -g window-status-bell-style "bg=${c("pink")},fg=${c("bg")}"`,
+      `set -g window-status-bell-style "bg=${c("burntOrange")},fg=${c("bg")}"`,
       `set -g pane-border-style "fg=${c("border")}"`,
       `set -g pane-active-border-style "fg=${c("blue")}"`,
       `set -g message-style "bg=${c("cursorLine")},fg=${c("fg")}"`,

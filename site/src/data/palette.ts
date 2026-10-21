@@ -24,4 +24,6 @@ export const syntaxHex = (role: string): string => hex(palette.syntax[role] as s
 
 /** Where a colour comes from, for display. */
 export const sourceLabel = (c: Color): string =>
-  c.source === "derived" ? "derived" : c.source.replace("jetbrains:", "");
+  c.source.startsWith("alias:")
+    ? `→ ${c.source.slice("alias:".length)}`
+    : c.source.replace("jetbrains:", "");

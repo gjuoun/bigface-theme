@@ -47,7 +47,8 @@ describe("starship", () => {
   const have = Bun.which("starship") !== null;
   test("palette line comes before the table and names bigface", () => {
     expect(toml.indexOf('palette = "bigface"')).toBeLessThan(toml.indexOf("[palettes.bigface]"));
-    expect(toml).toContain('green          = "#8bc34a"');
+    expect(toml).toContain(`green          = "${p.ansi.green.hex}"`);
+    expect(toml).toContain(`bright-green   = "${p.ansi.brightGreen.hex}"`);
   });
   test.skipIf(!have)(
     "starship parses it and a `green` style renders with the palette colour",
@@ -62,7 +63,8 @@ describe("starship", () => {
       const cfg = await $`starship print-config palette`.env(env).quiet().nothrow();
       expect(cfg.stdout.toString()).toContain('palette = "bigface"');
       const out = await $`starship module character`.env(env).quiet().nothrow();
-      expect(out.stdout.toString()).toContain("38;2;139;195;74"); // #8bc34a
+      const [r, g, b] = [1, 3, 5].map((i) => Number.parseInt(p.ansi.green.hex.slice(i, i + 2), 16));
+      expect(out.stdout.toString()).toContain(`38;2;${r};${g};${b}`);
     },
   );
 });

@@ -17,10 +17,10 @@ const MAP: [key: string, from: ColorName | `ansi.${string}`, note: string][] = [
   ["surface_dim", "borderMuted", "inset surface"],
   ["green", "green", "success"],
   ["yellow", "yellow", "attention"],
-  ["red", "pink", "danger"],
+  ["red", "burntOrange", "danger"],
   ["blue", "blue", "accent blue"],
   ["teal", "cyan", "info"],
-  ["peach", "orange", "warning / severe"],
+  ["peach", "brightYellow", "warning / severe"],
   ["mauve", "purple", "merged / done"],
 ];
 

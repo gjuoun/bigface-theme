@@ -17,7 +17,8 @@ test("package.json contributes one dark theme pointing at the theme file", async
 test("theme uses the palette: editor background, keyword, string, ANSI red", async () => {
   const t = JSON.parse((await out())["themes/bigface-color-theme.json"] as string);
   expect(t.colors["editor.background"]).toBe("#252925");
-  expect(t.colors["terminal.ansiRed"]).toBe("#f44336");
+  const pal = await loadPalette();
+  expect(t.colors["terminal.ansiRed"]).toBe(pal.ansi.red.hex);
   const scope = (name: string) =>
     t.tokenColors.find((r: { scope: string[] }) => r.scope.includes(name)).settings.foreground;
   expect(scope("keyword")).toBe("#00b0ff");

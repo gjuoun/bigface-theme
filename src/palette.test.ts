@@ -36,7 +36,7 @@ describe("scheme tokens match original XML", () => {
   test("every jetbrains-sourced colour equals the original scheme value", async () => {
     const p = await loadPalette();
     const entries = [...Object.entries(p.colors), ...Object.entries(p.ansi)];
-    const sourced = entries.filter(([, c]) => c.source !== "derived");
+    const sourced = entries.filter(([, c]) => c.source.startsWith("jetbrains:"));
     expect(sourced.length).toBeGreaterThan(20);
     const mismatches = sourced
       .map(([name, c]) => ({ name, want: lookupSource(xml, c.source), got: c.hex, src: c.source }))

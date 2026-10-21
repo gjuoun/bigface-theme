@@ -6,7 +6,7 @@ set background=dark
 if has('termguicolors') | set termguicolors | endif
 let g:colors_name = "bigface"
 
-let g:terminal_ansi_colors = ['#494848', '#f44336', '#8bc34a', '#ffeb3b', '#81d4fa', '#e91e63', '#00bcd4', '#9e9e9e', '#6e6b68', '#ff0000', '#00ff00', '#ccff90', '#40c4ff', '#7e57c2', '#00ffff', '#ffffff']
+let g:terminal_ansi_colors = ['#494848', '#fc5d23', '#00c853', '#e5e500', '#00b0ff', '#ae81ff', '#66d9ef', '#d9d9d4', '#6e6b68', '#fc5d23', '#c6ff00', '#ffeb3b', '#40c4ff', '#ae81ff', '#b3e5fc', '#f8f8f0']
 
 hi Normal guifg=#d9d9d4 guibg=#252925 gui=NONE cterm=NONE
 hi NonText guifg=#494848 guibg=NONE gui=NONE cterm=NONE
@@ -31,8 +31,8 @@ hi TabLine guifg=#6e6b68 guibg=#333333 gui=NONE cterm=NONE
 hi TabLineSel guifg=#d9d9d4 guibg=#252925 gui=NONE cterm=NONE
 hi TabLineFill guifg=NONE guibg=#333333 gui=NONE cterm=NONE
 hi Folded guifg=#75715e guibg=#3b3c32 gui=NONE cterm=NONE
-hi ErrorMsg guifg=#f52670 guibg=#252925 gui=bold cterm=bold
-hi WarningMsg guifg=#ff9800 guibg=NONE gui=NONE cterm=NONE
+hi ErrorMsg guifg=#fc5d23 guibg=#252925 gui=bold cterm=bold
+hi WarningMsg guifg=#ffeb3b guibg=NONE gui=NONE cterm=NONE
 hi Directory guifg=#00b0ff guibg=NONE gui=NONE cterm=NONE
 hi Title guifg=#c6ff00 guibg=NONE gui=bold cterm=bold
 
@@ -57,9 +57,9 @@ hi Special guifg=#40c4ff guibg=NONE gui=NONE cterm=NONE
 hi Delimiter guifg=#d9d9d4 guibg=NONE gui=NONE cterm=NONE
 hi Tag guifg=#40c4ff guibg=NONE gui=NONE cterm=NONE
 hi Underlined guifg=#00b0ff guibg=NONE gui=underline cterm=underline
-hi Error guifg=#f52670 guibg=NONE gui=NONE cterm=NONE
+hi Error guifg=#fc5d23 guibg=NONE gui=NONE cterm=NONE
 hi Todo guifg=#fc5d23 guibg=NONE gui=bold cterm=bold
-hi DiffAdd guifg=#8bc34a guibg=#3b3c32 gui=NONE cterm=NONE
-hi DiffDelete guifg=#f52670 guibg=#3b3c32 gui=NONE cterm=NONE
+hi DiffAdd guifg=#00c853 guibg=#3b3c32 gui=NONE cterm=NONE
+hi DiffDelete guifg=#fc5d23 guibg=#3b3c32 gui=NONE cterm=NONE
 hi DiffChange guifg=#40c4ff guibg=#3b3c32 gui=NONE cterm=NONE
 hi DiffText guifg=#d9d9d4 guibg=#3b514d gui=NONE cterm=NONE

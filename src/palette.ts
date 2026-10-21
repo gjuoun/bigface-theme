@@ -6,12 +6,15 @@ const Hex = z.string().regex(/^#[0-9a-f]{6}$/, "6-digit lowercase hex like #00b0
  * Where a colour comes from.
  * - `jetbrains:<OPTION>#<FIELD>` — an attribute in the original scheme (e.g. `DEFAULT_KEYWORD#FOREGROUND`)
  * - `jetbrains:colors#<KEY>`     — a `<colors>` option in the original scheme (e.g. `CARET_ROW_COLOR`)
+ * - `alias:<colour>`            — a standard slot (ANSI) borrowing one of the scheme's colours
  *
  * There is deliberately no "invented" option: every colour the themes use has to exist in the
  * original scheme, so a tool that wants a surface the scheme lacks is given one of the scheme's
  * existing surfaces instead of a new blend.
  */
-const Source = z.string().regex(/^jetbrains:(colors#[A-Z_]+|[A-Za-z0-9_.]+#[A-Z_]+)$/);
+const Source = z
+  .string()
+  .regex(/^(jetbrains:(colors#[A-Z_]+|[A-Za-z0-9_.]+#[A-Z_]+)|alias:[A-Za-z]+)$/);
 
 const Color = z.object({ hex: Hex, source: Source });
 
@@ -25,18 +28,14 @@ export const REQUIRED_COLORS = [
   "cursorLine",
   "braceMatch",
   "blue",
-  "skyBlue",
   "lightBlue",
   "paleBlue",
   "cyan",
   "green",
-  "limeGreen",
   "lime",
   "yellow",
   "brightYellow",
-  "orange",
   "burntOrange",
-  "pink",
   "purple",
   "comment",
   "searchBg",
@@ -114,7 +113,18 @@ export type AnsiName = keyof Palette["ansi"];
 export type SyntaxRole = keyof Palette["syntax"];
 
 export function parsePalette(json: unknown): Palette {
-  return PaletteSchema.parse(json);
+  const palette = PaletteSchema.parse(json);
+  // An ANSI slot borrows a colour; it may never drift from it.
+  for (const [slot, color] of Object.entries(palette.ansi)) {
+    if (!color.source.startsWith("alias:")) continue;
+    const target = color.source.slice("alias:".length);
+    const borrowed = palette.colors[target as keyof typeof palette.colors];
+    if (!borrowed) throw new Error(`ansi.${slot} aliases unknown colour ${target}`);
+    if (borrowed.hex !== color.hex) {
+      throw new Error(`ansi.${slot} says ${color.hex} but ${target} is ${borrowed.hex}`);
+    }
+  }
+  return palette;
 }
 
 export async function loadPalette(path = new URL("../palette/bigface.json", import.meta.url)) {

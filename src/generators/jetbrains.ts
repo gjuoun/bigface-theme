@@ -10,14 +10,15 @@ export const ORIGINAL_XML = readFileSync(
 
 /**
  * Start from the original scheme and write each palette colour back to the place it came from.
- * Tokens marked `derived` have no home in the scheme and are skipped.
+ * ANSI slots are aliases (a standard slot borrowing a scheme colour), so they have no home in the
+ * scheme and are skipped — their colour is already written by the accent they alias.
  */
 export function renderJetBrains(p: Palette, base = ORIGINAL_XML): string {
   let xml = base;
   const seen = new Map<string, string>();
   const entries = [...Object.entries(p.colors), ...Object.entries(p.ansi)];
   for (const [name, c] of entries) {
-    if (c.source === "derived") continue;
+    if (c.source.startsWith("alias:")) continue;
     const prev = seen.get(c.source);
     if (prev && prev !== c.hex) {
       throw new Error(

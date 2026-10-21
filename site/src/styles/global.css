@@ -27,18 +27,18 @@
   --line-strong: var(--selection);
   /* accents */
   --blue: #00b0ff;
-  --sky: #81d4fa;
+  --sky: #40c4ff;
   --light-blue: #40c4ff;
   --pale-blue: #b3e5fc;
   --cyan: #66d9ef;
   --green: #00c853;
-  --lime-green: #8bc34a;
+  --lime-green: #00c853;
   --lime: #c6ff00;
   --yellow: #e5e500;
   --bright-yellow: #ffeb3b;
-  --orange: #ff9800;
+  --orange: #ffeb3b;
   --burnt: #fc5d23;
-  --pink: #f52670;
+  --pink: #fc5d23;
   --purple: #ae81ff;
 
   --r-sm: 10px;

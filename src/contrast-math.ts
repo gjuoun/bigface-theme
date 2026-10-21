@@ -38,18 +38,14 @@ export function contrastReport(p: Palette): ContrastRow[] {
   const text = ["fg", "comment", "fgDim"] as const;
   const accents = [
     "blue",
-    "skyBlue",
     "lightBlue",
     "paleBlue",
     "cyan",
     "green",
-    "limeGreen",
     "lime",
     "yellow",
     "brightYellow",
-    "orange",
     "burntOrange",
-    "pink",
     "purple",
   ] as const;
   return [

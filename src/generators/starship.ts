@@ -29,7 +29,7 @@ const NAMED: [string, ColorName][] = [
   ["bigface_green", "green"],
   ["bigface_yellow", "yellow"],
   ["bigface_orange", "burntOrange"],
-  ["bigface_pink", "pink"],
+  ["bigface_pink", "burntOrange"],
   ["bigface_cyan", "cyan"],
   ["bigface_purple", "purple"],
   ["bigface_comment", "comment"],
