@@ -68,6 +68,12 @@ export const targets: Target[] = [
       text: "Accepted by `ghostty +validate-config`; a bad colour is rejected.",
     },
     terminalPreview: true,
+    screenshot: {
+      file: "img/apps/ghostty.png",
+      alt: "Ghostty running the Bigface theme: a dark green-grey window with the palette's sixteen ANSI colours as dots, the theme list and a TypeScript file.",
+      width: 1100,
+      height: 742,
+    },
   },
   {
     id: "herdr",
@@ -105,6 +111,12 @@ export const targets: Target[] = [
       text: "Packaged with `vsce` and installed with `code --install-extension` into a scratch extensions directory.",
     },
     terminalPreview: false,
+    screenshot: {
+      file: "img/apps/vscode.png",
+      alt: "VS Code with Bigface: blue keywords, lime function names and yellow strings on the theme's green-grey background, with a small TypeScript project in the explorer.",
+      width: 1100,
+      height: 742,
+    },
   },
   {
     id: "zed",
@@ -175,6 +187,12 @@ export const targets: Target[] = [
       text: "`starship print-config` reads it, and a `green` style renders as the palette's green.",
     },
     terminalPreview: true,
+    screenshot: {
+      file: "img/apps/starship.png",
+      alt: "The starship prompt using the Bigface palette through ANSI colour names: directory, branch and status segments on the theme background.",
+      width: 1100,
+      height: 742,
+    },
   },
   {
     id: "tmux",
@@ -191,6 +209,12 @@ export const targets: Target[] = [
       text: "Loaded by tmux 3.7; `show -gv status-style` returns the palette colours and a bad style is rejected.",
     },
     terminalPreview: true,
+    screenshot: {
+      file: "img/apps/tmux.png",
+      alt: "A tmux session styled by Bigface: coloured status-bar segments over vim showing TypeScript.",
+      width: 1100,
+      height: 742,
+    },
   },
   {
     id: "vim",
@@ -207,6 +231,12 @@ export const targets: Target[] = [
       text: "vim loads it headless and `hi Normal` reports the palette's foreground and background.",
     },
     terminalPreview: false,
+    screenshot: {
+      file: "img/apps/vim.png",
+      alt: "Vim with the Bigface colorscheme inside Ghostty: line-numbered TypeScript in the theme's keyword and string colours.",
+      width: 1100,
+      height: 742,
+    },
   },
   {
     id: "xcode",
