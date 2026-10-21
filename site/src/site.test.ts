@@ -255,8 +255,17 @@ test("app pages with a screenshot put it beside the instructions on desktop, sta
     expect(layout, t.id).toBe("split");
     // two columns only from lg (1024px), and the instructions column keeps at least 340px
     expect(cls, t.id).toContain("lg:grid");
-    expect(cls, t.id).toContain("lg:grid-cols-[minmax(0,1.4fr)_minmax(340px,1fr)]");
+    expect(cls, t.id).toContain("lg:grid-cols-[minmax(340px,45fr)_minmax(0,55fr)]");
     expect(cls, t.id).not.toMatch(/(^|\s)grid(\s|$)/);
+    // desktop order is instructions on the left, media on the right (Jun picked E from the /ui/ mocks)
+    // the class attribute wraps over lines in the built HTML, so read the text just before the slot
+    const classesBefore = (slot: string) => {
+      const at = html.indexOf(`data-split="${slot}"`);
+      expect(at, `${t.id} ${slot}`).toBeGreaterThan(-1);
+      return html.slice(Math.max(0, at - 400), at);
+    };
+    expect(classesBefore("media"), t.id).toContain("lg:order-2");
+    expect(classesBefore("aside"), t.id).toContain("lg:order-1");
     // stacked order: media column (the screenshot and its caption) before install before download
     const start = html.indexOf('data-layout="split"');
     const media = html.indexOf('data-split="media"', start);
