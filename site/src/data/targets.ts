@@ -193,6 +193,12 @@ export const targets: Target[] = [
       text: "`starship print-config` reads it, and a `green` style renders as the palette's green.",
     },
     terminalPreview: true,
+    screenshot: {
+      file: "img/apps/starship.png",
+      alt: "The starship prompt drawing the Bigface palette through ANSI colour names: cyan directory, purple branch, yellow status and a lime prompt character over a git log.",
+      width: 496,
+      height: 221,
+    },
   },
   {
     id: "tmux",
