@@ -134,6 +134,12 @@ export const targets: Target[] = [
       text: "Validated against Zed's published theme schema; not loaded inside Zed.",
     },
     terminalPreview: false,
+    screenshot: {
+      file: "img/apps/zed.png",
+      alt: "Zed with the Bigface theme: blue keywords, lime function calls, purple constants such as ENDPOINT, yellow strings and cyan types, with the project panel on the right.",
+      width: 1100,
+      height: 712,
+    },
   },
   {
     id: "jetbrains",
@@ -177,6 +183,12 @@ export const targets: Target[] = [
       text: "`zellij setup --check` reports the config is well defined; a non-hex colour is rejected.",
     },
     terminalPreview: true,
+    screenshot: {
+      file: "img/apps/zellij.png",
+      alt: "zellij styled by Bigface: the mode indicator, tab, session name and key hints in the theme's status bar colours.",
+      width: 1100,
+      height: 420,
+    },
   },
   {
     id: "starship",
@@ -276,6 +288,12 @@ export const targets: Target[] = [
       text: "Format-checked against micro's documented syntax. micro is not installed here, so it was not run.",
     },
     terminalPreview: false,
+    screenshot: {
+      file: "img/apps/micro.png",
+      alt: "micro with the Bigface colorscheme: line-numbered TypeScript in the theme's colours and micro's own status bar, cursor on the last line.",
+      width: 1100,
+      height: 390,
+    },
   },
   {
     id: "obsidian",
