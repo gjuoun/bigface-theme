@@ -1,7 +1,7 @@
 ---
 import SyntaxPreview from "../components/SyntaxPreview.astro";
 import { inline } from "../data/inline.ts";
-import { hex, palette } from "../data/palette.ts";
+import { hex, inkOn, palette } from "../data/palette.ts";
 import { installCommand, REPO, targets } from "../data/targets.ts";
 import Base from "../layouts/Base.astro";
 
@@ -84,7 +84,7 @@ const removeAll = installCommand("--uninstall all");
         <button
           type="button"
           class="swatch"
-          style={`--c:${hex(n)}`}
+          style={`--c:${hex(n)};--ink:${inkOn(hex(n)).ink}`}
           data-copy={hex(n)}
           data-swap="off"
           aria-label={`Copy ${n} ${hex(n)}`}
@@ -423,7 +423,7 @@ const removeAll = installCommand("--uninstall all");
     letter-spacing: 0.04em;
     opacity: 0;
     transition: opacity 0.3s;
-    color: var(--search-fg);
+    color: var(--ink);
   }
 
   .swatch .name {
@@ -437,7 +437,7 @@ const removeAll = installCommand("--uninstall all");
 
   .swatch:hover .name,
   .swatch:hover .hex {
-    opacity: 0.85;
+    opacity: 0.92;
   }
 
   .caption {

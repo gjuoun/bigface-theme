@@ -2,6 +2,7 @@ import { beforeAll, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
+import { contrastRatio, inkOn, palette } from "./data/palette.ts";
 import { targets } from "./data/targets.ts";
 
 const siteDir = join(import.meta.dir, "..");
@@ -110,6 +111,42 @@ test("the Obsidian page shows a real screenshot that exists and matches its decl
   expect(w).toBeGreaterThanOrEqual(1200);
   expect(buf.length).toBeLessThan(400 * 1024);
   expect(html).toMatch(/alt="Obsidian in reading view/);
+});
+
+test("every swatch prints an ink that actually contrasts on it", () => {
+  // The label on a colour chip is chosen from the palette's own fg/bg, and the ratio it prints
+  // must be readable text (WCAG AA for body copy) — lime with cream text was 1.2:1 before this.
+  const check = (label: string, hexValue: string, floor: number) => {
+    const { ratio } = inkOn(hexValue);
+    // The badge must never overstate: it prints the best of the palette's two inks.
+    const best = Math.max(
+      contrastRatio(palette.colors.fg.hex, hexValue),
+      contrastRatio(palette.colors.bg.hex, hexValue),
+    );
+    expect(ratio, `${label} ${hexValue} is not the best available ink`).toBeCloseTo(
+      Math.round(best * 10) / 10,
+      1,
+    );
+    expect(ratio, `${label} ${hexValue}`).toBeGreaterThanOrEqual(floor);
+  };
+  // Accents are the eye-candy: AA body text on every one of them.
+  for (const name of [
+    "blue",
+    "lightBlue",
+    "paleBlue",
+    "cyan",
+    "green",
+    "lime",
+    "yellow",
+    "brightYellow",
+    "burntOrange",
+    "purple",
+  ]) {
+    check(name, palette.colors[name].hex, 4.5);
+  }
+  // Neutrals only have to be legible, and fgDim genuinely tops out at 3.7:1 against both inks.
+  for (const [name, color] of Object.entries(palette.colors)) check(name, color.hex, 3);
+  for (const [name, color] of Object.entries(palette.ansi)) check(`ansi.${name}`, color.hex, 3);
 });
 
 test("the site only ships colours that exist in the palette", () => {
