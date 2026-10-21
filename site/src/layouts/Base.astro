@@ -1,6 +1,5 @@
 ---
 import "../styles/tailwind.css";
-import "../styles/legacy.css";
 import BGSiteFooter from "../components/bg/site-footer.astro";
 import BGSiteHeader from "../components/bg/site-header.astro";
 import BGToast from "../components/bg/toast.astro";
@@ -30,45 +29,11 @@ const vars: Record<string, string> = {
   ...Object.fromEntries(
     Object.entries(palette.ansi).map(([k, c]) => [`--bf-ansi-${kebab(k)}`, c.hex]),
   ),
-  // surfaces (the scheme's own: bg, cursor-line row, matched-brace block, border greys)
-  "--bg": hex("bg"),
-  "--bg-2": hex("borderMuted"),
-  "--bg-deep": hex("borderMuted"),
-  "--panel": hex("cursorLine"),
-  "--panel-2": hex("braceMatch"),
-  "--selection": hex("selection"),
-  // ink
-  "--fg": hex("fg"),
-  "--cream": hex("fg"),
-  // bright controls (buttons, selected tabs) take the background colour as ink
-  "--ink-on-bright": hex("bg"),
-  "--fg-muted": `color-mix(in srgb, ${hex("fg")} 75%, ${hex("bg")})`,
-  "--dim": `color-mix(in srgb, ${hex("fg")} 55%, ${hex("bg")})`,
-  "--comment": hex("comment"),
-  "--caret": hex("caret"),
-  // lines
-  "--border": hex("border"),
-  "--border-muted": hex("borderMuted"),
-  "--line-rgb": [1, 3, 5].map((i) => Number.parseInt(hex("border").slice(i, i + 2), 16)).join(", "),
-  // accents
-  "--blue": hex("blue"),
-  "--sky": hex("lightBlue"),
-  "--light-blue": hex("lightBlue"),
-  "--pale-blue": hex("paleBlue"),
-  "--cyan": hex("cyan"),
-  "--green": hex("green"),
-  "--lime": hex("lime"),
-  "--yellow": hex("yellow"),
-  "--bright-yellow": hex("brightYellow"),
-  "--orange": hex("burntOrange"),
-  "--burnt": hex("burntOrange"),
-  "--pink": hex("burntOrange"),
-  "--purple": hex("purple"),
-  // the scheme's search colours, and the theme's own editor background
-  "--search-bg": hex("selection"),
-  "--palette-bg": hex("bg"),
-  "--palette-panel": hex("cursorLine"),
-  "--palette-deep": hex("bg"),
+  // bright plates (buttons, selected tabs and chips) take the background colour as ink
+  "--ink-on-bright": "var(--bf-bg)",
+  // the two text greys: palette fg blended toward bg (translucent steps of palette colours)
+  "--fg-muted": "color-mix(in srgb, var(--bf-fg) 75%, var(--bf-bg))",
+  "--dim": "color-mix(in srgb, var(--bf-fg) 55%, var(--bf-bg))",
 };
 const style = Object.entries(vars)
   .map(([k, v]) => `${k}:${v}`)

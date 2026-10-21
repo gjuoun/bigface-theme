@@ -151,38 +151,8 @@ test("every swatch prints an ink that actually contrasts on it", () => {
   for (const [name, color] of Object.entries(palette.ansi)) check(`ansi.${name}`, color.hex, 3);
 });
 
-test("anything painted with a bright plate writes dark ink on it", () => {
-  // Two bugs of this shape shipped: cream on lime swatches (1.2:1) and cream on the selected
-  // filter chip (1.7:1). Rules that fill with an accent or the pale blues must use the one ink
-  // token, so a new bright control cannot quietly inherit the page's cream foreground.
-  const css = readdirSync(join(repo, "site/dist/_astro"))
-    .filter((f) => f.endsWith(".css"))
-    .map((f) => readFileSync(join(repo, "site/dist/_astro", f), "utf8"))
-    .join("\n");
-  const bright = [
-    "var(--blue)",
-    "var(--light-blue)",
-    "var(--pale-blue)",
-    "var(--cyan)",
-    "var(--lime)",
-    "var(--yellow)",
-    "var(--bright-yellow)",
-  ];
-  const blocks = css.match(/[^{}]+\{[^{}]*\}/g) ?? [];
-  const offenders: string[] = [];
-  for (const block of blocks) {
-    const paints = /\.(?:btn|swatch|tab|filter|chip|pill|badge)/.test(block);
-    // only an opaque fill counts: a translucent tint (color-mix) sits on the dark plate, so cream
-    // ink on it is the normal case, not a bug
-    const decl = block.match(/(?:^|;)\s*background(?:-color)?:[^;]*/)?.[0] ?? "";
-    const fill = !decl.includes("color-mix") && bright.some((c) => decl.includes(c));
-    if (!paints || !fill) continue;
-    if (!/var\(--ink-on-bright\)/.test(block))
-      offenders.push(block.slice(0, 90).replace(/\s+/g, " "));
-  }
-  expect(offenders).toEqual([]);
-});
-
+// Bright plates are now utility classes, so the dark-ink rule is checked per element (ink-guard.ts):
+// cream on lime swatches (1.2:1) and cream on the selected filter chip (1.7:1) both shipped once.
 test("no element pairs a bright fill class with anything but the dark ink", () => {
   const offenders: string[] = [];
   for (const f of readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>

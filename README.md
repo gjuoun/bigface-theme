@@ -10,7 +10,9 @@ the root of that domain; every push to `main` builds and deploys it.
 The site runs on the theme's **own** background (`#252925`) and surface ladder — every colour on it is
 a value from [`palette/bigface.json`](palette/bigface.json), with translucent steps being those same
 colours at lower alpha and gradients interpolating between palette stops. A test fails the build if a
-colour outside the palette reaches the shipped CSS or HTML. The mark — a polar bear on a blue field —
+colour outside the palette reaches the shipped CSS or HTML. The site is Astro + Tailwind v4 + shadcn/ui:
+`site/src/components/ui/` is owned by the shadcn CLI (never edited; `bun run --cwd site ui:drift`
+proves it), Bigface's own components and variants live in `site/src/components/bg/` as `BG*`. The mark — a polar bear on a blue field —
 and its export/validation pipeline live in [`brand/`](brand/README.md).
 
 | | |
