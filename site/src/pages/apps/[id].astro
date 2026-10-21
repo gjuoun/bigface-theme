@@ -2,7 +2,6 @@
 import BGAppHero from "../../components/bg/app-hero.astro";
 import { BGBadge } from "../../components/bg/badge.tsx";
 import BGBreadcrumbs from "../../components/bg/breadcrumbs.astro";
-import { BGCard } from "../../components/bg/card.tsx";
 import BGCodeCard from "../../components/bg/code-card.astro";
 import BGDownloadCard from "../../components/bg/download-card.astro";
 import { BGInstallTabs } from "../../components/bg/install-tabs.tsx";
@@ -79,9 +78,9 @@ const installTabs = [
 
     <section id="install" data-reveal>
       <h2>Install</h2>
-      <BGCard tone="plate" glow className="mt-[0.6rem] overflow-hidden p-[0.9rem]">
+      <div class="mt-[0.6rem]">
         <BGInstallTabs client:load items={installTabs} />
-      </BGCard>
+      </div>
       <p class="text-bf-dim">
         It never edits your config; it prints the one line you still need to add (or remove).{" "}
         <a href={`${base}/install.sh`}>Read the script</a> first, or add <code>--dry-run</code>.
