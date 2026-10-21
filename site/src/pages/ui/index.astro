@@ -21,6 +21,7 @@ import BGNextCard from "../../components/bg/next-card.astro";
 import { bgTextClass } from "../../components/bg/palette-classes.ts";
 import BGPaletteGroup from "../../components/bg/palette-group.astro";
 import BGSectionHead from "../../components/bg/section-head.astro";
+import BGSplit from "../../components/bg/split.astro";
 import BGStat from "../../components/bg/stat.astro";
 import BGSwatch from "../../components/bg/swatch.astro";
 import BGSwatchChip from "../../components/bg/swatch-chip.astro";
@@ -459,6 +460,17 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
             <div class="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-[0.9rem]" data-cards>
               {targets.slice(0, 3).map((t, i) => <BGAppCard target={t} index={i} base={base} />)}
             </div>
+          )}
+          {entry.name === "BGSplit" && (
+            <BGSplit>
+              <div slot="media" class="grid h-40 place-items-center rounded-[14px] border border-bf-border bg-bf-border-muted/72 text-bf-dim">
+                media (left from 1024px)
+              </div>
+              <section>
+                <h2 class="text-[1.1rem]">Instructions</h2>
+                <p class="m-0 text-bf-fg-muted">The aside: at least 340px wide, or the layout stacks.</p>
+              </section>
+            </BGSplit>
           )}
           {entry.name === "BGBreadcrumbs" && <BGBreadcrumbs base={base} name={pi.name} />}
           {entry.name === "BGMarketCard" && market?.market && (

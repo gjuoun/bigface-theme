@@ -1,0 +1,28 @@
+---
+// Media beside its instructions on wide screens, stacked below 1024px. The media slot comes first in
+// the DOM, so the stacked order (and reading order) is media → instructions. The right column never
+// gets narrower than 340px: at 1024px it is ~400px, and below lg the grid is off, so text never
+// shrinks. The first block of each column starts 1.8rem down, so the image and the first heading
+// line up. split={false} renders the same order with no grid at all (no empty column).
+interface Props {
+  split?: boolean;
+  class?: string;
+}
+const { split = true, class: extra = "" } = Astro.props;
+---
+
+<div
+  data-layout={split ? "split" : "stack"}
+  class:list={[
+    split && "lg:grid lg:grid-cols-[minmax(0,1.4fr)_minmax(340px,1fr)] lg:items-start lg:gap-8",
+    extra,
+  ]}
+>
+  <div class="min-w-0" data-split="media"><slot name="media" /></div>
+  <div
+    class:list={["min-w-0", split && "lg:[&>:first-child]:mt-[1.8rem] lg:[&>:first-child>h2:first-child]:mt-0"]}
+    data-split="aside"
+  >
+    <slot />
+  </div>
+</div>

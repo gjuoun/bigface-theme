@@ -229,6 +229,15 @@ export const bgCatalog: BGEntry[] = [
     live: "here",
   },
   {
+    file: "split.astro",
+    name: "BGSplit",
+    kind: "composite",
+    purpose:
+      "Media beside its instructions from 1024px, stacked below; the media stays first in the DOM.",
+    finalised: true,
+    live: "here",
+  },
+  {
     file: "breadcrumbs.astro",
     name: "BGBreadcrumbs",
     kind: "composite",
