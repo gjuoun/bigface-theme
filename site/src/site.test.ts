@@ -18,9 +18,10 @@ beforeAll(async () => {
   if (r.exitCode !== 0) throw new Error(`site build failed:\n${r.stderr.toString()}`);
 }, 120_000);
 
-test("one page per target plus home and palette", () => {
+test("one page per target plus home, palette and the component library", () => {
   expect(existsSync(join(dist, "index.html"))).toBe(true);
   expect(existsSync(join(dist, "palette/index.html"))).toBe(true);
+  expect(existsSync(join(dist, "ui/index.html"))).toBe(true);
   for (const t of targets)
     expect(existsSync(join(dist, "apps", t.id, "index.html")), t.id).toBe(true);
 });
@@ -182,7 +183,7 @@ test("the site only ships colours that exist in the palette", () => {
   const htmlFiles = readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
     f.endsWith("index.html"),
   );
-  expect(htmlFiles.length).toBeGreaterThanOrEqual(15);
+  expect(htmlFiles.length).toBeGreaterThanOrEqual(16);
   const offenders: string[] = [];
   for (const f of htmlFiles)
     for (const bad of findForeignInHtml(readFileSync(join(dist, f), "utf8"), known))
