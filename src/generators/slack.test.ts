@@ -14,7 +14,7 @@ describe("Slack", () => {
     expect(str).not.toContain(" ");
   });
   test("column background is the palette's sidebar colour, text is fg", () => {
-    expect(parts[0]).toBe("#1f231f");
+    expect(parts[0]).toBe("#333333");
     expect(parts[5]).toBe("#d9d9d4");
   });
 });

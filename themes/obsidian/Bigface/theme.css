@@ -21,7 +21,7 @@
 
   /* Greys: Obsidian derives most of its UI from this scale (00 darkest -> 100 lightest) */
   --color-base-00: #252925;
-  --color-base-05: #2e332e;
+  --color-base-05: #3b3c32;
   --color-base-10: #333333;
   --color-base-20: #3b3c32;
   --color-base-25: #494848;
@@ -29,7 +29,7 @@
   --color-base-35: #646464;
   --color-base-40: #6e6b68;
   --color-base-50: #75715e;
-  --color-base-60: #9c9a8f;
+  --color-base-60: #75715e;
   --color-base-70: #d9d9d4;
   --color-base-100: #f8f8f0;
 
@@ -49,26 +49,26 @@
 
   /* Surfaces and borders */
   --background-primary: #252925;
-  --background-primary-alt: #2e332e;
-  --background-secondary: #1f231f;
-  --background-secondary-alt: #1f231f;
+  --background-primary-alt: #3b3c32;
+  --background-secondary: #333333;
+  --background-secondary-alt: #333333;
   --background-modifier-hover: #3b3c32;
   --background-modifier-active-hover: #3b514d;
   --background-modifier-border: #333333;
   --background-modifier-border-hover: #494848;
   --background-modifier-border-focus: #00b0ff;
-  --background-modifier-form-field: #1f231f;
-  --background-modifier-message: #2e332e;
+  --background-modifier-form-field: #333333;
+  --background-modifier-message: #3b3c32;
   --background-modifier-error: #f52670;
   --background-modifier-error-hover: #f52670;
   --background-modifier-success: #00c853;
-  --background-modifier-cover: #1f231fcc;
-  --interactive-normal: #2e332e;
+  --background-modifier-cover: #333333cc;
+  --interactive-normal: #3b3c32;
   --interactive-hover: #3b3c32;
 
   /* Text */
   --text-normal: #d9d9d4;
-  --text-muted: #9c9a8f;
+  --text-muted: #75715e;
   --text-faint: #6e6b68;
   --text-success: #8bc34a;
   --text-warning: #ff9800;
@@ -83,7 +83,7 @@
   --h3-color: #66d9ef;
   --h4-color: #66d9ef;
   --h5-color: #00b0ff;
-  --h6-color: #9c9a8f;
+  --h6-color: #75715e;
   --inline-title-color: #c6ff00;
 
   /* Inline formatting, links, tags */
@@ -104,8 +104,8 @@
 
   /* Blocks: quotes, rules, lists, checkboxes, tables */
   --blockquote-border-color: #ae81ff;
-  --blockquote-color: #9c9a8f;
-  --blockquote-background-color: #2e332e;
+  --blockquote-color: #75715e;
+  --blockquote-background-color: #3b3c32;
   --hr-color: #494848;
   --list-marker-color: #fc5d23;
   --list-marker-color-hover: #ff9800;
@@ -113,18 +113,18 @@
   --checkbox-color: #00c853;
   --checkbox-color-hover: #8bc34a;
   --checkbox-border-color: #6e6b68;
-  --checkbox-border-color-hover: #9c9a8f;
+  --checkbox-border-color-hover: #75715e;
   --checkbox-marker-color: #252925;
   --table-border-color: #494848;
   --table-header-color: #c6ff00;
-  --table-header-background: #2e332e;
+  --table-header-background: #3b3c32;
   --table-header-border-color: #494848;
-  --table-row-alt-background: #2e332e80;
+  --table-row-alt-background: #3b3c3280;
   --table-row-background-hover: #3b3c32;
-  --embed-background: #1f231f;
+  --embed-background: #333333;
 
   /* Code */
-  --code-background: #1f231f;
+  --code-background: #333333;
   --code-normal: #d9d9d4;
   --code-comment: #75715e;
   --code-function: #c6ff00;
@@ -138,22 +138,22 @@
   --code-value: #fc5d23;
 
   /* Window chrome: title bar, ribbon, tabs, sidebar, status bar, icons */
-  --titlebar-background: #1f231f;
-  --titlebar-background-focused: #1f231f;
-  --titlebar-text-color: #9c9a8f;
+  --titlebar-background: #333333;
+  --titlebar-background-focused: #333333;
+  --titlebar-text-color: #75715e;
   --titlebar-text-color-focused: #d9d9d4;
-  --ribbon-background: #1f231f;
-  --ribbon-background-collapsed: #1f231f;
-  --tab-container-background: #1f231f;
+  --ribbon-background: #333333;
+  --ribbon-background-collapsed: #333333;
+  --tab-container-background: #333333;
   --tab-background-active: #252925;
   --tab-text-color: #6e6b68;
-  --tab-text-color-focused: #9c9a8f;
+  --tab-text-color-focused: #75715e;
   --tab-text-color-focused-active: #d9d9d4;
   --tab-text-color-focused-active-current: #00b0ff;
   --tab-outline-color: #333333;
   --divider-color: #333333;
   --divider-color-hover: #00b0ff;
-  --nav-item-color: #9c9a8f;
+  --nav-item-color: #75715e;
   --nav-item-color-hover: #d9d9d4;
   --nav-item-color-active: #00b0ff;
   --nav-item-color-selected: #d9d9d4;
@@ -161,10 +161,10 @@
   --nav-item-background-hover: #3b3c32;
   --nav-item-background-active: #3b514d;
   --nav-item-background-selected: #3b514d;
-  --status-bar-background: #1f231f;
+  --status-bar-background: #333333;
   --status-bar-border-color: #333333;
-  --status-bar-text-color: #9c9a8f;
-  --icon-color: #9c9a8f;
+  --status-bar-text-color: #75715e;
+  --icon-color: #75715e;
   --icon-color-hover: #d9d9d4;
   --icon-color-active: #00b0ff;
   --icon-color-focused: #d9d9d4;
@@ -173,12 +173,12 @@
   --scrollbar-active-thumb-bg: #6e6b68aa;
 
   /* Popups, settings, graph, canvas */
-  --prompt-background: #2e332e;
+  --prompt-background: #3b3c32;
   --prompt-border-color: #494848;
-  --setting-items-background: #2e332e;
+  --setting-items-background: #3b3c32;
   --setting-items-border-color: #333333;
   --graph-line: #494848;
-  --graph-node: #9c9a8f;
+  --graph-node: #75715e;
   --graph-node-unresolved: #75715e;
   --graph-node-focused: #00b0ff;
   --graph-node-tag: #00c853;

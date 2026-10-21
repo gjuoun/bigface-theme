@@ -6,21 +6,9 @@
       "hex": "#252925",
       "source": "jetbrains:TEXT#BACKGROUND"
     },
-    "bgPanel": {
-      "hex": "#2e332e",
-      "source": "derived"
-    },
-    "bgDeep": {
-      "hex": "#1f231f",
-      "source": "derived"
-    },
     "fg": {
       "hex": "#d9d9d4",
       "source": "jetbrains:TEXT#FOREGROUND"
-    },
-    "fgMuted": {
-      "hex": "#9c9a8f",
-      "source": "derived"
     },
     "fgDim": {
       "hex": "#6e6b68",
@@ -105,22 +93,6 @@
     "comment": {
       "hex": "#75715e",
       "source": "jetbrains:OC.LINE_COMMENT#FOREGROUND"
-    },
-    "toolPending": {
-      "hex": "#2f2f22",
-      "source": "derived"
-    },
-    "toolSuccess": {
-      "hex": "#1f3320",
-      "source": "derived"
-    },
-    "toolError": {
-      "hex": "#3a2028",
-      "source": "derived"
-    },
-    "customMessage": {
-      "hex": "#2b2740",
-      "source": "derived"
     },
     "searchBg": {
       "hex": "#ffe792",

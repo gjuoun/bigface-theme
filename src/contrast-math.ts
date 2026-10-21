@@ -35,7 +35,7 @@ export function contrastReport(p: Palette): ContrastRow[] {
     hex,
     ratio: Math.round(contrastRatio(hex, bg) * 10) / 10,
   });
-  const text = ["fg", "fgMuted", "fgDim", "comment"] as const;
+  const text = ["fg", "comment", "fgDim"] as const;
   const accents = [
     "blue",
     "skyBlue",

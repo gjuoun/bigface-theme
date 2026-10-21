@@ -13,7 +13,7 @@ describe("palette schema", () => {
 
   test("a missing token is rejected", async () => {
     const raw = await Bun.file(new URL("../palette/bigface.json", import.meta.url)).json();
-    delete raw.colors.bgDeep;
+    delete raw.colors.cursorLine;
     expect(PaletteSchema.safeParse(raw).success).toBe(false);
   });
 

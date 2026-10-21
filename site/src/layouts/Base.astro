@@ -17,19 +17,18 @@ const origin = Astro.site ? new URL(Astro.site).origin : "";
 // surface ladder, the accents are its accents, and translucent steps are those same colours with
 // alpha. Gradients interpolate between palette stops; nothing else is invented.
 const vars: Record<string, string> = {
-  // surfaces
+  // surfaces (the scheme's own: bg, cursor-line row, matched-brace block, border greys)
   "--bg": hex("bg"),
-  "--bg-2": hex("bgDeep"),
-  "--bg-deep": hex("bgDeep"),
-  "--panel": hex("bgPanel"),
-  "--panel-2": hex("cursorLine"),
-  "--panel-3": hex("braceMatch"),
+  "--bg-2": hex("borderMuted"),
+  "--bg-deep": hex("borderMuted"),
+  "--panel": hex("cursorLine"),
+  "--panel-2": hex("braceMatch"),
   "--selection": hex("selection"),
   // ink
   "--fg": hex("fg"),
   "--cream": hex("fg"),
-  "--muted": hex("fgMuted"),
-  "--dim": hex("fgDim"),
+  "--muted": `color-mix(in srgb, ${hex("fg")} 75%, ${hex("bg")})`,
+  "--dim": `color-mix(in srgb, ${hex("fg")} 55%, ${hex("bg")})`,
   "--comment": hex("comment"),
   "--caret": hex("caret"),
   // lines
@@ -51,17 +50,12 @@ const vars: Record<string, string> = {
   "--burnt": hex("burntOrange"),
   "--pink": hex("pink"),
   "--purple": hex("purple"),
-  // tints the theme itself defines
-  "--tool-pending": hex("toolPending"),
-  "--tool-success": hex("toolSuccess"),
-  "--tool-error": hex("toolError"),
-  "--custom-message": hex("customMessage"),
+  // the scheme's search colours, and the theme's own editor background
   "--search-bg": hex("searchBg"),
   "--search-fg": hex("searchFg"),
-  // the theme's own background, shown in prose about the theme
   "--palette-bg": hex("bg"),
-  "--palette-panel": hex("bgPanel"),
-  "--palette-deep": hex("bgDeep"),
+  "--palette-panel": hex("cursorLine"),
+  "--palette-deep": hex("bg"),
 };
 const style = Object.entries(vars)
   .map(([k, v]) => `${k}:${v}`)

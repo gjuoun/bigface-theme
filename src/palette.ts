@@ -6,21 +6,18 @@ const Hex = z.string().regex(/^#[0-9a-f]{6}$/, "6-digit lowercase hex like #00b0
  * Where a colour comes from.
  * - `jetbrains:<OPTION>#<FIELD>` — an attribute in the original scheme (e.g. `DEFAULT_KEYWORD#FOREGROUND`)
  * - `jetbrains:colors#<KEY>`     — a `<colors>` option in the original scheme (e.g. `CARET_ROW_COLOR`)
- * - `derived`                    — not in the scheme; a blend chosen for tools that need it
+ *
+ * There is deliberately no "invented" option: every colour the themes use has to exist in the
+ * original scheme, so a tool that wants a surface the scheme lacks is given one of the scheme's
+ * existing surfaces instead of a new blend.
  */
-const Source = z.union([
-  z.literal("derived"),
-  z.string().regex(/^jetbrains:(colors#[A-Z_]+|[A-Za-z0-9_.]+#[A-Z_]+)$/),
-]);
+const Source = z.string().regex(/^jetbrains:(colors#[A-Z_]+|[A-Za-z0-9_.]+#[A-Z_]+)$/);
 
 const Color = z.object({ hex: Hex, source: Source });
 
 export const REQUIRED_COLORS = [
   "bg",
-  "bgPanel",
-  "bgDeep",
   "fg",
-  "fgMuted",
   "fgDim",
   "border",
   "borderMuted",
@@ -42,10 +39,6 @@ export const REQUIRED_COLORS = [
   "pink",
   "purple",
   "comment",
-  "toolPending",
-  "toolSuccess",
-  "toolError",
-  "customMessage",
   "searchBg",
   "searchFg",
   "caret",

@@ -71,7 +71,7 @@ describe("tmux", () => {
   const conf = (tmux.files(p) as Record<string, string>)["bigface.conf"] as string;
   const have = Bun.which("tmux") !== null;
   test("styles use the palette", () => {
-    expect(conf).toContain('set -g status-style "bg=#1f231f,fg=#9c9a8f"');
+    expect(conf).toContain('set -g status-style "bg=#333333,fg=#75715e"');
   });
   test.skipIf(!have)("tmux loads it and reports the status style", async () => {
     const dir = await tmp();
@@ -82,7 +82,7 @@ describe("tmux", () => {
       await $`tmux -L ${sock} -f ${f} new-session -d -s t \; show -gv status-style \; show -gv pane-active-border-style \; kill-server`
         .quiet()
         .nothrow();
-    expect(r.stdout.toString()).toBe("bg=#1f231f,fg=#9c9a8f\nfg=#00b0ff\n");
+    expect(r.stdout.toString()).toBe("bg=#333333,fg=#75715e\nfg=#00b0ff\n");
   });
   test.skipIf(!have)("control: a bad style is rejected", async () => {
     const dir = await tmp();

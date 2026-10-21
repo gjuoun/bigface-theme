@@ -1,23 +1,22 @@
 /* Bigface site.
    Every colour in this file is a value from palette/bigface.json. The chrome is the theme's own
-   surface ladder (bg / bgDeep / bgPanel / cursorLine), not a tinted stage; Base.astro injects the
+   surface ladder (bg / cursorLine / braceMatch / border greys), not a tinted stage; Base.astro injects the
    values at build time and the tokens below are the fallback. Translucent steps are those same
    palette colours with alpha, and gradients interpolate between palette stops only. */
 
 :root {
   /* surfaces */
   --bg: #252925;
-  --bg-2: #1f231f;
-  --bg-deep: #1f231f;
-  --panel: #2e332e;
-  --panel-2: #3b3c32;
-  --panel-3: #3b514d;
+  --bg-2: #333333;
+  --bg-deep: #333333;
+  --panel: #3b3c32;
+  --panel-2: #3b514d;
   --selection: #646464;
   /* ink */
   --fg: #d9d9d4;
   --cream: #d9d9d4;
-  --muted: #9c9a8f;
-  --dim: #6e6b68;
+  --muted: color-mix(in srgb, var(--fg) 75%, var(--bg));
+  --dim: color-mix(in srgb, var(--fg) 55%, var(--bg));
   --comment: #75715e;
   --caret: #f8f8f0;
   /* lines */
@@ -41,13 +40,6 @@
   --burnt: #fc5d23;
   --pink: #f52670;
   --purple: #ae81ff;
-  /* the tints the theme itself defines */
-  --tool-pending: #2f2f22;
-  --tool-success: #1f3320;
-  --tool-error: #3a2028;
-  --custom-message: #2b2740;
-  --search-bg: #ffe792;
-  --search-fg: #252621;
 
   --r-sm: 10px;
   --r: 16px;

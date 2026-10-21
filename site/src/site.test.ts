@@ -55,7 +55,9 @@ test("pages use the palette: background, a syntax colour, and the original JetBr
   const pal = page("palette");
   expect(pal).toContain("#00b0ff");
   expect(pal).toContain("DEFAULT_KEYWORD#FOREGROUND");
-  expect(pal).toContain("derived");
+  // No colour may be described as blended/invented: every token is a scheme value.
+  expect(pal).not.toContain("derived");
+  expect(pal).toContain("byte-for-byte");
 });
 
 test("the VS Code .vsix is packaged into the site", () => {
