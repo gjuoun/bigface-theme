@@ -155,6 +155,12 @@ export const targets: Target[] = [
       label: "JetBrains Marketplace",
       url: "https://plugins.jetbrains.com/plugin/10988-bigface-color-scheme",
     },
+    screenshot: {
+      file: "img/apps/jetbrains.png",
+      alt: "IntelliJ IDEA using the Bigface .icls scheme: blue keywords, lime function calls, yellow strings, cyan types on the theme's green-grey background.",
+      width: 758,
+      height: 620,
+    },
   },
   {
     id: "zellij",
