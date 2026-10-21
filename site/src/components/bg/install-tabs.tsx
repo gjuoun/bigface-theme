@@ -4,8 +4,8 @@ import { BGButton } from "./button.tsx";
 export interface BGInstallTab {
   id: string;
   label: string;
-  /** Title in the fake terminal bar, e.g. "sh — install". */
-  bar: string;
+  /** Title in the fake terminal bar, e.g. "sh — install". Omit for no bar. */
+  bar?: string;
   command: string;
   note: string;
 }
@@ -36,12 +36,14 @@ export function BGInstallTabs({ items }: { items: BGInstallTab[] }) {
           forceMount
           className="mt-[0.8rem] text-[1rem] data-[state=inactive]:hidden"
         >
-          <div className="flex items-center gap-[0.4rem] px-[0.2rem] pb-[0.6rem] font-code text-[0.72rem] text-bf-dim">
-            <i className="size-[9px] rounded-full bg-bf-burnt-orange" />
-            <i className="size-[9px] rounded-full bg-bf-yellow text-ink-on-bright" />
-            <i className="size-[9px] rounded-full bg-bf-green" />
-            <span className="ml-2">{t.bar}</span>
-          </div>
+          {t.bar !== undefined && (
+            <div className="flex items-center gap-[0.4rem] px-[0.2rem] pb-[0.6rem] font-code text-[0.72rem] text-bf-dim">
+              <i className="size-[9px] rounded-full bg-bf-burnt-orange" />
+              <i className="size-[9px] rounded-full bg-bf-yellow text-ink-on-bright" />
+              <i className="size-[9px] rounded-full bg-bf-green" />
+              <span className="ml-2">{t.bar}</span>
+            </div>
+          )}
           <pre className="m-0 bg-bf-border-muted/85">
             <code>{t.command}</code>
           </pre>

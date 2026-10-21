@@ -1,6 +1,7 @@
 ---
 import { inline } from "../../data/inline.ts";
 import type { Target } from "../../data/targets.ts";
+import { cn } from "../../lib/utils.ts";
 import { BGBadge } from "./badge.tsx";
 import { bgCardVariants } from "./card.tsx";
 
@@ -27,11 +28,11 @@ const label = levelLabel[t.check.level] ?? t.check.level;
 ---
 
 <a
-  class:list={[
+  class={cn(
     bgCardVariants({ tone: "plate" }),
     "spotlight group/card grid grid-rows-[auto_auto_1fr_auto] gap-[0.3rem] overflow-hidden rounded-[16px] px-[1.15rem] pt-[1.1rem] pb-4 text-foreground no-underline transition-[transform,border-color,box-shadow] duration-350 ease-bf hover:-translate-y-1 hover:border-bf-blue/45 hover:text-foreground hover:shadow-[0_26px_50px_-28px_color-mix(in_srgb,var(--bf-blue)_65%,transparent)]",
     "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(260px_circle_at_var(--mx,50%)_var(--my,0%),color-mix(in_srgb,var(--bf-blue)_16%,transparent),transparent_68%)] after:opacity-0 after:transition-opacity after:duration-350 after:content-[''] hover:after:opacity-100",
-  ]}
+  )}
   data-card-kind={t.kind}
   data-reveal
   href={`${base}/apps/${t.id}/`}
