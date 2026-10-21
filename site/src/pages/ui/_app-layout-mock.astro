@@ -1,0 +1,71 @@
+---
+// A mock of the app page's media/install layout, at real desktop width so proportions can be judged.
+// Only the parts that decide the layout are here: the screenshot, Install (tabs + command + note),
+// "by hand", and Download. The copy button and tabs are inert on purpose — this is a layout study,
+// not a second implementation of the page.
+import { installCommand, targets } from "../../data/targets.ts";
+
+interface Props {
+  note: string;
+  cols: string;
+  sticky?: boolean;
+  mediaOrder?: "first" | "last";
+  frame?: number;
+}
+const { note, cols, sticky = false, mediaOrder = "first", frame = 1160 } = Astro.props;
+
+const zed = targets.find((t) => t.id === "zed")!;
+const shot = zed.screenshot!;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const cmd = installCommand("zed");
+---
+
+<div class="w-full min-w-0 overflow-x-auto rounded-[16px] border border-bf-border-muted bg-bf-bg p-3">
+  <div class:list={["grid gap-[2rem]", cols]} style={`min-width:${frame}px`}>
+    <figure class:list={["m-0 min-w-0", mediaOrder === "last" && "order-2"]}>
+      <img
+        src={`${base}/${shot.file}`}
+        alt={shot.alt}
+        width={shot.width}
+        height={shot.height}
+        class="block h-auto w-full rounded-[14px] border border-bf-border"
+      />
+      <figcaption class="mt-2 text-[0.82rem] text-bf-dim">
+        A real screenshot: Zed, Bigface applied.
+      </figcaption>
+    </figure>
+
+    <div class:list={["flex min-w-0 flex-col gap-[1.1rem]", mediaOrder === "last" && "order-1", sticky && "self-start"]}>
+      <section>
+        <div class="flex items-baseline gap-[0.6rem]">
+          <h3 class="m-0 text-[1.15rem] font-semibold">Install</h3>
+          <span class="font-code text-[0.68rem] text-bf-dim">zed</span>
+        </div>
+        <div class="mt-[0.55rem] inline-flex gap-[0.25rem] rounded-full border border-bf-border p-[0.2rem]">
+          <span class="rounded-full bg-bf-blue px-[0.7rem] py-[0.18rem] font-code text-[0.72rem] text-[var(--ink-on-bright)]">Install</span>
+          <span class="rounded-full px-[0.7rem] py-[0.18rem] font-code text-[0.72rem] text-bf-fg-muted">Uninstall</span>
+        </div>
+        <div class="mt-[0.6rem] flex items-start gap-[0.6rem] rounded-[12px] border border-bf-border-muted bg-bf-border-muted/40 p-[0.7rem]">
+          <code class="min-w-0 flex-1 font-code text-[0.74rem] break-all text-bf-fg-muted">{cmd}</code>
+          <span class="shrink-0 font-code text-[0.66rem] text-bf-dim uppercase">copy</span>
+        </div>
+        <p class="mt-[0.45rem] text-[0.8rem] text-bf-dim">
+          Writes Bigface's own file, prints the one line to add.
+        </p>
+        <p class="mt-[0.5rem] text-[0.82rem] text-bf-dim">
+          Never edits your config. <span class="text-bf-blue">Read the script</span> first, or add <code class="font-code text-bf-yellow">--dry-run</code>.
+        </p>
+        <p class="mt-[0.55rem] font-code text-[0.72rem] text-bf-dim">▸ Or do it by hand</p>
+      </section>
+
+      <section>
+        <h3 class="m-0 text-[1.15rem] font-semibold">Download</h3>
+        <div class="mt-[0.5rem] flex items-center justify-between gap-[0.8rem] rounded-[12px] border border-bf-border-muted p-[0.7rem]">
+          <span class="min-w-0 font-code text-[0.74rem] break-all text-bf-fg-muted">themes/zed/themes/bigface.json</span>
+          <span class="shrink-0 font-code text-[0.66rem] text-bf-dim uppercase">download</span>
+        </div>
+      </section>
+    </div>
+  </div>
+  <p class="mt-2 font-code text-[0.7rem] text-bf-dim">{note}</p>
+</div>
