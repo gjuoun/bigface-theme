@@ -115,7 +115,7 @@ export const targets: Target[] = [
       file: "img/apps/vscode.png",
       alt: "VS Code with Bigface: blue keywords, lime function names and yellow strings on the theme's green-grey background, with a small TypeScript project in the explorer.",
       width: 758,
-      height: 656,
+      height: 303,
     },
   },
   {
@@ -138,7 +138,7 @@ export const targets: Target[] = [
       file: "img/apps/zed.png",
       alt: "Zed with the Bigface theme: blue keywords, lime function calls, purple constants such as ENDPOINT, yellow strings and cyan types, with the project panel on the right.",
       width: 1100,
-      height: 712,
+      height: 424,
     },
   },
   {
@@ -165,7 +165,7 @@ export const targets: Target[] = [
       file: "img/apps/jetbrains.png",
       alt: "IntelliJ IDEA using the Bigface .icls scheme: blue keywords, lime function calls, yellow strings, cyan types on the theme's green-grey background.",
       width: 758,
-      height: 620,
+      height: 264,
     },
   },
   {
@@ -230,8 +230,8 @@ export const targets: Target[] = [
     screenshot: {
       file: "img/apps/vim.png",
       alt: "Vim with the Bigface colorscheme inside Ghostty: line-numbered TypeScript in the theme's keyword and string colours.",
-      width: 586,
-      height: 674,
+      width: 1100,
+      height: 330,
     },
   },
   {
@@ -254,7 +254,7 @@ export const targets: Target[] = [
       file: "img/apps/xcode.png",
       alt: "Xcode using the Bigface .xccolortheme: Swift keywords in blue, strings in yellow, types in cyan on the theme's green-grey background.",
       width: 816,
-      height: 628,
+      height: 613,
     },
   },
   {
