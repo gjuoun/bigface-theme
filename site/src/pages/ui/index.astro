@@ -1,14 +1,22 @@
 ---
+import { Download } from "lucide-react";
 import { BGBadge } from "../../components/bg/badge.tsx";
 import { BGCard } from "../../components/bg/card.tsx";
+import BGCodeCard from "../../components/bg/code-card.astro";
 import BGDivider from "../../components/bg/divider.astro";
 import BGEyebrow from "../../components/bg/eyebrow.astro";
 import BGSectionHead from "../../components/bg/section-head.astro";
 import BGSwatch from "../../components/bg/swatch.astro";
+import { Badge } from "../../components/ui/badge";
+import badgeSrc from "../../components/ui/badge.tsx?raw";
+import { Button } from "../../components/ui/button";
+import buttonSrc from "../../components/ui/button.tsx?raw";
+import tabsSrc from "../../components/ui/tabs.tsx?raw";
 import { palette } from "../../data/palette.ts";
-import { textScale } from "../../data/ui-catalog.ts";
+import { textScale, variantKeys } from "../../data/ui-catalog.ts";
 import Base from "../../layouts/Base.astro";
 import tailwindCss from "../../styles/tailwind.css?raw";
+import { CardDemo, TabsDemo } from "./_demos.tsx";
 
 // The component library the site is built from, rendered live. Lists that can be read from source
 // are: the semantic tokens (tailwind.css :root), the font stacks (@theme), the text scale (every
@@ -51,7 +59,19 @@ const subLink =
 const sections = [
   ["tokens", "Colour"],
   ["type", "Type"],
+  ["native", "Native"],
 ];
+// Variant and size keys come from the shadcn sources, so a variant added upstream shows up here.
+const buttonVariants = variantKeys(buttonSrc, "variant") as ButtonVariant[];
+const buttonSizes = variantKeys(buttonSrc, "size") as ButtonSize[];
+const badgeVariants = variantKeys(badgeSrc, "variant") as BadgeVariant[];
+const tabsVariants = variantKeys(tabsSrc, "variant") as ("default" | "line")[];
+type ButtonVariant = NonNullable<Parameters<typeof Button>[0]["variant"]>;
+type ButtonSize = NonNullable<Parameters<typeof Button>[0]["size"]>;
+type BadgeVariant = NonNullable<Parameters<typeof Badge>[0]["variant"]>;
+const entry = "mt-[1.4rem] min-w-0 p-5 md:p-6";
+const matrix = "max-w-full overflow-x-auto rounded-[14px] border border-bf-border-muted p-3";
+const cellLabel = "font-code text-[0.7rem] text-bf-dim";
 ---
 
 <Base
@@ -163,6 +183,143 @@ const sections = [
           </div>
         ))
       }
+    </BGCard>
+  </section>
+  <BGDivider />
+
+  <section id="native">
+    <BGSectionHead eyebrow="03 — native" title="Native components">
+      Everything in <code>components/ui/</code>, exactly as the shadcn CLI wrote it. Variants and
+      sizes are read from each component's source, so nothing upstream adds can hide.
+    </BGSectionHead>
+
+    <BGCard tone="plate" className={entry}>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 class="m-0">Button</h3>
+        <BGBadge tone="pill">native · shadcn</BGBadge>
+      </div>
+      <BGCodeCard path="import" code={'import { Button } from "@/components/ui/button";'} truncated={false} />
+      <p class="mb-2 text-bf-fg-muted">Every variant × size. Icon sizes carry an icon instead of a label.</p>
+      <div class={matrix}>
+        <table class="w-max min-w-full">
+          <thead>
+            <tr>
+              <th></th>
+              {buttonSizes.map((size) => <th>{size}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {
+              buttonVariants.map((variant) => (
+                <tr>
+                  <td class={cellLabel}>{variant}</td>
+                  {buttonSizes.map((size) => (
+                    <td>
+                      {size.startsWith("icon") ? (
+                        <Button variant={variant} size={size} aria-label={`${variant} ${size}`}>
+                          <Download />
+                        </Button>
+                      ) : (
+                        <Button variant={variant} size={size}>
+                          Button
+                        </Button>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 mb-2 text-bf-fg-muted">
+        States per variant. Hover and focus are live: point at or tab to any button above.
+      </p>
+      <div class={matrix}>
+        <table class="w-max min-w-full">
+          <thead>
+            <tr><th></th><th>default</th><th>disabled</th><th>aria-invalid</th></tr>
+          </thead>
+          <tbody>
+            {
+              buttonVariants.map((variant) => (
+                <tr>
+                  <td class={cellLabel}>{variant}</td>
+                  <td><Button variant={variant}>Default</Button></td>
+                  <td><Button variant={variant} disabled>Disabled</Button></td>
+                  <td><Button variant={variant} aria-invalid="true">Invalid</Button></td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </BGCard>
+
+    <BGCard tone="plate" className={entry}>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 class="m-0">Badge</h3>
+        <BGBadge tone="pill">native · shadcn</BGBadge>
+      </div>
+      <BGCodeCard path="import" code={'import { Badge } from "@/components/ui/badge";'} truncated={false} />
+      <p class="mb-2 text-bf-fg-muted">Every variant; Badge has no size. Not interactive, so no hover or disabled state.</p>
+      <div class={matrix}>
+        <div class="flex flex-wrap items-center gap-4">
+          {
+            badgeVariants.map((variant) => (
+              <span class="inline-flex flex-col items-start gap-1">
+                <Badge variant={variant}>{variant}</Badge>
+                <span class={cellLabel}>{variant}</span>
+              </span>
+            ))
+          }
+        </div>
+      </div>
+    </BGCard>
+
+    <BGCard tone="plate" className={entry}>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 class="m-0">Card</h3>
+        <BGBadge tone="pill">native · shadcn</BGBadge>
+      </div>
+      <BGCodeCard
+        path="import"
+        code={'import {\n  Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,\n} from "@/components/ui/card";'}
+        truncated={false}
+      />
+      <p class="mb-2 text-bf-fg-muted">Both sizes with every slot filled. Static, so no states.</p>
+      <div class:list={[matrix, "grid gap-4 md:grid-cols-2"]}>
+        <CardDemo size="default" />
+        <CardDemo size="sm" />
+      </div>
+    </BGCard>
+
+    <BGCard tone="plate" className={entry}>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 class="m-0">Tabs</h3>
+        <BGBadge tone="pill">native · shadcn</BGBadge>
+      </div>
+      <BGCodeCard
+        path="import"
+        code={'import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";'}
+        truncated={false}
+      />
+      <p class="mb-2 text-bf-fg-muted">
+        Every list variant × orientation, live (one island each). The third trigger is disabled; focus
+        and arrow keys work.
+      </p>
+      <div class:list={[matrix, "grid gap-6 md:grid-cols-2"]}>
+        {
+          tabsVariants.flatMap((variant) =>
+            (["horizontal", "vertical"] as const).map((orientation) => (
+              <div class="min-w-0">
+                <p class:list={[cellLabel, "mt-0 mb-2"]}>variant={variant} · {orientation}</p>
+                <TabsDemo client:load variant={variant} orientation={orientation} />
+              </div>
+            )),
+          )
+        }
+      </div>
     </BGCard>
   </section>
 </Base>
