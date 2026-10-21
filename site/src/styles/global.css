@@ -23,6 +23,7 @@
   --border: #494848;
   --border-muted: #333333;
   --line-rgb: 73, 72, 72;
+  --ink-on-bright: #252925;
   --line: var(--border);
   --line-strong: var(--selection);
   /* accents */
@@ -394,7 +395,7 @@ pre code {
   border: 1px solid transparent;
   font-weight: 600;
   font-size: 0.94rem;
-  color: var(--bg);
+  color: var(--ink-on-bright);
   background: linear-gradient(135deg, var(--blue), var(--light-blue));
   box-shadow:
     0 8px 26px color-mix(in srgb, var(--blue) 30.0%, transparent),
@@ -408,7 +409,7 @@ pre code {
 
 .btn:hover {
   transform: translateY(-2px);
-  color: var(--bg);
+  color: var(--ink-on-bright);
   background: linear-gradient(135deg, var(--light-blue), var(--pale-blue));
   box-shadow:
     0 14px 34px color-mix(in srgb, var(--blue) 40.0%, transparent),
@@ -644,7 +645,7 @@ pre code {
 }
 
 .tabs button[aria-selected="true"] {
-  color: var(--search-fg);
+  color: var(--ink-on-bright);
   background: linear-gradient(135deg, var(--pale-blue), var(--blue));
   box-shadow: 0 6px 18px color-mix(in srgb, var(--blue) 30.0%, transparent);
 }

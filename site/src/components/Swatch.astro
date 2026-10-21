@@ -31,7 +31,9 @@ const { ink, ratio } = inkOn(color.hex);
 
 <style>
   .swatch {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     width: 100%;
     text-align: left;
     font: inherit;
@@ -52,6 +54,7 @@ const { ink, ratio } = inkOn(color.hex);
   }
 
   .chip {
+    flex: 0 0 82px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -103,6 +106,9 @@ const { ink, ratio } = inkOn(color.hex);
   }
 
   .meta {
+    /* rows stretch to the tallest card; the footer takes the slack so no cell looks half-filled */
+    flex: 1 1 auto;
+    justify-content: center;
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
@@ -116,7 +122,7 @@ const { ink, ratio } = inkOn(color.hex);
   }
 
   .src {
-    color: var(--dim);
+    color: var(--muted);
     font-family: var(--font-mono);
     font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
     font-size: 0.64rem;

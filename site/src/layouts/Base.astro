@@ -27,6 +27,8 @@ const vars: Record<string, string> = {
   // ink
   "--fg": hex("fg"),
   "--cream": hex("fg"),
+  // bright controls (buttons, selected tabs) take the background colour as ink
+  "--ink-on-bright": hex("bg"),
   "--muted": `color-mix(in srgb, ${hex("fg")} 75%, ${hex("bg")})`,
   "--dim": `color-mix(in srgb, ${hex("fg")} 55%, ${hex("bg")})`,
   "--comment": hex("comment"),

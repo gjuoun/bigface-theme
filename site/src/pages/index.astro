@@ -404,13 +404,23 @@ const removeAll = installCommand("--uninstall all");
     cursor: pointer;
     padding: 0;
     overflow: hidden;
-    transition: flex-grow 0.45s var(--ease), transform 0.3s var(--ease);
+    transition:
+      flex-grow 0.5s var(--ease),
+      transform 0.35s var(--ease),
+      box-shadow 0.3s var(--ease),
+      filter 0.3s var(--ease);
+    will-change: flex-grow;
     font: inherit;
   }
 
+  .strip:hover .swatch:not(:hover) {
+    filter: saturate(0.72) brightness(0.9);
+  }
+
   .swatch:hover {
-    flex-grow: 2.2;
-    transform: translateY(-3px);
+    flex-grow: 2.6;
+    transform: translateY(-4px);
+    box-shadow: 0 18px 34px -26px color-mix(in srgb, var(--fg) 60%, transparent);
   }
 
   .swatch .name,
