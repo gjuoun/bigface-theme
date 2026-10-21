@@ -61,6 +61,40 @@
   box-sizing: border-box;
 }
 
+/* Browser defaults that Tailwind's reset zeroes, kept for the parts not yet on components (this file
+   lives in the `legacy` layer, above the reset and below the utilities). */
+p,
+ul,
+ol,
+dl,
+figure,
+blockquote {
+  margin-block: 1em;
+}
+ul,
+ol {
+  padding-inline-start: 40px;
+}
+ul {
+  list-style: disc;
+}
+ol {
+  list-style: decimal;
+}
+img,
+svg,
+video,
+canvas {
+  display: inline;
+  vertical-align: baseline;
+}
+button,
+input,
+select,
+textarea {
+  line-height: normal;
+}
+
 html {
   background: var(--bg);
   color: var(--fg);

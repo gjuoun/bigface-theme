@@ -18,6 +18,19 @@ test("a state fill needs the ink under the same state", () => {
   ).toEqual([]);
 });
 
+test("a bright gradient plate needs the ink too", () => {
+  expect(
+    findInklessBrightPlates(
+      '<a class="bg-linear-135 from-bf-blue to-bf-light-blue text-foreground"></a>',
+    ),
+  ).toHaveLength(2);
+  expect(
+    findInklessBrightPlates(
+      '<a class="bg-linear-135 from-bf-blue to-bf-light-blue text-ink-on-bright"></a>',
+    ),
+  ).toEqual([]);
+});
+
 test("translucent tints and paired fills are not flagged", () => {
   expect(findInklessBrightPlates('<i class="bg-bf-blue/20 text-foreground"></i>')).toEqual([]);
   expect(findInklessBrightPlates('<b class="bg-primary text-primary-foreground"></b>')).toEqual([]);

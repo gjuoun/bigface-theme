@@ -44,7 +44,8 @@ export function findInklessBrightPlates(html: string): string[] {
     const tokens = (m[1] as string).split(/\s+/).filter(Boolean).map(splitVariant);
     const inks = new Set(tokens.filter(([, u]) => INK.has(u)).map(([v]) => v));
     for (const [variant, utility] of tokens) {
-      const fill = /^bg-(.+)$/.exec(utility)?.[1];
+      // a solid fill (bg-x) or a gradient stop (from-x / via-x / to-x) of a bright colour
+      const fill = /^(?:bg|from|via|to)-(.+)$/.exec(utility)?.[1];
       if (!fill || !BRIGHT.has(fill)) continue; // bg-x/20 (translucent tint) never matches
       if (!inks.has(variant) && !inks.has("")) offenders.push(m[1] as string);
     }

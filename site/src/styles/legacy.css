@@ -1,0 +1,3 @@
+/* The pre-Tailwind stylesheet, kept in its own cascade layer (order declared in tailwind.css) until
+   every page is on components. Imported as plain CSS so Tailwind does not rewrite it. */
+@import "./global.css" layer(legacy);
