@@ -1,6 +1,7 @@
 ---
+import "../styles/tailwind.css";
 import "../styles/global.css";
-import { hex } from "../data/palette.ts";
+import { hex, palette } from "../data/palette.ts";
 import { REPO, targets } from "../data/targets.ts";
 
 interface Props {
@@ -16,7 +17,16 @@ const origin = Astro.site ? new URL(Astro.site).origin : "";
 // Every colour on this site comes from palette/bigface.json: the chrome is the theme's own
 // surface ladder, the accents are its accents, and translucent steps are those same colours with
 // alpha. Gradients interpolate between palette stops; nothing else is invented.
+const kebab = (name: string) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 const vars: Record<string, string> = {
+  // the palette itself, under our own names: --bf-<colour> and --bf-ansi-<name>. tailwind.css maps
+  // shadcn's semantic tokens and the bg-bf-* utilities onto these and nothing else.
+  ...Object.fromEntries(
+    Object.entries(palette.colors).map(([k, c]) => [`--bf-${kebab(k)}`, c.hex]),
+  ),
+  ...Object.fromEntries(
+    Object.entries(palette.ansi).map(([k, c]) => [`--bf-ansi-${kebab(k)}`, c.hex]),
+  ),
   // surfaces (the scheme's own: bg, cursor-line row, matched-brace block, border greys)
   "--bg": hex("bg"),
   "--bg-2": hex("borderMuted"),
@@ -29,7 +39,7 @@ const vars: Record<string, string> = {
   "--cream": hex("fg"),
   // bright controls (buttons, selected tabs) take the background colour as ink
   "--ink-on-bright": hex("bg"),
-  "--muted": `color-mix(in srgb, ${hex("fg")} 75%, ${hex("bg")})`,
+  "--fg-muted": `color-mix(in srgb, ${hex("fg")} 75%, ${hex("bg")})`,
   "--dim": `color-mix(in srgb, ${hex("fg")} 55%, ${hex("bg")})`,
   "--comment": hex("comment"),
   "--caret": hex("caret"),
@@ -63,7 +73,7 @@ const style = Object.entries(vars)
 ---
 
 <!doctype html>
-<html lang="en" style={style}>
+<html lang="en" class="dark" style={style}>
   <head>
     <meta charset="utf-8" />
     <script is:inline>

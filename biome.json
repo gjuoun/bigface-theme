@@ -9,9 +9,12 @@
       "!site/dist",
       "!site/.astro",
       "!src/fixtures",
-      "!palette/*.json"
+      "!palette/*.json",
+      "!site/src/components/ui",
+      "!site/src/lib/utils.ts"
     ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
-  "linter": { "enabled": true, "rules": { "preset": "none" } }
+  "linter": { "enabled": true, "rules": { "preset": "none" } },
+  "css": { "parser": { "tailwindDirectives": true } }
 }
