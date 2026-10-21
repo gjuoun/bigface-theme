@@ -2,6 +2,7 @@ import { beforeAll, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
+import { findForeignInCss, findForeignInHtml, paletteHexes } from "./color-guard.ts";
 import { contrastRatio, inkOn, palette } from "./data/palette.ts";
 import { targets } from "./data/targets.ts";
 
@@ -183,40 +184,26 @@ test("anything painted with a bright plate writes dark ink on it", () => {
 
 test("the site only ships colours that exist in the palette", () => {
   // Chrome included: the site uses the theme's own surfaces. Gradients interpolate between palette
-  // stops, and translucent steps are palette colours with alpha, so no other hex may appear.
-  const palette = JSON.parse(readFileSync(join(repo, "palette/bigface.json"), "utf8")) as {
-    colors: Record<string, { hex: string }>;
-    ansi: Record<string, { hex: string }>;
-  };
-  const known = new Set(
-    [...Object.values(palette.colors), ...Object.values(palette.ansi)].map((c) =>
-      c.hex.toLowerCase(),
-    ),
+  // stops, and translucent steps are palette colours with alpha. The scanner (color-guard.ts) knows
+  // every CSS colour syntax — hex of any length, rgb(), oklch()/lab()/hsl()…, named colours — because
+  // Tailwind/shadcn defaults ship oklch() and short hex that a #rrggbb regex never saw.
+  const known = paletteHexes(palette);
+  const htmlFiles = readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
+    f.endsWith("index.html"),
   );
-  const triplets = new Set(
-    [...known].map((h) => [1, 3, 5].map((i) => Number.parseInt(h.slice(i, i + 2), 16)).join(",")),
-  );
-  const scan = (file: string) => {
-    const text = readFileSync(file, "utf8");
-    for (const m of text.matchAll(/#[0-9a-fA-F]{6}\b/g)) {
-      expect(known.has(m[0].toLowerCase()), `${file}: ${m[0]}`).toBe(true);
-    }
-    // rgb()/rgba() triples are palette colours too — a stray rgba(5,13,27,…) once slipped past.
-    for (const m of text.matchAll(/rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/g)) {
-      expect(triplets.has(`${m[1]},${m[2]},${m[3]}`), `${file}: rgb(${m[1]},${m[2]},${m[3]})`).toBe(
-        true,
-      );
-    }
-  };
-  scan(join(dist, "index.html"));
-  scan(join(dist, "palette/index.html"));
-  scan(join(dist, "apps/jetbrains/index.html"));
-  for (const css of ["Base", "index"]) {
-    const files = readdirSync(join(dist, "_astro")).filter(
-      (f) => f.startsWith(css) && f.endsWith(".css"),
-    );
-    for (const f of files) scan(join(dist, "_astro", f));
+  expect(htmlFiles.length).toBeGreaterThanOrEqual(16);
+  const offenders: string[] = [];
+  for (const f of htmlFiles)
+    for (const bad of findForeignInHtml(readFileSync(join(dist, f), "utf8"), known))
+      offenders.push(`${f}: ${bad}`);
+  const cssFiles = readdirSync(join(dist, "_astro")).filter((f) => f.endsWith(".css"));
+  for (const f of cssFiles) {
+    const css = readFileSync(join(dist, "_astro", f), "utf8");
+    for (const bad of findForeignInCss(css, known)) offenders.push(`_astro/${f}: ${bad}`);
+    // The ring-offset #fff default is only harmless while no ring-offset utility paints it.
+    expect(css, f).not.toMatch(/\.ring-offset-/);
   }
+  expect(offenders).toEqual([]);
   // And the theme's own background really is the page background.
   expect(page("")).toContain("#252925");
 });
