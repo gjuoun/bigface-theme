@@ -48,11 +48,13 @@ jobs:
         run: |
           npx --yes wrangler@4 pages project create bundant --production-branch main || true
 
-      - uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 20045ddbb9002faab76593c79956a347
-          command: pages deploy bundant/site/dist --project-name bundant --branch main
+      # Plain `npx wrangler` on purpose: wrangler-action wants a wrangler already
+      # installed in the workspace, which this cross-repo job does not have.
+      - name: Deploy to Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 20045ddbb9002faab76593c79956a347
+        run: npx --yes wrangler@4 pages deploy bundant/site/dist --project-name bundant --branch main
 
       - name: Attach custom domain bundant.qqntt.com
         env:
