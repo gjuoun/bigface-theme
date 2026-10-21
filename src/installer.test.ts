@@ -10,7 +10,7 @@ const repo = join(import.meta.dir, "..");
 const script = join(await mkdtemp(join(tmpdir(), "bf-inst-script-")), "install.sh");
 const site = join(await mkdtemp(join(tmpdir(), "bf-inst-site-")));
 
-/** A PATH holding only what the script needs, so a real `vim` or `tmux` on this machine can't be detected. */
+/** A PATH holding only what the script needs, so a real `vim` or `zellij` on this machine can't be detected. */
 const basic = await mkdtemp(join(tmpdir(), "bf-basic-"));
 for (const tool of [
   "sh",
@@ -121,7 +121,7 @@ describe("running the script", () => {
     ["ghostty", ".config/ghostty/themes/Bigface", "Bigface"],
     ["zed", ".config/zed/themes/bigface.json", "themes/bigface.json"],
     ["zellij", ".config/zellij/themes/bigface.kdl", "bigface.kdl"],
-    ["tmux", ".config/tmux/bigface.conf", "bigface.conf"],
+    ["zellij", ".config/zellij/themes/bigface.kdl", "bigface.kdl"],
     ["micro", ".config/micro/colorschemes/bigface.micro", "bigface.micro"],
     [
       "xcode",
@@ -200,7 +200,7 @@ describe("running the script", () => {
   });
 
   test("--dry-run writes nothing and says what it would do", async () => {
-    const r = await run(["--dry-run", "ghostty", "tmux", "vscode"]);
+    const r = await run(["--dry-run", "ghostty", "zellij", "vscode"]);
     expect(r.code, r.out).toBe(0);
     expect(r.out).toContain("would write ~/");
     expect(r.out).not.toContain(r.home);
@@ -221,15 +221,15 @@ describe("running the script", () => {
   });
 
   test("a second run overwrites cleanly", async () => {
-    const home = (await run(["tmux"])).home;
-    const target = join(home, ".config/tmux/bigface.conf");
+    const home = (await run(["zellij"])).home;
+    const target = join(home, ".config/zellij/themes/bigface.kdl");
     await writeFile(target, "stale");
-    const again = await $`sh ${script} tmux`
+    const again = await $`sh ${script} zellij`
       .env({ HOME: home, PATH: basic, BIGFACE_BASE: `file://${site}` })
       .quiet()
       .nothrow();
     expect(again.exitCode).toBe(0);
-    expect(await Bun.file(target).text()).toBe(await themeText("tmux", "bigface.conf"));
+    expect(await Bun.file(target).text()).toBe(await themeText("zellij", "bigface.kdl"));
     expect(dirname(target)).toBeTruthy();
   });
 
@@ -289,7 +289,7 @@ describe("uninstall", () => {
       "ghostty",
       "zed",
       "zellij",
-      "tmux",
+      "zellij",
       "micro",
       "xcode",
       "vim",
@@ -315,23 +315,23 @@ describe("uninstall", () => {
   });
 
   test("uninstalling something that isn't installed is harmless", async () => {
-    const r = await run(["--uninstall", "tmux"]);
+    const r = await run(["--uninstall", "zellij"]);
     expect(r.code).toBe(0);
     expect(r.out).toContain("not installed:");
   });
 
   test("--dry-run --uninstall removes nothing", async () => {
-    const r = await run(["tmux"]);
-    const un = await $`sh ${script} --dry-run --uninstall tmux`
+    const r = await run(["zellij"]);
+    const un = await $`sh ${script} --dry-run --uninstall zellij`
       .env(homeEnv(r.home))
       .quiet()
       .nothrow();
     expect(un.stdout.toString()).toContain("would remove ~/");
-    expect(await tree(r.home)).toEqual([".config/tmux/bigface.conf"]);
+    expect(await tree(r.home)).toEqual([".config/zellij/themes/bigface.kdl"]);
   });
 
   test("`--uninstall all` removes only what is installed", async () => {
-    const r = await run(["pi", "tmux"]);
+    const r = await run(["pi", "zellij"]);
     await mkdir(join(r.home, ".config/zellij/themes"), { recursive: true });
     await writeFile(join(r.home, ".config/zellij/themes/mine.kdl"), "mine");
     const un = await $`sh ${script} --uninstall all`.env(homeEnv(r.home)).quiet().nothrow();
@@ -379,18 +379,18 @@ describe("uninstall", () => {
 
 describe("interactive menu", () => {
   test("install: pick by number and by name, confirm, files appear", async () => {
-    const r = await ask("1\n2, tmux\ny\n");
+    const r = await ask("1\n2, zellij\ny\n");
     expect(r.code, r.out).toBe(0);
     expect(r.out).toContain("What do you want to do?");
-    expect(r.out).toContain("install: ghostty tmux");
+    expect(r.out).toContain("install: ghostty zellij");
     expect(await tree(r.home)).toEqual([
       ".config/ghostty/themes/Bigface",
-      ".config/tmux/bigface.conf",
+      ".config/zellij/themes/bigface.kdl",
     ]);
   });
 
   test("the menu marks installed and detected apps", async () => {
-    const home = (await run(["tmux"])).home;
+    const home = (await run(["zellij"])).home;
     const apps = join(home, "Applications");
     await mkdir(join(apps, "Ghostty.app"), { recursive: true });
     const answers = join(home, "answers");
@@ -406,15 +406,15 @@ describe("interactive menu", () => {
       .quiet()
       .nothrow();
     const out = r.stdout.toString();
-    expect(out).toMatch(/9\) tmux\s+installed/);
+    expect(out).toMatch(/7\) zellij\s+installed/);
     expect(out).toMatch(/2\) ghostty\s+detected/);
     expect(out).toMatch(/3\) herdr\s{2,}downloads/);
   });
 
   test("uninstall: choose 2, pick an app, confirm, file is gone", async () => {
-    const home = (await run(["tmux", "ghostty"])).home;
+    const home = (await run(["zellij", "ghostty"])).home;
     const answers = join(home, "answers");
-    await writeFile(answers, "2\ntmux\ny\n");
+    await writeFile(answers, "2\nzellij\ny\n");
     const r = await $`sh ${script}`
       .env({ HOME: home, PATH: basic, BIGFACE_BASE: `file://${site}`, BIGFACE_TTY: answers })
       .quiet()
@@ -470,12 +470,12 @@ describe("interactive menu", () => {
   });
 
   test("--uninstall skips the first question; --dry-run writes nothing", async () => {
-    const r = await ask("tmux\ny\n", ["--dry-run"]);
+    const r = await ask("zellij\ny\n", ["--dry-run"]);
     expect(r.out).toContain("What do you want to do?");
     const u = await ask("q\n", ["--uninstall"]);
     expect(u.out).not.toContain("What do you want to do?");
     expect(u.out).toContain("uninstall which?");
-    const d = await ask("1\ntmux\ny\n", ["--dry-run"]);
+    const d = await ask("1\nzellij\ny\n", ["--dry-run"]);
     expect(d.out).toContain("would write ~/");
     expect(await tree(d.home)).toEqual([]);
   });
@@ -491,12 +491,12 @@ describe("interactive menu", () => {
   test("works when the script itself arrives on stdin, as with `curl | sh`", async () => {
     const home = await mkdtemp(join(tmpdir(), "bf-inst-home-"));
     const answers = join(home, "answers");
-    await writeFile(answers, "1\ntmux\ny\n");
+    await writeFile(answers, "1\nzellij\ny\n");
     const r = await $`cat ${script} | sh`
       .env({ HOME: home, PATH: basic, BIGFACE_BASE: `file://${site}`, BIGFACE_TTY: answers })
       .quiet()
       .nothrow();
     expect(r.exitCode, r.stderr.toString()).toBe(0);
-    expect(await Bun.file(join(home, ".config/tmux/bigface.conf")).exists()).toBe(true);
+    expect(await Bun.file(join(home, ".config/zellij/themes/bigface.kdl")).exists()).toBe(true);
   });
 });

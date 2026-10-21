@@ -2,7 +2,7 @@
 # Bigface installer — https://github.com/gjuoun/bigface-theme
 #
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh                          # interactive: asks what to install or remove
-#   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty tmux       # install named apps
+#   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty vim       # install named apps
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- all                # every drop-in app it detects
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --uninstall all    # remove what it installed
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --list
@@ -20,8 +20,8 @@ BASE="${BIGFACE_BASE:-https://bigface.qqntt.com}"
 DRY="${BIGFACE_DRY_RUN:-}"
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
 TTY="${BIGFACE_TTY:-/dev/tty}"
-IDS="pi ghostty herdr vscode zed jetbrains zellij starship tmux vim xcode micro obsidian slack"
-ALL="pi ghostty vscode zed zellij tmux vim xcode micro"
+IDS="pi ghostty herdr vscode zed jetbrains zellij starship vim xcode micro obsidian slack"
+ALL="pi ghostty vscode zed zellij vim xcode micro"
 MODE="install"
 
 usage() {
@@ -39,7 +39,6 @@ blurb() {
     jetbrains) echo 'downloads the file and prints the steps' ;;
     zellij) echo 'installs the theme file' ;;
     starship) echo 'downloads the file and prints the steps' ;;
-    tmux) echo 'installs the theme file' ;;
     vim) echo 'installs the theme file' ;;
     xcode) echo 'installs the theme file' ;;
     micro) echo 'installs the theme file' ;;
@@ -116,7 +115,6 @@ detected() {
     vscode) command -v code >/dev/null 2>&1 || command -v cursor >/dev/null 2>&1 ;;
     zed) [ -d "${BIGFACE_APPS:-/Applications}"/Zed.app ] || command -v zed >/dev/null 2>&1 || [ -d "$CFG/zed" ] ;;
     zellij) command -v zellij >/dev/null 2>&1 || [ -d "$CFG/zellij" ] ;;
-    tmux) command -v tmux >/dev/null 2>&1 || [ -f "$HOME/.tmux.conf" ] || [ -d "$CFG/tmux" ] ;;
     vim) command -v vim >/dev/null 2>&1 || command -v nvim >/dev/null 2>&1 ;;
     xcode) [ -d "${BIGFACE_APPS:-/Applications}"/Xcode.app ] ;;
     micro) command -v micro >/dev/null 2>&1 || [ -d "$CFG/micro" ] ;;
@@ -140,7 +138,6 @@ is_installed() {
     jetbrains) [ -e "$CFG/bigface/jetbrains/Bigface.xml" ] ;;
     zellij) [ -e "$CFG/zellij/themes/bigface.kdl" ] ;;
     starship) [ -e "$CFG/bigface/starship/palette.toml" ] ;;
-    tmux) [ -e "$CFG/tmux/bigface.conf" ] ;;
     vim) [ -e "$HOME/.vim/colors/bigface.vim" ] || [ -e "$CFG/nvim/colors/bigface.vim" ] ;;
     xcode) [ -e "$HOME/Library/Developer/Xcode/UserData/FontAndColorThemes/Bigface.xccolortheme" ] ;;
     micro) [ -e "$CFG/micro/colorschemes/bigface.micro" ] ;;
@@ -205,11 +202,6 @@ install_zellij() {
 install_starship() {
   put 'themes/starship/palette.toml' "$CFG/bigface/starship/palette.toml" || return 1
   note "Paste that file at the top of $CFG/starship.toml (the \`palette\` line must come before any table)."
-}
-
-install_tmux() {
-  put 'themes/tmux/bigface.conf' "$CFG/tmux/bigface.conf" || return 1
-  note "Add \`source-file $CFG/tmux/bigface.conf\` to ~/.tmux.conf, then \`tmux source ~/.tmux.conf\`."
 }
 
 install_vim() {
@@ -295,11 +287,6 @@ uninstall_starship() {
   drop_dir "$CFG/bigface/starship"
   drop_dir "$CFG/bigface"
   note "Remove the \`palette = bigface\` line and the [palettes.bigface] table from $CFG/starship.toml."
-}
-
-uninstall_tmux() {
-  remove "$CFG/tmux/bigface.conf"
-  note "Remove the \`source-file\` line for bigface.conf from ~/.tmux.conf."
 }
 
 uninstall_vim() {

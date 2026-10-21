@@ -145,6 +145,11 @@ export const zed: Target = {
         constructor: hl(s("type")),
         variable: hl(s("variable")),
         "variable.special": hl(s("constant")),
+        // SCREAMING_CASE bindings (`const ENDPOINT = …`) come through as variable.constant, not constant
+        "variable.constant": hl(s("constant")),
+        "variable.builtin": hl(s("constant")),
+        "constant.builtin": hl(s("constant")),
+        "label.constant": hl(s("constant")),
         property: hl(s("variable")),
         attribute: hl(s("tag")),
         tag: hl(s("tag")),

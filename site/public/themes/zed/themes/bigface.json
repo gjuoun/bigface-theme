@@ -203,6 +203,18 @@
           "variable.special": {
             "color": "#ae81ff"
           },
+          "variable.constant": {
+            "color": "#ae81ff"
+          },
+          "variable.builtin": {
+            "color": "#ae81ff"
+          },
+          "constant.builtin": {
+            "color": "#ae81ff"
+          },
+          "label.constant": {
+            "color": "#ae81ff"
+          },
           "property": {
             "color": "#00c853"
           },

@@ -24,7 +24,13 @@ const marquee = [
 ];
 const colourCount = Object.keys(palette.colors).length;
 const quick = installCommand();
-const oneApp = installCommand("ghostty tmux zed");
+const levelLabel = {
+  tool: "Checked with the tool",
+  schema: "Checked against its schema",
+  format: "Format-checked only",
+};
+const isLevel = (level: string): level is keyof typeof levelLabel => level in levelLabel;
+const oneApp = installCommand("ghostty zed vim");
 const everything = installCommand("all");
 const removeAll = installCommand("--uninstall all");
 const installTabs = [
@@ -38,7 +44,7 @@ const installTabs = [
   {
     id: "one",
     label: "One app",
-    bar: "sh — install ghostty tmux zed",
+    bar: "sh — install ghostty zed vim",
     command: oneApp,
     note: "Pass any app ids; unknown ones are reported and skipped.",
   },

@@ -1,6 +1,6 @@
 # Bigface
 
-A dark color theme with **one palette and 14 ports**. It started in 2018 as a
+A dark color theme with **one palette and 13 ports**. It started in 2018 as a
 [JetBrains scheme](https://plugins.jetbrains.com/plugin/10988-bigface-color-scheme) and is now
 generated for your terminal, editors, shell and notes from [`palette/bigface.json`](palette/bigface.json).
 
@@ -38,7 +38,7 @@ With no arguments it is interactive: it asks whether to install or uninstall, sh
 `installed` or `detected`, and lets you pick by number or name (Enter = all detected). Or skip the questions:
 
 ```sh
-curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty tmux zed
+curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty zed vim
 curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- all                # every supported app it detects
 curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --uninstall all   # remove what it installed
 curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --list
@@ -63,7 +63,6 @@ downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs 
 | JetBrains | `themes/jetbrains/Bigface.xml` | identical to the original scheme |
 | zellij | `themes/zellij/bigface.kdl` | `zellij setup --check` |
 | starship | `themes/starship/palette.toml` | `starship print-config` |
-| tmux | `themes/tmux/bigface.conf` | tmux loads it |
 | Vim / Neovim | `themes/vim/colors/bigface.vim` | vim loads it, `hi Normal` |
 | Xcode | `themes/xcode/Bigface.xccolortheme` | `plutil -lint` + Xcode's own key set |
 | micro | `themes/micro/bigface.micro` | format test only |
