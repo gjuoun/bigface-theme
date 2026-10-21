@@ -9,6 +9,7 @@ import { BGInstallTabs } from "../../components/bg/install-tabs.tsx";
 import BGManualSteps from "../../components/bg/manual-steps.astro";
 import BGMarketCard from "../../components/bg/market-card.astro";
 import BGNextCard from "../../components/bg/next-card.astro";
+import BGSplit from "../../components/bg/split.astro";
 import BGSyntaxPreview from "../../components/bg/syntax-preview.astro";
 import { installCommand, REPO, rawUrl, type Target, targets } from "../../data/targets.ts";
 import { themeFile } from "../../data/themes.ts";
@@ -53,66 +54,68 @@ const installTabs = [
 
   <BGAppHero target={target} index={index} total={targets.length} levelLabel={levelLabel} />
 
-  <section class="mt-[1.8rem]" data-reveal>
-    {target.screenshot ? (
-      <figure class="m-0">
-        <img
-          src={`${base}/${target.screenshot.file}`}
-          alt={target.screenshot.alt}
-          width={target.screenshot.width}
-          height={target.screenshot.height}
-          loading="lazy"
-          class="block h-auto w-full rounded-[14px] border border-bf-border"
-        />
-        <figcaption class="mt-2 text-[0.82rem] text-bf-dim">
-          {target.screenshot.caption ?? `A real screenshot: ${target.name}, Bigface applied.`}
-        </figcaption>
-      </figure>
-    ) : (
-      <BGSyntaxPreview terminal={target.terminalPreview} />
-    )}
-  </section>
-
-  {target.market && <BGMarketCard label={target.market.label} url={target.market.url} name={target.name} />}
-
-  <section id="install" data-reveal>
-    <h2>Install</h2>
-    <BGCard tone="plate" glow className="mt-[0.6rem] overflow-hidden p-[0.9rem]">
-      <BGInstallTabs client:load items={installTabs} />
-    </BGCard>
-    <p class="text-bf-dim">
-      It never edits your config; it prints the one line you still need to add (or remove).
-      <a href={`${base}/install.sh`}>Read the script</a> first, or add <code>--dry-run</code>.
-    </p>
-
-    <BGManualSteps steps={target.steps} />
-  </section>
-
-  <section data-reveal>
-    <h2>Download</h2>
-    <ul class="grid max-w-[560px] list-none gap-[0.6rem] p-0">
-      {target.download && (
-        <li>
-          <BGDownloadCard
-            href={`${base}/${target.download.href}`}
-            label={target.download.label}
-            detail="packaged extension"
+  <BGSplit split={Boolean(target.screenshot)}>
+    <section slot="media" class="mt-[1.8rem]" data-reveal>
+      {target.screenshot ? (
+        <figure class="m-0">
+          <img
+            src={`${base}/${target.screenshot.file}`}
+            alt={target.screenshot.alt}
+            width={target.screenshot.width}
+            height={target.screenshot.height}
+            loading="lazy"
+            class="block h-auto w-full rounded-[14px] border border-bf-border"
           />
-        </li>
+          <figcaption class="mt-2 text-[0.82rem] text-bf-dim">
+            {target.screenshot.caption ?? `A real screenshot: ${target.name}, Bigface applied.`}
+          </figcaption>
+        </figure>
+      ) : (
+        <BGSyntaxPreview terminal={target.terminalPreview} />
       )}
-      {target.files.map((f) => (
-        <li class="flex items-center gap-[0.8rem]">
-          <BGDownloadCard
-            href={`${base}/themes/${target.id}/${f.path}`}
-            label={f.label}
-            detail="download the file"
-            class="flex-1"
-          />
-          <a class="text-[0.75rem] whitespace-nowrap text-bf-dim hover:text-bf-blue" href={rawUrl(target.id, f.path)}>raw on GitHub</a>
-        </li>
-      ))}
-    </ul>
-  </section>
+    </section>
+
+    {target.market && <BGMarketCard label={target.market.label} url={target.market.url} name={target.name} />}
+
+    <section id="install" data-reveal>
+      <h2>Install</h2>
+      <BGCard tone="plate" glow className="mt-[0.6rem] overflow-hidden p-[0.9rem]">
+        <BGInstallTabs client:load items={installTabs} />
+      </BGCard>
+      <p class="text-bf-dim">
+        It never edits your config; it prints the one line you still need to add (or remove).
+        <a href={`${base}/install.sh`}>Read the script</a> first, or add <code>--dry-run</code>.
+      </p>
+
+      <BGManualSteps steps={target.steps} />
+    </section>
+
+    <section data-reveal>
+      <h2>Download</h2>
+      <ul class="grid max-w-[560px] list-none gap-[0.6rem] p-0">
+        {target.download && (
+          <li>
+            <BGDownloadCard
+              href={`${base}/${target.download.href}`}
+              label={target.download.label}
+              detail="packaged extension"
+            />
+          </li>
+        )}
+        {target.files.map((f) => (
+          <li class="flex items-center gap-[0.8rem]">
+            <BGDownloadCard
+              href={`${base}/themes/${target.id}/${f.path}`}
+              label={f.label}
+              detail="download the file"
+              class="flex-1"
+            />
+            <a class="text-[0.75rem] whitespace-nowrap text-bf-dim hover:text-bf-blue" href={rawUrl(target.id, f.path)}>raw on GitHub</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </BGSplit>
 
   <section data-reveal>
     <h2>What was checked</h2>

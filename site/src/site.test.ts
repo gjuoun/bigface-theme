@@ -239,3 +239,36 @@ test("the component library page shows every native and BG component, and flags 
     html.match(/data-slot="button" data-variant="destructive" data-size="icon-lg"/g)?.length,
   ).toBeGreaterThanOrEqual(1);
 });
+
+test("app pages with a screenshot put it beside the instructions on desktop, stacked in DOM order", () => {
+  for (const t of targets) {
+    const html = page(`apps/${t.id}`);
+    const wrapper = html.match(/<div data-layout="(split|stack)"(?: class="([^"]*)")?/);
+    expect(wrapper, t.id).not.toBeNull();
+    const [, layout, cls = ""] = wrapper as RegExpMatchArray;
+    if (!t.screenshot) {
+      // no screenshot → no empty left column: the same order, no grid
+      expect(layout, t.id).toBe("stack");
+      expect(cls, t.id).not.toContain("lg:grid");
+      continue;
+    }
+    expect(layout, t.id).toBe("split");
+    // two columns only from lg (1024px), and the instructions column keeps at least 340px
+    expect(cls, t.id).toContain("lg:grid");
+    expect(cls, t.id).toContain("lg:grid-cols-[minmax(0,1.4fr)_minmax(340px,1fr)]");
+    expect(cls, t.id).not.toMatch(/(^|\s)grid(\s|$)/);
+    // stacked order: media column (the screenshot and its caption) before install before download
+    const start = html.indexOf('data-layout="split"');
+    const media = html.indexOf('data-split="media"', start);
+    const img = html.indexOf(`src="/${t.screenshot.file}"`, start);
+    const caption = html.indexOf("<figcaption", start);
+    const aside = html.indexOf('data-split="aside"', start);
+    const install = html.indexOf('id="install"', start);
+    const download = html.indexOf(">Download</h2>", start);
+    expect(media, t.id).toBeGreaterThan(start);
+    expect(
+      [media < img, img < caption, caption < aside, aside < install, install < download],
+      t.id,
+    ).toEqual([true, true, true, true, true]);
+  }
+});
