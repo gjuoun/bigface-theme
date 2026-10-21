@@ -409,30 +409,6 @@ pre code {
   pointer-events: none;
 }
 
-.spotlight {
-  position: relative;
-  overflow: hidden;
-}
-
-.spotlight::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    260px circle at var(--mx, 50%) var(--my, 0%),
-    color-mix(in srgb, var(--blue) 16.0%, transparent),
-    transparent 68%
-  );
-  opacity: 0;
-  transition: opacity 0.35s;
-  pointer-events: none;
-}
-
-.spotlight:hover::after {
-  opacity: 1;
-}
-
 /* ---------- pills / tags ---------- */
 
 .pill {
@@ -650,13 +626,6 @@ tbody tr:hover {
 }
 
 /* ---------- utility ---------- */
-
-.hr-grad {
-  height: 1px;
-  border: 0;
-  background: linear-gradient(to right, transparent, var(--line-strong), transparent);
-  margin: 3.5rem 0;
-}
 
 @media (max-width: 760px) {
   main {

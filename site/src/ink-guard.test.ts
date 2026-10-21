@@ -44,6 +44,14 @@ test("an empty ::before dot has no text to ink, a ::before with text does", () =
   ).toHaveLength(1);
 });
 
+test("gradient-clipped text is not a plate", () => {
+  expect(
+    findInklessBrightPlates(
+      '<b class="bg-linear-120 from-bf-caret to-bf-blue bg-clip-text text-transparent">7</b>',
+    ),
+  ).toEqual([]);
+});
+
 test("translucent tints and paired fills are not flagged", () => {
   expect(findInklessBrightPlates('<i class="bg-bf-blue/20 text-foreground"></i>')).toEqual([]);
   expect(findInklessBrightPlates('<b class="bg-primary text-primary-foreground"></b>')).toEqual([]);

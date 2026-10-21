@@ -34,7 +34,7 @@ test("BGButton tone=chip fills only when pressed, with the dark ink", () => {
       </BGButton>,
     ),
   );
-  expect(c).toContain("aria-pressed:from-bf-pale-blue");
+  expect(c).toContain("aria-pressed:bg-bf-blue");
   expect(c).toContain("aria-pressed:text-ink-on-bright");
 });
 

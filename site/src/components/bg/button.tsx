@@ -20,7 +20,7 @@ export const bgButtonVariants = cva("", {
       // header link with a hairline: the GitHub call to action
       nav: "h-auto rounded-full border-bf-selection bg-transparent px-3 py-[0.4rem] text-[0.9rem] font-normal text-foreground no-underline hover:border-bf-blue hover:bg-transparent hover:text-bf-blue",
       // filter / chip that fills when aria-pressed
-      chip: "h-auto cursor-pointer rounded-full border-bf-selection bg-bf-border/5 px-[0.85rem] py-[0.4rem] text-[0.82rem] font-medium text-bf-fg-muted hover:text-foreground aria-pressed:border-transparent aria-pressed:bg-linear-135 aria-pressed:from-bf-pale-blue aria-pressed:to-bf-blue aria-pressed:text-ink-on-bright",
+      chip: "h-auto cursor-pointer rounded-full border-bf-border bg-bf-border/4 px-[0.8rem] py-[0.35rem] font-code text-[0.78rem] leading-[1.65] font-normal tracking-[0.04em] text-bf-fg-muted transition-[color,border-color,background] duration-200 hover:border-bf-selection hover:bg-bf-border/4 hover:text-foreground aria-pressed:border-bf-blue aria-pressed:bg-bf-blue aria-pressed:text-ink-on-bright aria-pressed:hover:bg-bf-blue aria-pressed:hover:text-ink-on-bright",
     },
   },
   defaultVariants: { tone: "none" },
@@ -43,11 +43,13 @@ export function BGButton({
   ...props
 }: BGButtonProps) {
   const classes = cn(bgButtonVariants({ tone }), className);
-  const outline = tone && tone !== "none" && tone !== "glow" ? "outline" : variant;
+  // Tones sit on shadcn's default variant: it has no dark: classes, which would out-rank ours
+  // (the page is <html class="dark">), and every class it sets is one a tone overrides.
+  const base = tone && tone !== "none" ? "default" : variant;
   if (href !== undefined) {
     const { type: _type, ...rest } = props;
     return (
-      <Button asChild variant={outline} size={size} className={classes}>
+      <Button asChild variant={base} size={size} className={classes}>
         <a href={href} {...(rest as React.ComponentProps<"a">)}>
           {children}
         </a>
@@ -55,7 +57,7 @@ export function BGButton({
     );
   }
   return (
-    <Button type="button" variant={outline} size={size} className={classes} {...props}>
+    <Button type="button" variant={base} size={size} className={classes} {...props}>
       {children}
     </Button>
   );

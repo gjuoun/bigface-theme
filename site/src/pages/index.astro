@@ -1,10 +1,15 @@
 ---
+import BGAppCard from "../components/bg/app-card.astro";
 import { BGCard } from "../components/bg/card.tsx";
+import BGDivider from "../components/bg/divider.astro";
+import BGFilterChips from "../components/bg/filter-chips.astro";
 import BGHero from "../components/bg/hero.astro";
 import { BGInstallTabs } from "../components/bg/install-tabs.tsx";
+import BGMarquee from "../components/bg/marquee.astro";
 import BGSectionHead from "../components/bg/section-head.astro";
-import { inline } from "../data/inline.ts";
-import { hex, inkOn, palette } from "../data/palette.ts";
+import BGStat from "../components/bg/stat.astro";
+import BGSwatchChip from "../components/bg/swatch-chip.astro";
+import { hex, palette } from "../data/palette.ts";
 import { installCommand, REPO, targets } from "../data/targets.ts";
 import Base from "../layouts/Base.astro";
 
@@ -19,12 +24,6 @@ const marquee = [
 ];
 const colourCount = Object.keys(palette.colors).length;
 const quick = installCommand();
-const levelLabel = {
-  tool: "Checked with the tool",
-  schema: "Checked against its schema",
-  format: "Format-checked only",
-};
-const isLevel = (level: string): level is keyof typeof levelLabel => level in levelLabel;
 const oneApp = installCommand("ghostty tmux zed");
 const everything = installCommand("all");
 const removeAll = installCommand("--uninstall all");
@@ -63,44 +62,30 @@ const installTabs = [
 <Base title="Bigface — a dark color theme for your tools">
   <BGHero base={base} repo={REPO} ports={targets.length} command={quick} />
 
-  <div class="marquee" aria-hidden="true">
-    <div class="track">
-      {marquee.map((name) => <span>{name}</span>)}
-      {marquee.map((name) => <span>{name}</span>)}
-    </div>
-  </div>
+  <BGMarquee items={marquee} />
 
-  <section class="strip-wrap" data-reveal>
-    <div class="strip" aria-label="Palette">
-      {strip.map((n) => (
-        <button
-          type="button"
-          class="swatch"
-          style={`--c:${hex(n)};--ink:${inkOn(hex(n)).ink}`}
-          data-copy={hex(n)}
-          data-swap="off"
-          aria-label={`Copy ${n} ${hex(n)}`}
-        >
-          <span class="name">{n}</span>
-          <span class="hex">{hex(n)}</span>
-        </button>
-      ))}
+  <section class="mt-[2.2rem]" data-reveal>
+    <div class="group/strip flex h-24 gap-[0.3rem] max-[620px]:h-[72px]" aria-label="Palette">
+      {strip.map((n) => <BGSwatchChip name={n} hex={hex(n)} />)}
     </div>
-    <p class="dim caption">
+    <p class="mt-[0.7rem] mb-0 text-[0.87rem] text-bf-dim">
       {colourCount} colours in the palette. This page runs on the theme's own background
       <code>{hex("bg")}</code> — every colour here comes from
       <code>palette/bigface.json</code>. Click a swatch to copy its hex.
     </p>
   </section>
 
-  <section class="stats" data-reveal>
-    <div><strong>{targets.length}</strong><span>ports, one source</span></div>
-    <div><strong>{colourCount}</strong><span>colours, no variants</span></div>
-    <div><strong>0</strong><span>per-tool adjustments</span></div>
-    <div><strong>2018</strong><span>first JetBrains release</span></div>
+  <section
+    class="mt-10 grid grid-cols-4 gap-px overflow-hidden rounded-[16px] border border-bf-border bg-bf-border max-[900px]:grid-cols-2"
+    data-reveal
+  >
+    <BGStat value={targets.length} label="ports, one source" />
+    <BGStat value={colourCount} label="colours, no variants" />
+    <BGStat value={0} label="per-tool adjustments" />
+    <BGStat value={2018} label="first JetBrains release" />
   </section>
 
-  <hr class="hr-grad" />
+  <BGDivider />
 
   <section id="install">
     <BGSectionHead eyebrow="01 — install" title="One command, then it asks.">
@@ -120,7 +105,7 @@ const installTabs = [
     </p>
   </section>
 
-  <hr class="hr-grad" />
+  <BGDivider />
 
   <section id="apps">
     <BGSectionHead eyebrow="02 — apps" title={`${targets.length} ports, one source of truth.`}>
@@ -128,341 +113,11 @@ const installTabs = [
       its schema, or format-checked only. Nothing is claimed stronger than the proof.
     </BGSectionHead>
 
-    <div class="filters" data-filter role="group" aria-label="Filter apps">
-      <button type="button" data-kind="all" aria-pressed="true">All</button>
-      {kinds.map((kind) => (
-        <button type="button" data-kind={kind} aria-pressed="false">{kind}</button>
-      ))}
-    </div>
+    <BGFilterChips kinds={kinds} />
 
-    <div class="cards" data-cards>
-      {targets.map((t, i) => (
-        <a
-          class="app-card card spotlight"
-          data-card-kind={t.kind}
-          data-reveal
-          href={`${base}/apps/${t.id}/`}
-        >
-          <span class="idx">{String(i + 1).padStart(2, "0")}</span>
-          <span class="app-name">{t.name}</span>
-          <span class="app-tag muted" set:html={inline(t.tagline)} />
-          <span class="app-foot">
-            <span class="pill">{t.kind}</span>
-            <span class="foot-right">
-              <span
-                class={`dot ${t.check.level}`}
-                role="img"
-                aria-label={isLevel(t.check.level) ? levelLabel[t.check.level] : t.check.level}
-                title={isLevel(t.check.level) ? levelLabel[t.check.level] : t.check.level}
-              />
-              <span class="go" aria-hidden="true">→</span>
-            </span>
-          </span>
-        </a>
-      ))}
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-[0.9rem]" data-cards>
+      {targets.map((t, i) => <BGAppCard target={t} index={i} base={base} />)}
     </div>
   </section>
 </Base>
 
-<style>
-  /* ---------- marquee ---------- */
-  .marquee {
-    overflow: hidden;
-    margin: 1.5rem 0 0;
-    padding: 0.9rem 0;
-    border-block: 1px solid var(--line);
-    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  }
-
-  .track {
-    display: flex;
-    gap: 2.2rem;
-    width: max-content;
-    animation: slide 42s linear infinite;
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    font-size: 0.84rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--fg) 72%, transparent);
-  }
-
-  .track span {
-    display: inline-flex;
-    align-items: center;
-    gap: 2.2rem;
-    white-space: nowrap;
-  }
-
-  .track span::after {
-    content: "✦";
-    color: var(--blue);
-    opacity: 0.5;
-  }
-
-  .marquee:hover .track {
-    animation-play-state: paused;
-  }
-
-  @keyframes slide {
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  /* ---------- strip ---------- */
-  .strip-wrap {
-    margin: 2.2rem 0 0;
-  }
-
-  .strip {
-    display: flex;
-    gap: 0.3rem;
-    height: 96px;
-  }
-
-  .swatch {
-    position: relative;
-    flex: 1;
-    min-width: 0;
-    border: 0;
-    border-radius: 12px;
-    background: var(--c);
-    cursor: pointer;
-    padding: 0;
-    overflow: hidden;
-    transition:
-      flex-grow 0.5s var(--ease),
-      transform 0.35s var(--ease),
-      box-shadow 0.3s var(--ease),
-      filter 0.3s var(--ease);
-    will-change: flex-grow;
-    font: inherit;
-  }
-
-  .strip:hover .swatch:not(:hover) {
-    filter: saturate(0.72) brightness(0.9);
-  }
-
-  .swatch:hover {
-    flex-grow: 2.6;
-    transform: translateY(-4px);
-    box-shadow: 0 18px 34px -26px color-mix(in srgb, var(--fg) 60%, transparent);
-  }
-
-  .swatch .name,
-  .swatch .hex {
-    position: absolute;
-    left: 0.6rem;
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    font-size: 0.66rem;
-    letter-spacing: 0.04em;
-    opacity: 0;
-    transition: opacity 0.3s;
-    color: var(--ink);
-  }
-
-  .swatch .name {
-    bottom: 1.5rem;
-    font-weight: 600;
-  }
-
-  .swatch .hex {
-    bottom: 0.55rem;
-  }
-
-  .swatch:hover .name,
-  .swatch:hover .hex {
-    opacity: 0.92;
-  }
-
-  .caption {
-    font-size: 0.87rem;
-    margin: 0.7rem 0 0;
-  }
-
-  /* ---------- stats ---------- */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    margin: 2.5rem 0 0;
-    border: 1px solid var(--line);
-    border-radius: var(--r);
-    overflow: hidden;
-    background: var(--line);
-  }
-
-  .stats div {
-    background: color-mix(in srgb, var(--bg-deep) 72.0%, transparent);
-    padding: 1.2rem 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-
-  .stats strong {
-    font-family: var(--font-display);
-    font-size: 1.9rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    background: linear-gradient(120deg, var(--caret), var(--blue));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .stats span {
-    color: var(--fg-muted);
-    font-size: 0.82rem;
-  }
-
-  /* ---------- filters + cards ---------- */
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 1.2rem;
-  }
-
-  .filters button {
-    font: inherit;
-    font-size: 0.78rem;
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    letter-spacing: 0.04em;
-    padding: 0.35rem 0.8rem;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: rgba(var(--line-rgb), 0.04);
-    color: var(--fg-muted);
-    cursor: pointer;
-    transition: color 0.2s, border-color 0.2s, background 0.2s;
-  }
-
-  .filters button:hover {
-    color: var(--fg);
-    border-color: var(--line-strong);
-  }
-
-  .filters button[aria-pressed="true"] {
-    color: var(--ink-on-bright);
-    background: var(--blue);
-    border-color: var(--blue);
-  }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 0.9rem;
-  }
-
-  .cards [hidden] {
-    display: none;
-  }
-
-  .app-card {
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 0.3rem;
-    padding: 1.1rem 1.15rem 1rem;
-    color: var(--fg);
-    text-decoration: none;
-    border-radius: var(--r);
-    transition: transform 0.35s var(--ease), border-color 0.35s, box-shadow 0.35s;
-  }
-
-  .app-card:hover {
-    transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--blue) 45.0%, transparent);
-    box-shadow: 0 26px 50px -28px color-mix(in srgb, var(--blue) 65.0%, transparent);
-    color: var(--fg);
-  }
-
-  .idx {
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    font-size: 0.68rem;
-    color: var(--dim);
-  }
-
-  .app-name {
-    font-family: var(--font-display);
-    font-size: 1.22rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-  }
-
-  .app-tag {
-    font-size: 0.88rem;
-    line-height: 1.45;
-  }
-
-  .app-foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.6rem;
-    margin-top: 0.55rem;
-  }
-
-  .foot-right {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-
-  .dot.tool {
-    background: var(--green);
-    box-shadow: 0 0 8px color-mix(in srgb, var(--green) 70.0%, transparent);
-  }
-
-  .dot.schema {
-    background: var(--cyan);
-    box-shadow: 0 0 8px color-mix(in srgb, var(--cyan) 70.0%, transparent);
-  }
-
-  .dot.format {
-    background: var(--orange);
-    box-shadow: 0 0 8px color-mix(in srgb, var(--burnt) 70.0%, transparent);
-  }
-
-  .app-tag code {
-    font-size: 0.92em;
-  }
-
-  .go {
-    color: var(--blue);
-    transition: transform 0.3s var(--ease);
-  }
-
-  .app-card:hover .go {
-    transform: translateX(4px);
-  }
-
-  @media (max-width: 900px) {
-    .stats {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 620px) {
-    .strip {
-      height: 72px;
-    }
-
-    .swatch .name,
-    .swatch .hex {
-      display: none;
-    }
-  }
-</style>

@@ -44,6 +44,8 @@ export function findInklessBrightPlates(html: string): string[] {
     const tokens = (m[1] as string).split(/\s+/).filter(Boolean).map(splitVariant);
     const inks = new Set(tokens.filter(([, u]) => INK.has(u)).map(([v]) => v));
     // a ::before/::after with empty content is a decorative dot or rim: there is no text to ink
+    // a gradient clipped to the text is the text's own paint, not a plate behind it
+    if (tokens.some(([v, u]) => v === "" && u === "bg-clip-text")) continue;
     const empty = new Set(tokens.filter(([, u]) => u === "content-['']").map(([v]) => v));
     for (const [variant, utility] of tokens) {
       // a solid fill (bg-x) or a gradient stop (from-x / via-x / to-x) of a bright colour
