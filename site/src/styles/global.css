@@ -177,102 +177,11 @@ body::after {
 
 /* ---------- shell ---------- */
 
-.wrap {
-  width: min(var(--max), 100% - 2.5rem);
-  margin-inline: auto;
-}
-
 main {
   flex: 1;
   width: min(var(--max), 100% - 2.5rem);
   margin-inline: auto;
   padding: 2.5rem 0 6rem;
-}
-
-/* ---------- header ---------- */
-
-.top {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  /* No band of its own at rest: the header sits on the page background and only takes on a
-     surface once the page scrolls. */
-  border-bottom: 1px solid transparent;
-  transition:
-    border-color 0.3s var(--ease),
-    background 0.3s var(--ease);
-}
-
-.top.scrolled {
-  border-bottom-color: var(--line);
-  background: color-mix(in srgb, var(--bg-deep) 92%, transparent);
-  backdrop-filter: blur(18px) saturate(150%);
-}
-
-.top .bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.85rem 0;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  color: var(--fg);
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: -0.01em;
-}
-
-.brand img {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  box-shadow:
-    0 0 0 1px var(--line-strong),
-    0 6px 18px color-mix(in srgb, var(--blue) 35.0%, transparent);
-  transition: transform 0.4s var(--ease);
-}
-
-.brand:hover img {
-  transform: rotate(-6deg) scale(1.06);
-}
-
-.top nav {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.9rem;
-}
-
-.top nav a {
-  padding: 0.4rem 0.75rem;
-  border-radius: 999px;
-  color: var(--fg-muted);
-  text-decoration: none;
-  transition:
-    color 0.2s,
-    background 0.2s;
-}
-
-.top nav a:hover {
-  color: var(--fg);
-  background: rgba(var(--line-rgb), 0.1);
-}
-
-.top nav a.cta {
-  color: var(--fg);
-  border: 1px solid var(--line-strong);
-}
-
-.top nav a.cta:hover {
-  border-color: var(--blue);
-  color: var(--blue);
 }
 
 /* ---------- type ---------- */
@@ -704,88 +613,6 @@ pre code {
   transform: none;
 }
 
-/* ---------- toast ---------- */
-
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 1.75rem;
-  translate: -50% 0;
-  z-index: 90;
-  padding: 0.6rem 1rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--lime) 45.0%, transparent);
-  background: color-mix(in srgb, var(--bg-deep) 92.0%, transparent);
-  backdrop-filter: blur(12px);
-  color: var(--lime);
-  font-family: var(--font-mono);
-  font-variation-settings:
-    "MONO" 1,
-    "CASL" 0,
-    "CRSV" 0.5;
-  font-size: 0.78rem;
-  opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity 0.25s,
-    transform 0.25s;
-  pointer-events: none;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---------- footer ---------- */
-
-footer {
-  border-top: 1px solid var(--line);
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--bg-deep) 20%, transparent),
-    color-mix(in srgb, var(--bg-deep) 85.0%, transparent)
-  );
-}
-
-footer .inner {
-  width: min(var(--max), 100% - 2.5rem);
-  margin-inline: auto;
-  padding: 2.5rem 0 3rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-footer .mark {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-}
-
-footer .mark img {
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
-  box-shadow: 0 0 0 1px var(--line-strong);
-}
-
-footer nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem 1.5rem;
-  font-size: 0.88rem;
-}
-
-footer small {
-  color: var(--dim);
-  font-size: 0.8rem;
-}
-
 /* ---------- tables ---------- */
 
 table {
@@ -831,26 +658,11 @@ tbody tr:hover {
   margin: 3.5rem 0;
 }
 
-.skip {
-  position: absolute;
-  left: -9999px;
-}
-
-.skip:focus {
-  left: 1rem;
-  top: 1rem;
-  z-index: 100;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  background: var(--panel);
-}
-
 @media (max-width: 760px) {
   main {
     padding-top: 1.5rem;
   }
 
-  .wrap,
   main {
     width: min(var(--max), 100% - 1.75rem);
   }

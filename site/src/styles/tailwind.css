@@ -25,6 +25,8 @@
   --font-heading: var(--font-sans);
   --font-sans: "Recursive", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Recursive", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: "Recursive", "Helvetica Neue", system-ui, sans-serif;
+  --ease-bf: cubic-bezier(0.22, 1, 0.36, 1);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -87,6 +89,7 @@
   --color-bf-comment: var(--bf-comment);
   --color-bf-caret: var(--bf-caret);
   --color-bf-fg-muted: var(--fg-muted);
+  --color-bf-dim: var(--dim);
 
   /* Shadows: Tailwind's defaults are black at 10% — use the theme's own darkest surface instead. */
   --shadow: 0 1px 3px 0 var(--bf-shadow), 0 1px 2px -1px var(--bf-shadow);
@@ -136,6 +139,15 @@
   --sidebar-accent-foreground: var(--bf-fg);
   --sidebar-border: var(--bf-border);
   --sidebar-ring: var(--bf-blue);
+}
+
+/* The page column: 1180px max, 1.25rem gutters (0.875rem on phones). */
+@utility bf-wrap {
+  width: min(1180px, 100% - 2.5rem);
+  margin-inline: auto;
+  @media (max-width: 760px) {
+    width: min(1180px, 100% - 1.75rem);
+  }
 }
 
 /* Recursive with the MONO axis on: the site's code face. */

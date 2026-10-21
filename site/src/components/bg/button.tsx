@@ -17,6 +17,8 @@ export const bgButtonVariants = cva("", {
         "h-auto rounded-full border-bf-selection bg-bf-border/6 px-[1.15rem] py-[0.7rem] text-[0.94rem] font-semibold text-foreground no-underline hover:border-bf-blue hover:bg-bf-blue/8 hover:text-bf-blue",
       // the small mono "copy" pill
       copy: "h-auto cursor-pointer gap-1.5 rounded-full border-bf-selection bg-bf-border/8 px-[0.6rem] py-[0.35rem] font-code text-[0.72rem] font-normal tracking-[0.04em] text-bf-fg-muted hover:border-bf-blue hover:bg-bf-blue/12 hover:text-foreground [&.done]:border-bf-lime [&.done]:text-bf-lime",
+      // header link with a hairline: the GitHub call to action
+      nav: "h-auto rounded-full border-bf-selection bg-transparent px-3 py-[0.4rem] text-[0.9rem] font-normal text-foreground no-underline hover:border-bf-blue hover:bg-transparent hover:text-bf-blue",
       // filter / chip that fills when aria-pressed
       chip: "h-auto cursor-pointer rounded-full border-bf-selection bg-bf-border/5 px-[0.85rem] py-[0.4rem] text-[0.82rem] font-medium text-bf-fg-muted hover:text-foreground aria-pressed:border-transparent aria-pressed:bg-linear-135 aria-pressed:from-bf-pale-blue aria-pressed:to-bf-blue aria-pressed:text-ink-on-bright",
     },
@@ -41,7 +43,7 @@ export function BGButton({
   ...props
 }: BGButtonProps) {
   const classes = cn(bgButtonVariants({ tone }), className);
-  const outline = tone === "ghost" || tone === "copy" || tone === "chip" ? "outline" : variant;
+  const outline = tone && tone !== "none" && tone !== "glow" ? "outline" : variant;
   if (href !== undefined) {
     const { type: _type, ...rest } = props;
     return (

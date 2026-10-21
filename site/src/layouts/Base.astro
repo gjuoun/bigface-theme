@@ -1,6 +1,9 @@
 ---
 import "../styles/tailwind.css";
 import "../styles/legacy.css";
+import BGSiteFooter from "../components/bg/site-footer.astro";
+import BGSiteHeader from "../components/bg/site-header.astro";
+import BGToast from "../components/bg/toast.astro";
 import { hex, palette } from "../data/palette.ts";
 import { REPO, targets } from "../data/targets.ts";
 
@@ -105,45 +108,10 @@ const style = Object.entries(vars)
     />
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
-    <header class="top" id="site-header">
-      <div class="wrap bar">
-        <a class="brand" href={`${base}/`}>
-          <img src={`${base}/img/bigface-avatar.svg`} alt="" width="34" height="34" />
-          Bigface
-        </a>
-        <nav aria-label="Main">
-          <a href={`${base}/#apps`}>Apps</a>
-          <a href={`${base}/palette/`}>Palette</a>
-          <a href={`${base}/#install`}>Install</a>
-          <a class="cta" href={REPO}>GitHub</a>
-        </nav>
-      </div>
-    </header>
+    <BGSiteHeader base={base} repo={REPO} />
     <main id="main"><slot /></main>
-    <footer>
-      <div class="inner">
-        <div>
-          <div class="mark">
-            <img src={`${base}/img/bigface-avatar.svg`} alt="" width="40" height="40" />
-            Bigface
-          </div>
-          <p class="dim" style="margin:.6rem 0 0;font-size:.85rem;max-width:34ch">
-            One dark palette, {targets.length} ports, no per-tool adjustments. Started in 2018 as a
-            JetBrains scheme.
-          </p>
-        </div>
-        <nav aria-label="Footer">
-          <a href={`${base}/#apps`}>Apps</a>
-          <a href={`${base}/palette/`}>Palette</a>
-          <a href={`${base}/#install`}>Install</a>
-          <a href={`${base}/install.sh`}>install.sh</a>
-          <a href={REPO}>GitHub</a>
-          <a href={`${REPO}/blob/main/LICENSE`}>MIT licence</a>
-        </nav>
-      </div>
-    </footer>
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <BGSiteFooter base={base} repo={REPO} ports={targets.length} />
+    <BGToast />
 
     <script>
       const toast = document.getElementById("toast");
