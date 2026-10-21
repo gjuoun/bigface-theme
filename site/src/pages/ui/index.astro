@@ -1,21 +1,41 @@
 ---
 import { Download } from "lucide-react";
+import BGAppCard from "../../components/bg/app-card.astro";
 import { BGBadge } from "../../components/bg/badge.tsx";
+import BGBreadcrumbs from "../../components/bg/breadcrumbs.astro";
+import { BGButton } from "../../components/bg/button.tsx";
 import { BGCard } from "../../components/bg/card.tsx";
 import BGCodeCard from "../../components/bg/code-card.astro";
+import BGCommandLine from "../../components/bg/command-line.astro";
+import BGContrastTable from "../../components/bg/contrast-table.astro";
+import BGCopyButton from "../../components/bg/copy-button.astro";
 import BGDivider from "../../components/bg/divider.astro";
+import BGDownloadCard from "../../components/bg/download-card.astro";
 import BGEyebrow from "../../components/bg/eyebrow.astro";
+import BGFilterChips from "../../components/bg/filter-chips.astro";
+import { BGInstallTabs } from "../../components/bg/install-tabs.tsx";
+import BGManualSteps from "../../components/bg/manual-steps.astro";
+import BGMarketCard from "../../components/bg/market-card.astro";
+import BGMarquee from "../../components/bg/marquee.astro";
+import BGNextCard from "../../components/bg/next-card.astro";
+import { bgTextClass } from "../../components/bg/palette-classes.ts";
+import BGPaletteGroup from "../../components/bg/palette-group.astro";
 import BGSectionHead from "../../components/bg/section-head.astro";
+import BGStat from "../../components/bg/stat.astro";
 import BGSwatch from "../../components/bg/swatch.astro";
+import BGSwatchChip from "../../components/bg/swatch-chip.astro";
+import BGSyntaxPreview from "../../components/bg/syntax-preview.astro";
 import { Badge } from "../../components/ui/badge";
 import badgeSrc from "../../components/ui/badge.tsx?raw";
 import { Button } from "../../components/ui/button";
 import buttonSrc from "../../components/ui/button.tsx?raw";
 import tabsSrc from "../../components/ui/tabs.tsx?raw";
 import { palette } from "../../data/palette.ts";
-import { textScale, variantKeys } from "../../data/ui-catalog.ts";
+import { installCommand, targets } from "../../data/targets.ts";
+import { bgCatalog, textScale, variantKeys } from "../../data/ui-catalog.ts";
 import Base from "../../layouts/Base.astro";
 import tailwindCss from "../../styles/tailwind.css?raw";
+import BGEntry from "./_bg-entry.astro";
 import { CardDemo, TabsDemo } from "./_demos.tsx";
 
 // The component library the site is built from, rendered live. Lists that can be read from source
@@ -60,7 +80,23 @@ const sections = [
   ["tokens", "Colour"],
   ["type", "Type"],
   ["native", "Native"],
+  ["bg", "BG"],
+  ["missing", "Not yet"],
 ];
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const bgSources = Object.fromEntries(
+  Object.entries(
+    import.meta.glob("../../components/bg/*.{astro,tsx,ts}", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    }),
+  ).map(([path, src]) => [path.split("/").pop() as string, src as string]),
+);
+const notFinal = bgCatalog.filter((e) => !e.finalised);
+const pi = targets.find((t) => t.id === "pi") ?? (targets[0] as (typeof targets)[number]);
+const market = targets.find((t) => t.market);
+const kinds = [...new Set(targets.map((t) => t.kind))];
 // Variant and size keys come from the shadcn sources, so a variant added upstream shows up here.
 const buttonVariants = variantKeys(buttonSrc, "variant") as ButtonVariant[];
 const buttonSizes = variantKeys(buttonSrc, "size") as ButtonSize[];
@@ -320,6 +356,167 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
           )
         }
       </div>
+    </BGCard>
+  </section>
+
+  <BGDivider />
+
+  <section id="bg">
+    <BGSectionHead eyebrow="04 — bg" title="BG components">
+      Everything in <code>components/bg/</code>: the Bigface layer. Wrappers add variants over a
+      native component without touching it; composite blocks are built from utilities and other BG
+      parts. Props are shown straight from each file.
+    </BGSectionHead>
+    <p class="text-bf-fg-muted">
+      {`${bgCatalog.length} entries · ${bgCatalog.filter((e) => e.kind === "wrapper").length} wrappers · ${notFinal.length} with props not finalised.`}
+    </p>
+
+    {
+      bgCatalog.map((entry) => (
+        <BGEntry entry={entry} source={bgSources[entry.file] ?? ""} base={base}>
+          {entry.name === "BGButton" && (
+            <div class="flex flex-wrap items-center gap-3">
+              <BGButton>none (shadcn default)</BGButton>
+              <BGButton tone="glow">glow</BGButton>
+              <BGButton tone="ghost">ghost</BGButton>
+              <BGButton tone="copy">copy</BGButton>
+              <BGButton tone="nav" href="#bg-BGButton">nav (href)</BGButton>
+              <BGButton tone="chip" aria-pressed="false">chip</BGButton>
+              <BGButton tone="chip" aria-pressed="true">chip pressed</BGButton>
+              <BGButton tone="ghost" disabled>ghost disabled</BGButton>
+            </div>
+          )}
+          {entry.name === "BGBadge" && (
+            <div class="flex flex-wrap items-center gap-3">
+              <BGBadge tone="pill">pill</BGBadge>
+              <BGBadge tone="tool">tool</BGBadge>
+              <BGBadge tone="schema">schema</BGBadge>
+              <BGBadge tone="format">format</BGBadge>
+              <BGBadge>none (shadcn default)</BGBadge>
+            </div>
+          )}
+          {entry.name === "BGCard" && (
+            <div class="grid gap-4 md:grid-cols-2">
+              <BGCard tone="plate" className="p-5">tone="plate"</BGCard>
+              <BGCard tone="plate" glow className="p-5">tone="plate" glow</BGCard>
+            </div>
+          )}
+          {entry.name === "BGInstallTabs" && (
+            <BGInstallTabs
+              client:load
+              items={[
+                { id: "demo-install", label: "Install", bar: "sh — install", command: installCommand("pi"), note: "With a terminal bar (home)." },
+                { id: "demo-off", label: "Uninstall", command: installCommand("--uninstall pi"), note: "Without one (app pages)." },
+              ]}
+            />
+          )}
+          {entry.name === "BGEyebrow" && <BGEyebrow>a kicker</BGEyebrow>}
+          {entry.name === "BGSectionHead" && (
+            <BGSectionHead eyebrow="00 — demo" title="A section heading">
+              The lead paragraph sits under it.
+            </BGSectionHead>
+          )}
+          {entry.name === "BGDivider" && <BGDivider />}
+          {entry.name === "BGCopyButton" && <BGCopyButton value={palette.colors.blue?.hex ?? ""} aria-label="Copy the blue hex" />}
+          {entry.name === "BGCommandLine" && <BGCommandLine command={installCommand()} />}
+          {entry.name === "BGStat" && (
+            <div class="grid max-w-sm grid-cols-2 gap-px overflow-hidden rounded-[16px] border border-bf-border bg-bf-border">
+              <BGStat value={targets.length} label="ports" />
+              <BGStat value={2018} label="first release" />
+            </div>
+          )}
+          {entry.name === "BGSwatchChip" && (
+            <div class="group/strip flex h-24 max-w-md gap-[0.3rem]">
+              {["blue", "lime", "purple"].map((n) => (
+                <BGSwatchChip name={n} hex={palette.colors[n]?.hex ?? ""} />
+              ))}
+            </div>
+          )}
+          {entry.name === "BGSwatch" && (
+            <div class="max-w-[180px]">
+              <BGSwatch name="lime" color={palette.colors.lime as { hex: string; source: string }} />
+            </div>
+          )}
+          {entry.name === "BGMarquee" && <BGMarquee items={targets.slice(0, 6).map((t) => t.name)} />}
+          {entry.name === "BGSyntaxPreview" && (
+            <div class="max-w-[640px]">
+              <BGSyntaxPreview terminal />
+            </div>
+          )}
+          {entry.name === "BGContrastTable" && <BGContrastTable />}
+          {entry.name === "BGPaletteGroup" && (
+            <BGPaletteGroup id="ui-demo-group" title="A palette group" count={3}>
+              <p class="m-0 text-bf-fg-muted">Its content goes here.</p>
+            </BGPaletteGroup>
+          )}
+          {entry.name === "BGFilterChips" && (
+            <>
+              <BGFilterChips kinds={kinds} />
+              <p class="m-0 text-[0.82rem] text-bf-dim">Filters the BGAppCard grid in the next entry.</p>
+            </>
+          )}
+          {entry.name === "BGAppCard" && (
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-[0.9rem]" data-cards>
+              {targets.slice(0, 3).map((t, i) => <BGAppCard target={t} index={i} base={base} />)}
+            </div>
+          )}
+          {entry.name === "BGBreadcrumbs" && <BGBreadcrumbs base={base} name={pi.name} />}
+          {entry.name === "BGMarketCard" && market?.market && (
+            <BGMarketCard label={market.market.label} url={market.market.url} name={market.name} />
+          )}
+          {entry.name === "BGDownloadCard" && pi.files[0] && (
+            <div class="max-w-[560px]">
+              <BGDownloadCard href={`${base}/themes/${pi.id}/${pi.files[0].path}`} label={pi.files[0].label} detail="download the file" />
+            </div>
+          )}
+          {entry.name === "BGManualSteps" && <BGManualSteps steps={pi.steps} />}
+          {entry.name === "BGCodeCard" && <BGCodeCard path="example.ts" code={'const palette = "bigface";'} truncated={false} />}
+          {entry.name === "BGNextCard" && <BGNextCard href={`${base}/apps/${pi.id}/`} name={pi.name} />}
+          {entry.name === "bgTextClass" && (
+            <p class="m-0 flex flex-wrap gap-x-4 gap-y-1 font-code text-[0.8rem]">
+              {Object.entries(bgTextClass).map(([name, cls]) => (
+                <span class={cls}>{name}</span>
+              ))}
+            </p>
+          )}
+        </BGEntry>
+      ))
+    }
+  </section>
+
+  <BGDivider />
+
+  <section id="missing">
+    <BGSectionHead eyebrow="05 — not yet" title="Not covered yet">
+      This is a working catalogue, not a finished design system. Deliberately missing for now:
+    </BGSectionHead>
+    <BGCard tone="plate" className="p-5 md:p-6">
+      <ul class="my-0 grid gap-2 pl-5">
+        <li>
+          <strong>More shadcn components.</strong> Only what the site uses is installed (Button, Badge,
+          Card, Tabs). Form controls, overlays (dialog, sheet, popover, tooltip), menus and toasts are
+          not added yet.
+        </li>
+        <li>
+          <strong>Toggle group.</strong> Tried and dropped: right after <code>shadcn add toggle-group</code>
+          its own <code>--diff</code> reports the files it wrote as drifted, so it cannot pass
+          <code>ui:drift</code>. The filter chips use <code>BGButton tone="chip"</code> instead.
+        </li>
+        <li>
+          <strong>Pinned hover and focus states.</strong> They are live (point or tab) rather than frozen
+          side by side: forcing them would mean editing the shadcn classes.
+        </li>
+        <li>
+          <strong>Final props for {notFinal.length} BG components:</strong>{" "}
+          {notFinal.map((e, i) => <><a href={`#bg-${e.name}`}>{e.name}</a>{i < notFinal.length - 1 ? ", " : ""}</>)}.
+          They take page data (a raw <code>Target</code>, base and repo strings) instead of design types.
+        </li>
+        <li><strong>A light theme.</strong> Bigface is dark only, by design.</li>
+        <li>
+          <strong>Usage guidance.</strong> No do/don't notes or spacing rules yet; this page shows what
+          exists, not how to compose it.
+        </li>
+      </ul>
     </BGCard>
   </section>
 </Base>

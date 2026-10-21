@@ -5,6 +5,7 @@ import { $ } from "bun";
 import { findForeignInCss, findForeignInHtml, paletteHexes } from "./color-guard.ts";
 import { contrastRatio, inkOn, palette } from "./data/palette.ts";
 import { targets } from "./data/targets.ts";
+import { bgCatalog } from "./data/ui-catalog.ts";
 import { findInklessBrightPlates } from "./ink-guard.ts";
 
 const siteDir = join(import.meta.dir, "..");
@@ -221,4 +222,20 @@ test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 soci
   expect(home).toContain("img/bigface-avatar.svg");
   expect(home).toContain('property="og:image"');
   expect(home).toContain("img/og.png");
+});
+
+test("the component library page shows every native and BG component, and flags unfinished props", () => {
+  const html = page("ui");
+  for (const name of ["button", "badge", "card", "tabs"])
+    expect(html, name).toContain(`from &quot;@/components/ui/${name}&quot;`);
+  for (const e of bgCatalog) {
+    expect(html, e.name).toContain(`id="bg-${e.name}"`);
+    expect(html, e.name).toContain(`components/bg/${e.file}`);
+  }
+  const flagged = html.match(/>props not finalised</g) ?? [];
+  expect(flagged.length).toBe(bgCatalog.filter((e) => !e.finalised).length);
+  // every Button variant x size from the shadcn source is rendered
+  expect(
+    html.match(/data-slot="button" data-variant="destructive" data-size="icon-lg"/g)?.length,
+  ).toBeGreaterThanOrEqual(1);
 });
