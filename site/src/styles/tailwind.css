@@ -27,6 +27,28 @@
   --font-mono: "Recursive", ui-monospace, "SF Mono", Menlo, monospace;
   --font-display: "Recursive", "Helvetica Neue", system-ui, sans-serif;
   --ease-bf: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-hue: bf-hue 12s var(--ease-bf) infinite alternate;
+  --animate-ring: bf-ring 22s linear infinite;
+  --animate-marquee: bf-marquee 42s linear infinite;
+
+  @keyframes bf-hue {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 100% 50%;
+    }
+  }
+  @keyframes bf-ring {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+  @keyframes bf-marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -148,6 +170,29 @@
   @media (max-width: 760px) {
     width: min(1180px, 100% - 1.75rem);
   }
+}
+
+/* The moving caret → pale blue → blue → lime headline ink. */
+@utility bf-grad {
+  background: linear-gradient(
+    100deg,
+    var(--bf-caret) 6%,
+    var(--bf-pale-blue) 30%,
+    var(--bf-blue) 55%,
+    var(--bf-lime) 96%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: var(--animate-hue);
+}
+
+/* Lead paragraph under a heading. */
+@utility bf-lead {
+  font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+  color: var(--fg-muted);
+  max-width: 56ch;
 }
 
 /* Recursive with the MONO axis on: the site's code face. */

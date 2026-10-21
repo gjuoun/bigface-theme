@@ -43,10 +43,13 @@ export function findInklessBrightPlates(html: string): string[] {
   for (const m of html.matchAll(/\sclass(?:Name)?="([^"]*)"/g)) {
     const tokens = (m[1] as string).split(/\s+/).filter(Boolean).map(splitVariant);
     const inks = new Set(tokens.filter(([, u]) => INK.has(u)).map(([v]) => v));
+    // a ::before/::after with empty content is a decorative dot or rim: there is no text to ink
+    const empty = new Set(tokens.filter(([, u]) => u === "content-['']").map(([v]) => v));
     for (const [variant, utility] of tokens) {
       // a solid fill (bg-x) or a gradient stop (from-x / via-x / to-x) of a bright colour
       const fill = /^(?:bg|from|via|to)-(.+)$/.exec(utility)?.[1];
       if (!fill || !BRIGHT.has(fill)) continue; // bg-x/20 (translucent tint) never matches
+      if (/(?:^|:)(?:before|after):$/.test(variant) && empty.has(variant)) continue;
       if (!inks.has(variant) && !inks.has("")) offenders.push(m[1] as string);
     }
   }

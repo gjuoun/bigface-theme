@@ -1,5 +1,8 @@
 ---
-import SyntaxPreview from "../components/SyntaxPreview.astro";
+import { BGCard } from "../components/bg/card.tsx";
+import BGHero from "../components/bg/hero.astro";
+import { BGInstallTabs } from "../components/bg/install-tabs.tsx";
+import BGSectionHead from "../components/bg/section-head.astro";
 import { inline } from "../data/inline.ts";
 import { hex, inkOn, palette } from "../data/palette.ts";
 import { installCommand, REPO, targets } from "../data/targets.ts";
@@ -25,51 +28,40 @@ const isLevel = (level: string): level is keyof typeof levelLabel => level in le
 const oneApp = installCommand("ghostty tmux zed");
 const everything = installCommand("all");
 const removeAll = installCommand("--uninstall all");
+const installTabs = [
+  {
+    id: "interactive",
+    label: "Interactive",
+    bar: "sh — install",
+    command: quick,
+    note: "Asks install or uninstall, then which apps. Enter picks every detected app.",
+  },
+  {
+    id: "one",
+    label: "One app",
+    bar: "sh — install ghostty tmux zed",
+    command: oneApp,
+    note: "Pass any app ids; unknown ones are reported and skipped.",
+  },
+  {
+    id: "all",
+    label: "Everything",
+    bar: "sh — install all",
+    command: everything,
+    note: "Every supported app it finds on this machine.",
+  },
+  {
+    id: "off",
+    label: "Uninstall",
+    bar: "sh — uninstall all",
+    command: removeAll,
+    note: "Removes Bigface's files and prints the lines to drop from your config.",
+  },
+];
 ---
 
 <Base title="Bigface — a dark color theme for your tools">
-  <section class="hero">
-    <div class="hero-copy" data-reveal>
-      <p class="eyebrow">one palette · {targets.length} ports · since 2018</p>
-      <h1><span class="grad">Bigface</span></h1>
-      <p class="lead">
-        One dark palette, ported to {targets.length} tools. No per-tool tweaking, no variants, no
-        second-guessing.
-      </p>
-      <p class="muted">
-        Born in 2018 as a JetBrains scheme, now generated for your terminal, editors, shell and notes
-        from a single palette file. Every colour that came from the original scheme is checked
-        against it by a test.
-      </p>
-      <div class="actions">
-        <a class="btn" href="#install">Install in one line</a>
-        <a class="btn ghost" href={`${base}/palette/`}>See the palette</a>
-        <a class="btn ghost" href={REPO}>GitHub</a>
-      </div>
-      <div class="cmdline">
-        <span class="sigil">❯</span>
-        <span class="text">{quick}</span>
-        <button class="copy" type="button" data-copy={quick} data-swap="off" aria-label="Copy the install command">
-          copy
-        </button>
-      </div>
-    </div>
-
-    <div class="stage" data-parallax aria-hidden="true">
-      <div class="ring"></div>
-      <img
-        class="mark"
-        data-depth="1"
-        src={`${base}/img/bigface-avatar.svg`}
-        alt=""
-        width="112"
-        height="112"
-      />
-      <div class="float-window" data-depth="0.4">
-        <SyntaxPreview terminal />
-      </div>
-    </div>
-  </section>
+  <BGHero base={base} repo={REPO} ports={targets.length} command={quick} />
 
   <div class="marquee" aria-hidden="true">
     <div class="track">
@@ -110,71 +102,18 @@ const removeAll = installCommand("--uninstall all");
 
   <hr class="hr-grad" />
 
-  <section id="install" class="install">
-    <div class="sec-head" data-reveal>
-      <p class="eyebrow">01 — install</p>
-      <h2>One command, then it asks.</h2>
-      <p class="lead">
-        The installer shows every app marked <code>installed</code> or <code>detected</code> and lets
-        you pick. It writes Bigface's own files only, never edits your config, and prints the one line
-        you still need to add.
-      </p>
-    </div>
+  <section id="install">
+    <BGSectionHead eyebrow="01 — install" title="One command, then it asks.">
+      The installer shows every app marked <code>installed</code> or <code>detected</code> and lets
+      you pick. It writes Bigface's own files only, never edits your config, and prints the one line
+      you still need to add.
+    </BGSectionHead>
 
-    <div class="card glow terminal-card" data-reveal>
-      <div class="tabs" data-tabs role="tablist" aria-label="Install options">
-        <button type="button" role="tab" data-tab aria-selected="true" aria-controls="tab-interactive">
-          Interactive
-        </button>
-        <button type="button" role="tab" data-tab aria-selected="false" aria-controls="tab-one">
-          One app
-        </button>
-        <button type="button" role="tab" data-tab aria-selected="false" aria-controls="tab-all">
-          Everything
-        </button>
-        <button type="button" role="tab" data-tab aria-selected="false" aria-controls="tab-off">
-          Uninstall
-        </button>
-      </div>
+    <BGCard tone="plate" glow className="overflow-hidden p-[0.9rem]" data-reveal>
+      <BGInstallTabs client:load items={installTabs} />
+    </BGCard>
 
-      <div id="tab-interactive" class="panel" role="tabpanel">
-        <div class="bar"><i /><i /><i /><span>sh — install</span></div>
-        <pre class="cmd"><code>{quick}</code></pre>
-        <div class="panel-foot">
-          <span class="dim">Asks install or uninstall, then which apps. Enter picks every detected app.</span>
-          <button class="copy" type="button" data-copy={quick} data-swap="off">copy</button>
-        </div>
-      </div>
-
-      <div id="tab-one" class="panel" role="tabpanel" hidden>
-        <div class="bar"><i /><i /><i /><span>sh — install ghostty tmux zed</span></div>
-        <pre class="cmd"><code>{oneApp}</code></pre>
-        <div class="panel-foot">
-          <span class="dim">Pass any app ids; unknown ones are reported and skipped.</span>
-          <button class="copy" type="button" data-copy={oneApp} data-swap="off">copy</button>
-        </div>
-      </div>
-
-      <div id="tab-all" class="panel" role="tabpanel" hidden>
-        <div class="bar"><i /><i /><i /><span>sh — install all</span></div>
-        <pre class="cmd"><code>{everything}</code></pre>
-        <div class="panel-foot">
-          <span class="dim">Every supported app it finds on this machine.</span>
-          <button class="copy" type="button" data-copy={everything} data-swap="off">copy</button>
-        </div>
-      </div>
-
-      <div id="tab-off" class="panel" role="tabpanel" hidden>
-        <div class="bar"><i /><i /><i /><span>sh — uninstall all</span></div>
-        <pre class="cmd"><code>{removeAll}</code></pre>
-        <div class="panel-foot">
-          <span class="dim">Removes Bigface's files and prints the lines to drop from your config.</span>
-          <button class="copy" type="button" data-copy={removeAll} data-swap="off">copy</button>
-        </div>
-      </div>
-    </div>
-
-    <p class="dim" data-reveal>
+    <p class="text-bf-dim" data-reveal>
       Add <code>--dry-run</code> to see what it would do, or <a href={`${base}/install.sh`}>read the
       script</a> first — it is generated from
       <a href={`${REPO}/blob/main/src/installer.ts`}>src/installer.ts</a>.
@@ -184,14 +123,10 @@ const removeAll = installCommand("--uninstall all");
   <hr class="hr-grad" />
 
   <section id="apps">
-    <div class="sec-head" data-reveal>
-      <p class="eyebrow">02 — apps</p>
-      <h2>{targets.length} ports, one source of truth.</h2>
-      <p class="lead">
-        Each page says exactly how far its theme was checked — loaded by the tool, validated against
-        its schema, or format-checked only. Nothing is claimed stronger than the proof.
-      </p>
-    </div>
+    <BGSectionHead eyebrow="02 — apps" title={`${targets.length} ports, one source of truth.`}>
+      Each page says exactly how far its theme was checked — loaded by the tool, validated against
+      its schema, or format-checked only. Nothing is claimed stronger than the proof.
+    </BGSectionHead>
 
     <div class="filters" data-filter role="group" aria-label="Filter apps">
       <button type="button" data-kind="all" aria-pressed="true">All</button>
@@ -230,114 +165,6 @@ const removeAll = installCommand("--uninstall all");
 </Base>
 
 <style>
-  /* ---------- hero ---------- */
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: center;
-    padding: clamp(1.5rem, 5vw, 4rem) 0 2rem;
-  }
-
-  .hero h1 {
-    font-size: clamp(3.4rem, 8.5vw, 6.2rem);
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    margin: 0.6rem 0 0.4rem;
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    margin: 1.6rem 0 1.1rem;
-  }
-
-  .cmdline {
-    max-width: 100%;
-    border-radius: 999px;
-    align-items: center;
-    padding-block: 0.6rem;
-  }
-
-  .cmdline .text {
-    white-space: nowrap;
-    line-height: 1.4;
-    font-size: 0.72rem;
-    color: var(--cream);
-  }
-
-  .cmdline .copy {
-    flex: none;
-  }
-
-  /* stage */
-  .stage {
-    position: relative;
-    min-height: 340px;
-    margin-top: 1.25rem;
-    padding-top: 2.2rem;
-    display: grid;
-    place-items: center;
-  }
-
-  .ring {
-    position: absolute;
-    width: min(78%, 340px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: conic-gradient(
-      from 0deg,
-      color-mix(in srgb, var(--blue) 0.0%, transparent) 0deg,
-      color-mix(in srgb, var(--blue) 55.0%, transparent) 70deg,
-      color-mix(in srgb, var(--lime) 35.0%, transparent) 140deg,
-      color-mix(in srgb, var(--blue) 0.0%, transparent) 220deg,
-      color-mix(in srgb, var(--purple) 40.0%, transparent) 300deg,
-      color-mix(in srgb, var(--blue) 0.0%, transparent) 360deg
-    );
-    filter: blur(26px);
-    opacity: 0.75;
-    animation: spin 22s linear infinite;
-    z-index: 0;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(1turn);
-    }
-  }
-
-  .mark {
-    position: absolute;
-    top: 0;
-    right: -8px;
-    width: clamp(88px, 10vw, 132px);
-    height: auto;
-    border-radius: 30px;
-    rotate: -6deg;
-    z-index: 3;
-    box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px color-mix(in srgb, var(--sky) 30.0%, transparent),
-      0 30px 70px -22px color-mix(in srgb, var(--blue) 85.0%, transparent);
-    transition: rotate 0.6s var(--ease);
-  }
-
-  .stage:hover .mark {
-    rotate: 0deg;
-  }
-
-  .float-window {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    transform: perspective(1400px) rotateY(-7deg) rotateX(3deg);
-    transition: transform 0.6s var(--ease);
-    filter: drop-shadow(0 40px 60px color-mix(in srgb, var(--bg-deep) 70.0%, transparent));
-  }
-
-  .stage:hover .float-window {
-    transform: perspective(1400px) rotateY(-2deg) rotateX(0deg);
-  }
-
   /* ---------- marquee ---------- */
   .marquee {
     overflow: hidden;
@@ -492,74 +319,6 @@ const removeAll = installCommand("--uninstall all");
     font-size: 0.82rem;
   }
 
-  /* ---------- sections ---------- */
-  .sec-head {
-    max-width: 62ch;
-    margin-bottom: 1.6rem;
-  }
-
-  .sec-head h2 {
-    margin: 0.5rem 0 0.7rem;
-  }
-
-  /* ---------- terminal card ---------- */
-  .terminal-card {
-    padding: 0.9rem;
-    overflow: hidden;
-  }
-
-  .panel {
-    margin-top: 0.8rem;
-  }
-
-  .bar {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0 0.2rem 0.6rem;
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    font-size: 0.72rem;
-    color: var(--dim);
-  }
-
-  .bar i {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--line-strong);
-  }
-
-  .bar i:nth-child(1) {
-    background: var(--pink);
-  }
-
-  .bar i:nth-child(2) {
-    background: var(--yellow);
-  }
-
-  .bar i:nth-child(3) {
-    background: var(--green);
-  }
-
-  .bar span {
-    margin-left: 0.5rem;
-  }
-
-  .panel pre {
-    margin: 0;
-    background: color-mix(in srgb, var(--bg-deep) 85.0%, transparent);
-  }
-
-  .panel-foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.7rem 0.3rem 0.1rem;
-    font-size: 0.8rem;
-  }
-
   /* ---------- filters + cards ---------- */
   .filters {
     display: flex;
@@ -690,22 +449,7 @@ const removeAll = installCommand("--uninstall all");
     transform: translateX(4px);
   }
 
-  @media (max-width: 1100px) {
-    /* Narrow column: let the command wrap at a space (before the pipe), never inside the URL. */
-    .cmdline .text {
-      white-space: normal;
-    }
-  }
-
   @media (max-width: 900px) {
-    .hero {
-      grid-template-columns: 1fr;
-    }
-
-    .stage {
-      min-height: 300px;
-    }
-
     .stats {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -719,11 +463,6 @@ const removeAll = installCommand("--uninstall all");
     .swatch .name,
     .swatch .hex {
       display: none;
-    }
-
-    .panel-foot {
-      flex-direction: column;
-      align-items: flex-start;
     }
   }
 </style>
