@@ -5,6 +5,7 @@ import { $ } from "bun";
 import { findForeignInCss, findForeignInHtml, paletteHexes } from "./color-guard.ts";
 import { contrastRatio, inkOn, palette } from "./data/palette.ts";
 import { targets } from "./data/targets.ts";
+import { findInklessBrightPlates } from "./ink-guard.ts";
 
 const siteDir = join(import.meta.dir, "..");
 const repo = join(siteDir, "..");
@@ -180,6 +181,26 @@ test("anything painted with a bright plate writes dark ink on it", () => {
       offenders.push(block.slice(0, 90).replace(/\s+/g, " "));
   }
   expect(offenders).toEqual([]);
+});
+
+test("no element pairs a bright fill class with anything but the dark ink", () => {
+  const offenders: string[] = [];
+  for (const f of readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
+    f.endsWith("index.html"),
+  ))
+    for (const cls of findInklessBrightPlates(readFileSync(join(dist, f), "utf8")))
+      offenders.push(`${f}: ${cls}`);
+  expect(offenders).toEqual([]);
+});
+
+// Until shadcn is initialised there is no --primary token to pair.
+const tailwindCss = join(siteDir, "src/styles/tailwind.css");
+test.skipIf(!existsSync(tailwindCss))("the shadcn primary token writes the dark ink", () => {
+  const css = readdirSync(join(dist, "_astro"))
+    .filter((f) => f.endsWith(".css"))
+    .map((f) => readFileSync(join(dist, "_astro", f), "utf8"))
+    .join("\n");
+  expect(css).toMatch(/--primary-foreground:\s*var\(--ink-on-bright\)/);
 });
 
 test("the site only ships colours that exist in the palette", () => {
