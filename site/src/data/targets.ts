@@ -213,22 +213,6 @@ export const targets: Target[] = [
     },
   },
   {
-    id: "tmux",
-    name: "tmux",
-    kind: "Shell",
-    tagline: "Status line, pane borders, messages and copy-mode colours.",
-    files: [{ path: "bigface.conf", label: "bigface.conf" }],
-    steps: [
-      "Copy `bigface.conf` to `~/.config/tmux/bigface.conf`.",
-      "Add `source-file ~/.config/tmux/bigface.conf` to `~/.tmux.conf`, then `tmux source ~/.tmux.conf`.",
-    ],
-    check: {
-      level: "tool",
-      text: "Loaded by tmux 3.7; `show -gv status-style` returns the palette colours and a bad style is rejected.",
-    },
-    terminalPreview: true,
-  },
-  {
     id: "vim",
     name: "Vim / Neovim",
     kind: "Editor",

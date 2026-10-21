@@ -5,7 +5,6 @@ import { join } from "node:path";
 import { $ } from "bun";
 import { loadPalette } from "../palette.ts";
 import { starship } from "./starship.ts";
-import { tmux } from "./tmux.ts";
 import { zellij } from "./zellij.ts";
 
 const p = await loadPalette();
@@ -67,34 +66,4 @@ describe("starship", () => {
       expect(out.stdout.toString()).toContain(`38;2;${r};${g};${b}`);
     },
   );
-});
-
-describe("tmux", () => {
-  const conf = (tmux.files(p) as Record<string, string>)["bigface.conf"] as string;
-  const have = Bun.which("tmux") !== null;
-  test("styles use the palette", () => {
-    expect(conf).toContain('set -g status-style "bg=#333333,fg=#75715e"');
-  });
-  test.skipIf(!have)("tmux loads it and reports the status style", async () => {
-    const dir = await tmp();
-    const f = join(dir, "bigface.conf");
-    await writeFile(f, conf);
-    const sock = `bf${process.pid}`;
-    const r =
-      await $`tmux -L ${sock} -f ${f} new-session -d -s t \; show -gv status-style \; show -gv pane-active-border-style \; kill-server`
-        .quiet()
-        .nothrow();
-    expect(r.stdout.toString()).toBe("bg=#333333,fg=#75715e\nfg=#00b0ff\n");
-  });
-  test.skipIf(!have)("control: a bad style is rejected", async () => {
-    const dir = await tmp();
-    const f = join(dir, "bad.conf");
-    await writeFile(f, 'set -g status-style "bg=notacolour"\n');
-    const sock = `bfbad${process.pid}`;
-    const r =
-      await $`tmux -L ${sock} -f ${f} new-session -d -s t \; show -gv status-style \; kill-server`
-        .quiet()
-        .nothrow();
-    expect(r.stdout.toString() + r.stderr.toString()).not.toContain("bg=notacolour\n");
-  });
 });

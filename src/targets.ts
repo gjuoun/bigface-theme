@@ -6,7 +6,6 @@ import { obsidian } from "./generators/obsidian.ts";
 import { pi } from "./generators/pi.ts";
 import { slack } from "./generators/slack.ts";
 import { starship } from "./generators/starship.ts";
-import { tmux } from "./generators/tmux.ts";
 import type { Target } from "./generators/types.ts";
 import { vim } from "./generators/vim.ts";
 import { vscode } from "./generators/vscode.ts";
@@ -24,7 +23,6 @@ export const targets: Target[] = [
   jetbrains,
   zellij,
   starship,
-  tmux,
   vim,
   xcode,
   micro,

@@ -22,7 +22,7 @@ const levelLabel = {
   format: "Format-checked only",
 };
 const isLevel = (level: string): level is keyof typeof levelLabel => level in levelLabel;
-const oneApp = installCommand("ghostty tmux zed");
+const oneApp = installCommand("ghostty zed vim");
 const everything = installCommand("all");
 const removeAll = installCommand("--uninstall all");
 ---
@@ -147,7 +147,7 @@ const removeAll = installCommand("--uninstall all");
       </div>
 
       <div id="tab-one" class="panel" role="tabpanel" hidden>
-        <div class="bar"><i /><i /><i /><span>sh — install ghostty tmux zed</span></div>
+        <div class="bar"><i /><i /><i /><span>sh — install ghostty zed vim</span></div>
         <pre class="cmd"><code>{oneApp}</code></pre>
         <div class="panel-foot">
           <span class="dim">Pass any app ids; unknown ones are reported and skipped.</span>

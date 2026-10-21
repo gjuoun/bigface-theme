@@ -1,7 +1,7 @@
 /**
  * Renders `install.sh`, the one-curl installer served from the Pages site.
  *
- *   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty tmux
+ *   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty vim
  *
  * The script only writes Bigface's own files. It never edits an existing config file; it prints the
  * line you need to add instead.
@@ -102,14 +102,6 @@ export const installSpecs: InstallSpec[] = [
     note: "Paste that file at the top of $CFG/starship.toml (the `palette` line must come before any table).",
     undo: "Remove the `palette = bigface` line and the [palettes.bigface] table from $CFG/starship.toml.",
     owned: ["$CFG/bigface/starship", "$CFG/bigface"],
-  },
-  {
-    id: "tmux",
-    kind: "files",
-    detect: 'command -v tmux >/dev/null 2>&1 || [ -f "$HOME/.tmux.conf" ] || [ -d "$CFG/tmux" ]',
-    files: [["bigface.conf", "$CFG/tmux/bigface.conf"]],
-    note: "Add `source-file $CFG/tmux/bigface.conf` to ~/.tmux.conf, then `tmux source ~/.tmux.conf`.",
-    undo: "Remove the `source-file` line for bigface.conf from ~/.tmux.conf.",
   },
   {
     id: "vim",
@@ -295,7 +287,7 @@ export function renderInstaller(base = SITE): string {
 # Bigface installer — https://github.com/gjuoun/bigface-theme
 #
 #   curl -fsSL ${base}/install.sh | sh                          # interactive: asks what to install or remove
-#   curl -fsSL ${base}/install.sh | sh -s -- ghostty tmux       # install named apps
+#   curl -fsSL ${base}/install.sh | sh -s -- ghostty vim       # install named apps
 #   curl -fsSL ${base}/install.sh | sh -s -- all                # every drop-in app it detects
 #   curl -fsSL ${base}/install.sh | sh -s -- --uninstall all    # remove what it installed
 #   curl -fsSL ${base}/install.sh | sh -s -- --list
