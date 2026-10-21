@@ -1,8 +1,8 @@
 ---
-import SyntaxPreview from "../SyntaxPreview.astro";
 import { BGButton } from "./button.tsx";
 import BGCommandLine from "./command-line.astro";
 import BGEyebrow from "./eyebrow.astro";
+import BGSyntaxPreview from "./syntax-preview.astro";
 
 // Home hero: pitch + actions + one-line install on the left, the parallax stage (spinning ring,
 // the bear mark, a floating terminal) on the right. Base.astro's pointer script moves [data-depth].
@@ -62,7 +62,7 @@ const { base, repo, ports, command } = Astro.props;
       class="relative z-2 w-full transform-[perspective(1400px)_rotateY(-7deg)_rotateX(3deg)] drop-shadow-[0_40px_60px_color-mix(in_srgb,var(--bf-border-muted)_70%,transparent)] transition-transform duration-600 ease-bf group-hover/stage:transform-[perspective(1400px)_rotateY(-2deg)_rotateX(0deg)]"
       data-depth="0.4"
     >
-      <SyntaxPreview terminal />
+      <BGSyntaxPreview terminal />
     </div>
   </div>
 </section>

@@ -1,6 +1,6 @@
 ---
+import BGSyntaxPreview from "../../components/bg/syntax-preview.astro";
 import InstallSteps from "../../components/InstallSteps.astro";
-import SyntaxPreview from "../../components/SyntaxPreview.astro";
 import { installCommand, REPO, rawUrl, type Target, targets } from "../../data/targets.ts";
 import { themeFile } from "../../data/themes.ts";
 import Base from "../../layouts/Base.astro";
@@ -61,7 +61,7 @@ const next = targets[(index + 1) % targets.length]!;
         </figcaption>
       </figure>
     ) : (
-      <SyntaxPreview terminal={target.terminalPreview} />
+      <BGSyntaxPreview terminal={target.terminalPreview} />
     )}
   </section>
 

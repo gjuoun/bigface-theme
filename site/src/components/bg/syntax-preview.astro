@@ -1,6 +1,9 @@
 ---
-import { hex, palette, syntaxHex } from "../data/palette.ts";
+import { palette } from "../../data/palette.ts";
+import { bgTextClass } from "./palette-classes.ts";
 
+// A fake editor window painted with the syntax roles, optionally with a terminal strip (prompt,
+// output and the 16 ANSI slots) under it.
 interface Props {
   terminal?: boolean;
 }
@@ -147,7 +150,7 @@ const code: Tok[][] = [
   ],
   [["}", "punctuation"]],
 ];
-const colorOf = (role?: string) => (role ? syntaxHex(role) : hex("fg"));
+const classOf = (role?: string) => bgTextClass[role ? (palette.syntax[role] as string) : "fg"];
 const ansi = Object.entries(palette.ansi);
 
 // Rendered as one HTML string per line: template whitespace would otherwise be preserved by
@@ -156,159 +159,44 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 const render = (line: Tok[]): string =>
   line.length === 0
     ? " "
-    : line
-        .map(([text, role]) => `<span style="color:${colorOf(role)}">${esc(text)}</span>`)
-        .join("");
+    : line.map(([text, role]) => `<span class="${classOf(role)}">${esc(text)}</span>`).join("");
+const dot = "inline-block size-[10px] rounded-full";
 ---
 
-<figure class="window">
-  <div class="bar">
-    <i /><i /><i />
-    <span class="file">main.ts</span>
+<figure
+  class="m-0 overflow-hidden rounded-[14px] border border-bf-border/22 bg-bf-bg shadow-[inset_0_1px_0_color-mix(in_srgb,var(--bf-caret)_6%,transparent),0_30px_60px_-40px_var(--bf-bg)]"
+>
+  <div
+    class="flex items-center gap-[0.4rem] border-b border-bf-border/14 bg-linear-to-b/srgb from-bf-caret/5 to-transparent px-[0.85rem] py-[0.45rem] font-code text-[0.72rem] text-bf-fg-dim"
+  >
+    <i class:list={[dot, "bg-bf-burnt-orange"]}></i><i class:list={[dot, "bg-bf-yellow text-ink-on-bright"]}></i><i
+      class:list={[dot, "bg-bf-green"]}></i>
+    <span class="ml-[0.55rem] opacity-60">main.ts</span>
   </div>
 
-  <pre class="code"><code>{code.map((line) => <span class="ln" set:html={render(line)} />)}</code></pre>
+  <pre
+    class="m-0 rounded-none border-0 bg-transparent px-4 pt-[0.7rem] pb-[0.75rem] text-[0.79rem] leading-[1.52] [counter-reset:line]"><code>{code.map((line) => <span class="block whitespace-pre before:mr-[0.9em] before:inline-block before:w-[1.6em] before:text-right before:text-bf-comment before:select-none before:[counter-increment:line] before:content-[counter(line)]" set:html={render(line)} />)}</code></pre>
 
-  {terminal && (
-    <div class="term">
-      <div class="prompt">
-        <span style={`color:${hex("green")}`}>jun</span>
-        <span style={`color:${hex("comment")}`}> ~/code </span>
-        <span style={`color:${hex("blue")}`}>❯</span>
-        <span> git status</span>
-        <span class="caret" style={`background:${hex("caret")}`} />
+  {
+    terminal && (
+      <div class="border-t border-bf-border/14 px-4 pt-[0.6rem] pb-[0.7rem] font-code text-[0.75rem] leading-[1.6]">
+        <div class="flex items-center whitespace-pre">
+          <span class="text-bf-green">jun</span>
+          <span class="text-bf-comment"> ~/code </span>
+          <span class="text-bf-blue">❯</span>
+          <span> git status</span>
+          <span class="ml-[2px] inline-block h-[1em] w-[7px] animate-blink bg-bf-caret" />
+        </div>
+        <div class="whitespace-pre">
+          <span class="text-bf-green">On branch</span>
+          <span class="text-bf-fg"> main</span>
+        </div>
+        <div class="mt-[0.6rem] flex h-4 overflow-hidden rounded-[4px]">
+          {ansi.map(([name, c]) => (
+            <span class="flex-1 bg-(--c)" style={`--c:${c.hex}`} title={`${name} ${c.hex}`} />
+          ))}
+        </div>
       </div>
-      <div class="out">
-        <span style={`color:${hex("green")}`}>On branch</span>
-        <span style={`color:${hex("fg")}`}> main</span>
-      </div>
-      <div class="ansi">
-        {ansi.map(([name, c]) => (
-          <span style={`background:${c.hex}`} title={`${name} ${c.hex}`} />
-        ))}
-      </div>
-    </div>
-  )}
+    )
+  }
 </figure>
-
-<style>
-  .window {
-    margin: 0;
-    background: var(--palette-deep);
-    border: 1px solid rgba(var(--line-rgb), 0.22);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--caret) 6.0%, transparent), 0 30px 60px -40px var(--bg);
-  }
-
-  .bar {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.45rem 0.85rem;
-    background: linear-gradient(to bottom, color-mix(in srgb, var(--caret) 5.0%, transparent), transparent);
-    border-bottom: 1px solid rgba(var(--line-rgb), 0.14);
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    font-size: 0.72rem;
-    color: #6e6b68;
-  }
-
-  .bar i {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-
-  .bar i:nth-child(1) {
-    background: var(--pink);
-  }
-
-  .bar i:nth-child(2) {
-    background: var(--yellow);
-  }
-
-  .bar i:nth-child(3) {
-    background: var(--green);
-  }
-
-  .bar .file {
-    margin-left: 0.55rem;
-    color: var(--palette-fg);
-    opacity: 0.6;
-  }
-
-  .code {
-    margin: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    padding: 0.7rem 1rem 0.75rem;
-    counter-reset: line;
-    font-size: 0.79rem;
-    line-height: 1.52;
-  }
-
-  .ln {
-    display: block;
-    white-space: pre;
-  }
-
-  .ln::before {
-    counter-increment: line;
-    content: counter(line);
-    display: inline-block;
-    width: 1.6em;
-    margin-right: 0.9em;
-    text-align: right;
-    color: var(--comment);
-    user-select: none;
-  }
-
-  .term {
-    border-top: 1px solid rgba(var(--line-rgb), 0.14);
-    padding: 0.6rem 1rem 0.7rem;
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    font-size: 0.75rem;
-    line-height: 1.6;
-  }
-
-  .prompt {
-    display: flex;
-    align-items: center;
-    white-space: pre;
-    color: var(--palette-fg);
-  }
-
-  .caret {
-    display: inline-block;
-    width: 7px;
-    height: 1em;
-    margin-left: 2px;
-    animation: blink 1.1s step-end infinite;
-  }
-
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-
-  .out {
-    white-space: pre;
-  }
-
-  .ansi {
-    display: flex;
-    height: 16px;
-    margin-top: 0.6rem;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .ansi span {
-    flex: 1;
-  }
-</style>

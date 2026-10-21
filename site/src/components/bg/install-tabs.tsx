@@ -23,7 +23,7 @@ export function BGInstallTabs({ items }: { items: BGInstallTab[] }) {
           <TabsTrigger
             key={t.id}
             value={t.id}
-            className="h-auto flex-none cursor-pointer rounded-full border-0 px-[0.85rem] py-[0.4rem] text-[0.82rem] leading-[1.65] font-medium text-bf-fg-muted transition-[color,background] duration-200 hover:text-foreground dark:text-bf-fg-muted dark:hover:text-foreground data-active:bg-linear-135 data-active:from-bf-pale-blue data-active:to-bf-blue data-active:text-ink-on-bright dark:data-active:bg-transparent dark:data-active:text-ink-on-bright dark:data-active:hover:text-ink-on-bright group-data-[variant=default]/tabs-list:data-active:shadow-[0_6px_18px_color-mix(in_srgb,var(--bf-blue)_30%,transparent)]"
+            className="h-auto flex-none cursor-pointer rounded-full border-0 px-[0.85rem] py-[0.4rem] text-[0.82rem] leading-[1.65] font-medium text-bf-fg-muted transition-[color,background] duration-200 hover:text-foreground dark:text-bf-fg-muted dark:hover:text-foreground data-active:bg-linear-135/srgb data-active:from-bf-pale-blue data-active:to-bf-blue data-active:text-ink-on-bright dark:data-active:bg-transparent dark:data-active:text-ink-on-bright dark:data-active:hover:text-ink-on-bright group-data-[variant=default]/tabs-list:data-active:shadow-[0_6px_18px_color-mix(in_srgb,var(--bf-blue)_30%,transparent)]"
           >
             {t.label}
           </TabsTrigger>
