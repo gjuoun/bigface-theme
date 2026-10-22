@@ -8,7 +8,7 @@
     "build": "bun run scripts/sync-assets.ts && astro build",
     "preview": "astro preview",
     "typecheck": "astro check",
-    "ui:drift": "bun run scripts/ui-drift.ts"
+    "ui:drift": "bun run --cwd ../packages/ui ui:drift"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.0",
