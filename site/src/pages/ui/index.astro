@@ -110,6 +110,38 @@ type ButtonSize = NonNullable<Parameters<typeof Button>[0]["size"]>;
 type BadgeVariant = NonNullable<Parameters<typeof Badge>[0]["variant"]>;
 const entry = "mt-[1.4rem] min-w-0 p-5 md:p-6";
 const matrix = "max-w-full overflow-x-auto rounded-[14px] border border-bf-border-muted p-3";
+
+// The whole native set, read from the directory itself: the list can never fall behind
+// components/ui. Exports come from each file's own export statement, variants from its cva.
+const nativeSet = Object.entries(
+  import.meta.glob("../../components/ui/*.tsx", {
+    query: "?raw",
+    import: "default",
+    eager: true,
+  }),
+)
+  .map(([path, raw]) => {
+    const name = (path.split("/").pop() as string).replace(/\.tsx$/, "");
+    const src = raw as string;
+    const block = /export\s*\{([\s\S]*?)\}/.exec(src)?.[1] ?? "";
+    const parts = block
+      ? block
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [...src.matchAll(/export\s+(?:function|const|class|type|interface)\s+(\w+)/g)].map(
+          (m) => m[1] as string,
+        );
+    return {
+      name,
+      parts,
+      variants: variantKeys(src, "variant"),
+      sizes: variantKeys(src, "size"),
+    };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+const nativeFeatured = new Set(["button", "badge", "card", "tabs"]);
+const nativeRest = nativeSet.filter((e) => !nativeFeatured.has(e.name));
 const cellLabel = "font-code text-[0.7rem] text-bf-dim";
 ---
 
@@ -228,11 +260,12 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
 
   <section id="native">
     <BGSectionHead eyebrow="03 — native" title="Native components">
-      Everything in <code>components/ui/</code>, exactly as the shadcn CLI wrote it. Variants and
-      sizes are read from each component's source, so nothing upstream adds can hide.
+      Everything in <code>components/ui/</code>, exactly as the shadcn CLI wrote it — all
+      {nativeSet.length} components the registry ships. The four below are documented in depth;
+      the rest follow with their exports and the variant keys read from their own source.
     </BGSectionHead>
 
-    <BGCard tone="plate" className={entry}>
+    <BGCard tone="plate" className={entry} data-native="button">
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h3 class="m-0">Button</h3>
         <BGBadge tone="pill">native · shadcn</BGBadge>
@@ -295,7 +328,7 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
       </div>
     </BGCard>
 
-    <BGCard tone="plate" className={entry}>
+    <BGCard tone="plate" className={entry} data-native="badge">
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h3 class="m-0">Badge</h3>
         <BGBadge tone="pill">native · shadcn</BGBadge>
@@ -316,7 +349,7 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
       </div>
     </BGCard>
 
-    <BGCard tone="plate" className={entry}>
+    <BGCard tone="plate" className={entry} data-native="card">
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h3 class="m-0">Card</h3>
         <BGBadge tone="pill">native · shadcn</BGBadge>
@@ -333,7 +366,7 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
       </div>
     </BGCard>
 
-    <BGCard tone="plate" className={entry}>
+    <BGCard tone="plate" className={entry} data-native="tabs">
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h3 class="m-0">Tabs</h3>
         <BGBadge tone="pill">native · shadcn</BGBadge>
@@ -357,6 +390,50 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
               </div>
             )),
           )
+        }
+      </div>
+    </BGCard>
+
+    <BGCard tone="plate" className={entry}>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 class="m-0">The full set — {nativeSet.length} components</h3>
+        <BGBadge tone="pill">native · shadcn</BGBadge>
+      </div>
+      <p class="mb-2 text-bf-fg-muted">
+        Every component the CLI ships, installed and upgrade-clean (<code>ui:drift</code>). The four
+        above are documented in depth; the rest are registered with the exports and variant keys
+        their own source declares.
+      </p>
+      <div class="grid gap-4 md:grid-cols-2">
+        {
+          nativeRest.map((c) => (
+            <div
+              class="min-w-0 rounded-[14px] border border-bf-border-muted p-4"
+              data-native={c.name}
+            >
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h4 class="m-0 font-code text-[0.9rem]">{c.name}</h4>
+                <span class="font-code text-[0.7rem] text-bf-dim">
+                  {c.parts.length} exports
+                </span>
+              </div>
+              <BGCodeCard
+                path="import"
+                code={`import { ${c.parts.join(", ")} } from "@/components/ui/${c.name}";`}
+                truncated={false}
+              />
+              {c.variants.length > 0 && (
+                <p class="mt-2 mb-0 text-[0.82rem] text-bf-fg-muted">
+                  <code>variant</code>: {c.variants.join(" · ")}
+                </p>
+              )}
+              {c.sizes.length > 0 && (
+                <p class="mt-1 mb-0 text-[0.82rem] text-bf-fg-muted">
+                  <code>size</code>: {c.sizes.join(" · ")}
+                </p>
+              )}
+            </div>
+          ))
         }
       </div>
     </BGCard>
@@ -542,14 +619,17 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
     <BGCard tone="plate" className="p-5 md:p-6">
       <ul class="my-0 grid gap-2 pl-5">
         <li>
-          <strong>More shadcn components.</strong> Only what the site uses is installed (Button, Badge,
-          Card, Tabs). Form controls, overlays (dialog, sheet, popover, tooltip), menus and toasts are
-          not added yet.
+          <strong>Live demos for the rest of the native set.</strong> All {nativeSet.length}{" "}
+          components the CLI ships are installed and upgrade-clean, and every one is registered above
+          with its exports and variant keys; the ones outside the four deep entries have no live demo
+          yet, and say nothing rather than pretending.
         </li>
         <li>
-          <strong>Toggle group.</strong> Tried and dropped: right after <code>shadcn add toggle-group</code>
-          its own <code>--diff</code> reports the files it wrote as drifted, so it cannot pass
-          <code>ui:drift</code>. The filter chips use <code>BGButton tone="chip"</code> instead.
+          <strong>Two system colours the registry paints with.</strong> Overlay scrims ask for
+          <code>bg-black/10</code> and the slider thumb for <code>bg-white</code>. Tailwind's default
+          colour scale is cleared here (bigface is palette-only), so both classes generate no CSS and
+          the scrim stays invisible; fixing that means adding a colour to the palette, which is a
+          design decision, not a component one.
         </li>
         <li>
           <strong>Pinned hover and focus states.</strong> They are live (point or tab) rather than frozen

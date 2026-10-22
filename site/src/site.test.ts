@@ -259,6 +259,15 @@ test("the component library page shows every native and BG component, and flags 
   ).toBeGreaterThanOrEqual(1);
 });
 
+test("the /ui page registers every shadcn native component in the directory", () => {
+  // Directory-driven: the page lists what components/ui holds, so the registry cannot fall behind
+  // the CLI. 63 = the registry's 64 (ui) items minus `form`, which ships no files.
+  const html = page("ui");
+  const files = readdirSync(join(siteDir, "src/components/ui")).filter((f) => f.endsWith(".tsx"));
+  expect(files.length).toBeGreaterThanOrEqual(63);
+  for (const f of files) expect(html, f).toContain(`data-native="${f.replace(/\.tsx$/, "")}"`);
+});
+
 test("app pages with a screenshot put it beside the instructions on desktop, stacked in DOM order", () => {
   for (const t of targets) {
     const html = page(`apps/${t.id}`);
