@@ -172,6 +172,22 @@ test("no element pairs a bright fill class with anything but the dark ink", () =
 
 // Until shadcn is initialised there is no --primary token to pair.
 const tailwindCss = join(siteDir, "src/styles/tailwind.css");
+// The library ships its own structural theme (packages/ui/src/styles/theme.css): semantic colour
+// names plus the font-code utility, no values. If the site's palette reset ever runs after that
+// import, the names vanish and a component silently loses its colours; the colour guard cannot see
+// a missing rule, so pin the mapping here.
+test("the built CSS keeps the library's theme names and drops Tailwind's default scale", () => {
+  const css = readdirSync(join(dist, "_astro"))
+    .filter((f) => f.endsWith(".css"))
+    .map((f) => readFileSync(join(dist, "_astro", f), "utf8"))
+    .join("\n");
+  expect(css).toContain(".bg-primary{background-color:var(--primary)}");
+  expect(css).toMatch(/\.font-code\{/);
+  expect(css).toMatch(/\.text-ink-on-bright\{/);
+  expect(css).not.toContain("--color-red-500");
+  expect(css).not.toMatch(/\.bg-red-500\{/);
+});
+
 test.skipIf(!existsSync(tailwindCss))("the shadcn primary token writes the dark ink", () => {
   const css = readdirSync(join(dist, "_astro"))
     .filter((f) => f.endsWith(".css"))
@@ -246,7 +262,7 @@ test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 soci
 test("the component library page shows every native and BG component, and flags unfinished props", () => {
   const html = page("ui");
   for (const name of ["button", "badge", "card", "tabs"])
-    expect(html, name).toContain(`from &quot;@/components/ui/${name}&quot;`);
+    expect(html, name).toContain(`from &quot;@gjuoun/bigface-ui/components/ui/${name}&quot;`);
   for (const e of bgCatalog) {
     expect(html, e.name).toContain(`id="bg-${e.name}"`);
     expect(html, e.name).toContain(`components/bg/${e.file}`);
@@ -260,10 +276,13 @@ test("the component library page shows every native and BG component, and flags 
 });
 
 test("the /ui page registers every shadcn native component in the directory", () => {
-  // Directory-driven: the page lists what components/ui holds, so the registry cannot fall behind
-  // the CLI. 63 = the registry's 64 (ui) items minus `form`, which ships no files.
+  // Directory-driven: the page lists what the package's components/ui holds, so the registry
+  // cannot fall behind the CLI. 63 = the registry's 64 (ui) items minus `form`, which ships no
+  // files. The library lives in packages/ui since the npm-package round.
   const html = page("ui");
-  const files = readdirSync(join(siteDir, "src/components/ui")).filter((f) => f.endsWith(".tsx"));
+  const files = readdirSync(join(siteDir, "../packages/ui/src/components/ui")).filter((f) =>
+    f.endsWith(".tsx"),
+  );
   expect(files.length).toBeGreaterThanOrEqual(63);
   for (const f of files) expect(html, f).toContain(`data-native="${f.replace(/\.tsx$/, "")}"`);
 });

@@ -1,11 +1,21 @@
 import { expect, test } from "bun:test";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { bgCatalog, propsOf, textScale, variantKeys } from "./ui-catalog.ts";
 
-const ui = join(import.meta.dir, "../components/ui");
-const bg = join(import.meta.dir, "../components/bg");
+// The library moved to packages/ui; the site keeps the .astro composites. The catalog and the /ui
+// page read both, so these helpers resolve a BG entry by name wherever it lives.
+const pkg = join(import.meta.dir, "../../../packages/ui/src/components");
+const ui = join(pkg, "ui");
+const bgPkg = join(pkg, "bg");
+const bgSite = join(import.meta.dir, "../components/bg");
 const read = (dir: string, f: string) => readFileSync(join(dir, f), "utf8");
+const bgFiles = () =>
+  [
+    ...readdirSync(bgSite, { encoding: "utf8" }),
+    ...readdirSync(bgPkg, { encoding: "utf8" }),
+  ].sort();
+const bgAt = (f: string) => (existsSync(join(bgPkg, f)) ? bgPkg : bgSite);
 
 test("variant keys are read from the shadcn sources", () => {
   const button = read(ui, "button.tsx");
@@ -33,27 +43,25 @@ test("variant keys are read from the shadcn sources", () => {
 });
 
 test("the catalog lists every file in components/bg, and nothing else", () => {
-  const files = readdirSync(bg)
-    .filter((f) => !f.includes(".test."))
-    .sort();
+  const files = bgFiles().filter((f) => !f.includes(".test."));
   expect(bgCatalog.map((e) => e.file).sort()).toEqual(files);
 });
 
 test("every BG export of a .tsx file is in the catalog", () => {
   const names = new Set(bgCatalog.map((e) => e.name));
-  for (const f of readdirSync(bg).filter((f) => f.endsWith(".tsx") && !f.includes(".test.")))
-    for (const m of read(bg, f).matchAll(/export function (BG\w+)/g))
+  for (const f of readdirSync(bgPkg).filter((f) => f.endsWith(".tsx") && !f.includes(".test.")))
+    for (const m of read(bgPkg, f).matchAll(/export function (BG\w+)/g))
       expect(names.has(m[1] as string), `${f}: ${m[1]}`).toBe(true);
 });
 
 test("props come from the source: every component that takes props shows them", () => {
   for (const e of bgCatalog.filter((e) => e.kind !== "helper")) {
-    const props = propsOf(e.file, read(bg, e.file));
+    const props = propsOf(e.file, read(bgAt(e.file), e.file));
     if (["toast.astro", "divider.astro", "contrast-table.astro"].includes(e.file))
       expect(props).toBe("(no props)");
     else expect(props, e.file).not.toBe("(no props)");
   }
-  const tabs = propsOf("install-tabs.tsx", read(bg, "install-tabs.tsx"));
+  const tabs = propsOf("install-tabs.tsx", read(bgPkg, "install-tabs.tsx"));
   expect(tabs).toContain("command: string");
   expect(tabs).toContain("items: BGInstallTab[]");
 });

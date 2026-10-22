@@ -10,13 +10,26 @@
       "!site/.astro",
       "!src/fixtures",
       "!palette/*.json",
-      "!site/src/components/ui",
-      "!site/src/lib/utils.ts",
-      "!site/src/lib/highlighter.tsx",
-      "!site/src/hooks"
+      "!packages/ui/src/components/ui",
+      "!packages/ui/src/lib/utils.ts",
+      "!packages/ui/src/lib/highlighter.tsx",
+      "!packages/ui/src/hooks"
     ]
   },
-  "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
-  "linter": { "enabled": true, "rules": { "preset": "none" } },
-  "css": { "parser": { "tailwindDirectives": true } }
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "none"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
 }

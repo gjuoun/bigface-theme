@@ -2,7 +2,7 @@
 // read each other through :has()/group selectors. Page-private (the leading underscore keeps Astro
 // from routing it); the library itself is components/ui and components/bg.
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@gjuoun/bigface-ui/components/ui/button";
 import {
   Card,
   CardAction,
@@ -11,8 +11,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@gjuoun/bigface-ui/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gjuoun/bigface-ui/components/ui/tabs";
 
 export function CardDemo({ size }: { size: "default" | "sm" }) {
   return (

@@ -1,10 +1,16 @@
 ---
+import { BGBadge } from "@gjuoun/bigface-ui/components/bg/badge";
+import { BGButton } from "@gjuoun/bigface-ui/components/bg/button";
+import { BGCard } from "@gjuoun/bigface-ui/components/bg/card";
+import { BGInstallTabs } from "@gjuoun/bigface-ui/components/bg/install-tabs";
+import { Badge } from "@gjuoun/bigface-ui/components/ui/badge";
+import { Button } from "@gjuoun/bigface-ui/components/ui/button";
 import { Download } from "lucide-react";
+import badgeSrc from "../../../../packages/ui/src/components/ui/badge.tsx?raw";
+import buttonSrc from "../../../../packages/ui/src/components/ui/button.tsx?raw";
+import tabsSrc from "../../../../packages/ui/src/components/ui/tabs.tsx?raw";
 import BGAppCard from "../../components/bg/app-card.astro";
-import { BGBadge } from "../../components/bg/badge.tsx";
 import BGBreadcrumbs from "../../components/bg/breadcrumbs.astro";
-import { BGButton } from "../../components/bg/button.tsx";
-import { BGCard } from "../../components/bg/card.tsx";
 import BGCodeCard from "../../components/bg/code-card.astro";
 import BGCommandLine from "../../components/bg/command-line.astro";
 import BGContrastTable from "../../components/bg/contrast-table.astro";
@@ -13,7 +19,6 @@ import BGDivider from "../../components/bg/divider.astro";
 import BGDownloadCard from "../../components/bg/download-card.astro";
 import BGEyebrow from "../../components/bg/eyebrow.astro";
 import BGFilterChips from "../../components/bg/filter-chips.astro";
-import { BGInstallTabs } from "../../components/bg/install-tabs.tsx";
 import BGManualSteps from "../../components/bg/manual-steps.astro";
 import BGMarketCard from "../../components/bg/market-card.astro";
 import BGMarquee from "../../components/bg/marquee.astro";
@@ -26,11 +31,6 @@ import BGStat from "../../components/bg/stat.astro";
 import BGSwatch from "../../components/bg/swatch.astro";
 import BGSwatchChip from "../../components/bg/swatch-chip.astro";
 import BGSyntaxPreview from "../../components/bg/syntax-preview.astro";
-import { Badge } from "../../components/ui/badge";
-import badgeSrc from "../../components/ui/badge.tsx?raw";
-import { Button } from "../../components/ui/button";
-import buttonSrc from "../../components/ui/button.tsx?raw";
-import tabsSrc from "../../components/ui/tabs.tsx?raw";
 import { palette } from "../../data/palette.ts";
 import { installCommand, targets } from "../../data/targets.ts";
 import { bgCatalog, textScale, variantKeys } from "../../data/ui-catalog.ts";
@@ -43,11 +43,18 @@ import { CardDemo, TabsDemo } from "./_demos.tsx";
 // are: the semantic tokens (tailwind.css :root), the font stacks (@theme), the text scale (every
 // font-size class used under src/).
 const sources = Object.values(
-  import.meta.glob(["../../components/**/*.{astro,tsx}", "../**/*.astro"], {
-    query: "?raw",
-    import: "default",
-    eager: true,
-  }),
+  import.meta.glob(
+    [
+      "../../components/**/*.astro",
+      "../../../../packages/ui/src/components/**/*.tsx",
+      "../**/*.astro",
+    ],
+    {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    },
+  ),
 ) as string[];
 const scale = textScale(sources);
 
@@ -87,11 +94,14 @@ const sections = [
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const bgSources = Object.fromEntries(
   Object.entries(
-    import.meta.glob("../../components/bg/*.{astro,tsx,ts}", {
-      query: "?raw",
-      import: "default",
-      eager: true,
-    }),
+    import.meta.glob(
+      ["../../components/bg/*.{astro,ts}", "../../../../packages/ui/src/components/bg/*.tsx"],
+      {
+        query: "?raw",
+        import: "default",
+        eager: true,
+      },
+    ),
   ).map(([path, src]) => [path.split("/").pop() as string, src as string]),
 );
 const notFinal = bgCatalog.filter((e) => !e.finalised);
@@ -112,7 +122,7 @@ const matrix = "max-w-full overflow-x-auto rounded-[14px] border border-bf-borde
 // The whole native set, read from the directory itself: the list can never fall behind
 // components/ui. Exports come from each file's own export statement, variants from its cva.
 const nativeSet = Object.entries(
-  import.meta.glob("../../components/ui/*.tsx", {
+  import.meta.glob("../../../../packages/ui/src/components/ui/*.tsx", {
     query: "?raw",
     import: "default",
     eager: true,
@@ -268,7 +278,7 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
         <h3 class="m-0">Button</h3>
         <BGBadge tone="pill">native · shadcn</BGBadge>
       </div>
-      <BGCodeCard path="import" code={'import { Button } from "@/components/ui/button";'} truncated={false} />
+      <BGCodeCard path="import" code={'import { Button } from "@gjuoun/bigface-ui/components/ui/button";'} truncated={false} />
       <p class="mb-2 text-bf-fg-muted">Every variant × size. Icon sizes carry an icon instead of a label.</p>
       <div class={matrix}>
         <table class="w-max min-w-full">
@@ -331,7 +341,7 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
         <h3 class="m-0">Badge</h3>
         <BGBadge tone="pill">native · shadcn</BGBadge>
       </div>
-      <BGCodeCard path="import" code={'import { Badge } from "@/components/ui/badge";'} truncated={false} />
+      <BGCodeCard path="import" code={'import { Badge } from "@gjuoun/bigface-ui/components/ui/badge";'} truncated={false} />
       <p class="mb-2 text-bf-fg-muted">Every variant; Badge has no size. Not interactive, so no hover or disabled state.</p>
       <div class={matrix}>
         <div class="flex flex-wrap items-center gap-4">
@@ -354,7 +364,7 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
       </div>
       <BGCodeCard
         path="import"
-        code={'import {\n  Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,\n} from "@/components/ui/card";'}
+        code={'import {\n  Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,\n} from "@gjuoun/bigface-ui/components/ui/card";'}
         truncated={false}
       />
       <p class="mb-2 text-bf-fg-muted">Both sizes with every slot filled. Static, so no states.</p>
@@ -371,7 +381,7 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
       </div>
       <BGCodeCard
         path="import"
-        code={'import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";'}
+        code={'import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gjuoun/bigface-ui/components/ui/tabs";'}
         truncated={false}
       />
       <p class="mb-2 text-bf-fg-muted">

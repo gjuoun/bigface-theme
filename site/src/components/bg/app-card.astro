@@ -1,9 +1,9 @@
 ---
+import { BGBadge } from "@gjuoun/bigface-ui/components/bg/badge";
+import { bgCardVariants } from "@gjuoun/bigface-ui/components/bg/card";
+import { cn } from "@gjuoun/bigface-ui/lib/utils";
 import { inline } from "../../data/inline.ts";
 import type { Target } from "../../data/targets.ts";
-import { cn } from "../../lib/utils.ts";
-import { BGBadge } from "./badge.tsx";
-import { bgCardVariants } from "./card.tsx";
 
 // One app in the home grid. .spotlight is the hook for Base.astro's pointer glow (--mx/--my).
 interface Props {
