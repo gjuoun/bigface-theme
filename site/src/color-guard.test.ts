@@ -124,3 +124,17 @@ test("a bare ring-offset width fails: it would pair with the #fff default", () =
     "ring-offset-2",
   ]);
 });
+
+// attachment.tsx and trace.tsx ship the shimmer's fallback highlight as a relative colour whose
+// base is the element's own text colour. Jun: A, 2026-10-21.
+
+test("relative colours pass only on a palette var or the element's own colour", () => {
+  const css =
+    ".a{--_highlight:oklch(from currentColor l c h / calc(alpha * .2))}" +
+    ".b{color:oklch(from var(--bf-blue) 0.7 c h)}";
+  expect(findForeignInCss(css, known)).toEqual([]);
+  // not relative: an invented grey is still an invented grey
+  expect(findForeignInCss(".c{color:oklch(.2 0 0)}", known)).toHaveLength(1);
+  // relative on a literal base: the literal is still caught, and so is the relative call
+  expect(findForeignInCss(".d{color:oklch(from #123456 l c h)}", known)).toContain("#123456");
+});

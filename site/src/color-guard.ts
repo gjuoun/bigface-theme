@@ -135,8 +135,11 @@ export function findForeignInCss(css: string, known: Set<string>): string[] {
 
   for (const m of text.matchAll(/\b(hsla?|hwb|lab|lch|oklab|oklch)\(\s*([^)]*)\)/gi)) {
     const args = (m[2] as string).trim();
-    // relative colour syntax built on our own variables is fine: oklch(from var(--bf-blue) …)
-    if (/^from\s+var\(/.test(args)) continue;
+    // Relative colour syntax passes when its base is a palette variable or the element's own
+    // colour: oklch(from var(--bf-blue) …), oklch(from currentColor …). Only lightness, chroma and
+    // alpha are transformed, and every `color` on this site is a palette-mapped utility or an
+    // inherited one (attachment.tsx / trace.tsx ship the shimmer's fallback highlight this way).
+    if (/^from\s+(?:var\(|currentcolor)/i.test(args)) continue;
     bad.push(m[0]);
   }
 
