@@ -22,6 +22,7 @@
   "files": [
     "src",
     "!src/**/*.test.*",
+    "!src/styles/tailwind.css",
     "README.md",
     "LICENSE"
   ],
