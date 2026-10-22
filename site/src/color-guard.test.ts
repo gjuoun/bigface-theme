@@ -1,6 +1,11 @@
 import { expect, test } from "bun:test";
 import palette from "../../palette/bigface.json";
-import { findForeignInCss, findForeignInHtml, paletteHexes } from "./color-guard.ts";
+import {
+  findForeignInCss,
+  findForeignInHtml,
+  paletteHexes,
+  ringOffsetOffenders,
+} from "./color-guard.ts";
 
 const known = paletteHexes(palette);
 
@@ -95,4 +100,27 @@ test("<noscript> fallbacks are not painted in a JS browser; outside them the sam
   const inside = "<noscript><style>.q{color:#fff;background:#000}</style></noscript>";
   expect(findForeignInHtml(inside, known)).toEqual([]);
   expect(findForeignInHtml("<style>.q{color:#fff}</style>", known)).toEqual(["#fff"]);
+});
+
+// resizable.tsx ships ring-offset-background; the #fff initial value must still never paint.
+
+test("a ring-offset on a palette-mapped semantic token is allowed", () => {
+  expect(
+    ringOffsetOffenders(".ring-offset-background{--tw-ring-offset-color:var(--background)}"),
+  ).toEqual([]);
+});
+
+test("ring-offset-white and an arbitrary ring-offset value fail", () => {
+  expect(ringOffsetOffenders(".ring-offset-white{--tw-ring-offset-color:#fff}")).toEqual([
+    "ring-offset-white",
+  ]);
+  expect(ringOffsetOffenders(".ring-offset-\\[3px\\]{--tw-ring-offset-width:3px}")).toEqual([
+    "ring-offset-[3px]",
+  ]);
+});
+
+test("a bare ring-offset width fails: it would pair with the #fff default", () => {
+  expect(ringOffsetOffenders(".ring-offset-2{--tw-ring-offset-width:2px}")).toEqual([
+    "ring-offset-2",
+  ]);
 });

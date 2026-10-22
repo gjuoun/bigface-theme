@@ -69,6 +69,44 @@ const stripAllowed = (css: string): string =>
     .replace(/\.bg-\\\[Canvas\\\]\s*\{[^{}]*\}/g, "")
     .replace(/\.text-\\\[CanvasText\\\]\s*\{[^{}]*\}/g, "");
 
+// Tokens tailwind.css maps onto a palette variable (`--<token>: var(--bf-*)`).
+const RING_OFFSET_TOKENS = new Set([
+  "background",
+  "foreground",
+  "card",
+  "popover",
+  "primary",
+  "secondary",
+  "muted",
+  "accent",
+  "destructive",
+  "border",
+  "input",
+  "ring",
+]);
+
+/**
+ * Offending `.ring-offset-<token>` utilities in a stylesheet.
+ *
+ * Tailwind's `--tw-ring-offset-color` initial value is `#fff`, which nothing paints while no
+ * ring-offset utility exists. The registry's `resizable.tsx` ships one on the background token, so
+ * the class may exist — but only on a semantic token that resolves to a palette variable, which the
+ * colour scan above already checks. A named colour, an arbitrary value, or a bare width (which pairs
+ * with the untouched `#fff` default) would paint a colour outside the palette.
+ *
+ * The comment deliberately spells no real utility name: Tailwind scans this file, so a literal
+ * would generate the very rule the test is there to constrain.
+ */
+export function ringOffsetOffenders(css: string): string[] {
+  const bad = new Set<string>();
+  for (const m of css.matchAll(/\.ring-offset-([^\s,{]+)/g)) {
+    const token = m[1] as string;
+    const name = token.replace(/\\/g, "");
+    if (!RING_OFFSET_TOKENS.has(name)) bad.add(`ring-offset-${name}`);
+  }
+  return [...bad];
+}
+
 /** Colour literals in a CSS text (stylesheet, <style> block or style="" value). */
 export function findForeignInCss(css: string, known: Set<string>): string[] {
   const text = stripAllowed(css);

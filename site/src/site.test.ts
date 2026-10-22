@@ -2,7 +2,12 @@ import { beforeAll, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-import { findForeignInCss, findForeignInHtml, paletteHexes } from "./color-guard.ts";
+import {
+  findForeignInCss,
+  findForeignInHtml,
+  paletteHexes,
+  ringOffsetOffenders,
+} from "./color-guard.ts";
 import { contrastRatio, inkOn, palette } from "./data/palette.ts";
 import { targets } from "./data/targets.ts";
 import { bgCatalog } from "./data/ui-catalog.ts";
@@ -193,8 +198,9 @@ test("the site only ships colours that exist in the palette", () => {
   for (const f of cssFiles) {
     const css = readFileSync(join(dist, "_astro", f), "utf8");
     for (const bad of findForeignInCss(css, known)) offenders.push(`_astro/${f}: ${bad}`);
-    // The ring-offset #fff default is only harmless while no ring-offset utility paints it.
-    expect(css, f).not.toMatch(/\.ring-offset-/);
+    // The ring-offset #fff default is only harmless while every ring-offset utility paints a
+    // palette-mapped token (resizable.tsx ships ring-offset-background).
+    expect(ringOffsetOffenders(css), f).toEqual([]);
   }
   expect(offenders).toEqual([]);
   // And the theme's own background really is the page background.
