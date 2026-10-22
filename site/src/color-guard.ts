@@ -59,7 +59,15 @@ const stripAllowed = (css: string): string =>
     .replace(/((?:-webkit-)?mask(?:-image)?\s*:)[^;{}]*/g, "$1")
     // Tailwind's ring-offset default: the @property rule and the fallback declaration
     .replace(/@property\s+--tw-ring-offset-color\s*\{[^}]*\}/g, "")
-    .replace(/(--tw-ring-offset-color\s*:\s*)#fff(?:fff)?\b/gi, "$1");
+    .replace(/(--tw-ring-offset-color\s*:\s*)#fff(?:fff)?\b/gi, "$1")
+    // `--scroll-fade-*` custom properties are consumed by the scroll-fade utilities' own
+    // `mask-image` gradients: they travel in the alpha channel and paint nothing themselves.
+    .replace(/--scroll-fade-[\w-]+\s*:[^;{}]*/g, "")
+    // `.bg-[Canvas]` / `.text-[CanvasText]` are native-select.tsx's arbitrary system-colour
+    // utilities. No built element uses those classes (site.test.ts keeps that true), so the rules
+    // are dead CSS: drop them here rather than let a never-painted system colour fail the scan.
+    .replace(/\.bg-\\\[Canvas\\\]\s*\{[^{}]*\}/g, "")
+    .replace(/\.text-\\\[CanvasText\\\]\s*\{[^{}]*\}/g, "");
 
 /** Colour literals in a CSS text (stylesheet, <style> block or style="" value). */
 export function findForeignInCss(css: string, known: Set<string>): string[] {
@@ -114,11 +122,14 @@ export function findForeignInCss(css: string, known: Set<string>): string[] {
 /** Colour literals in an HTML document: <style> blocks, style="" attributes, and any 6/8-digit hex. */
 export function findForeignInHtml(html: string, known: Set<string>): string[] {
   const bad: string[] = [];
-  for (const m of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g))
+  // A library's no-JS fallback (input-otp ships one with plain white/black) sits inside <noscript>.
+  // A JS-capable browser never paints it, and the island it guards needs JS anyway.
+  const live = html.replace(/<noscript>[\s\S]*?<\/noscript>/g, "");
+  for (const m of live.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g))
     bad.push(...findForeignInCss(m[1] as string, known));
-  for (const m of html.matchAll(/\sstyle="([^"]*)"/g))
+  for (const m of live.matchAll(/\sstyle="([^"]*)"/g))
     bad.push(...findForeignInCss((m[1] as string).replace(/&quot;/g, '"'), known));
-  const rest = html.replace(/<style[^>]*>[\s\S]*?<\/style>/g, "").replace(/\sstyle="[^"]*"/g, "");
+  const rest = live.replace(/<style[^>]*>[\s\S]*?<\/style>/g, "").replace(/\sstyle="[^"]*"/g, "");
   for (const m of rest.matchAll(/#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g)) {
     const full = (m[1] as string).toLowerCase();
     if (full.length === 8 && full.endsWith("00")) continue;

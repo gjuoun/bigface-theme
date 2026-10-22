@@ -201,6 +201,19 @@ test("the site only ships colours that exist in the palette", () => {
   expect(page("")).toContain("#252925");
 });
 
+// native-select.tsx ships `bg-[Canvas] text-[CanvasText]`: arbitrary system-colour utilities. Their CSS
+// rules exist (the colour scan drops them as dead), so the reason they are harmless must stay true.
+test("no built page uses the Canvas/CanvasText system-colour classes", () => {
+  const users: string[] = [];
+  for (const f of readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
+    f.endsWith("index.html"),
+  )) {
+    const html = readFileSync(join(dist, f), "utf8");
+    if (html.includes("bg-[Canvas]") || html.includes("text-[CanvasText]")) users.push(f);
+  }
+  expect(users).toEqual([]);
+});
+
 test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 social card", () => {
   const svg = readFileSync(join(dist, "favicon.svg"), "utf8");
   expect(svg).toContain("<svg");

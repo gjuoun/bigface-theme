@@ -74,3 +74,25 @@ test("HTML: style attributes and <style> blocks are scanned, URL fragments are n
     '<svg fill="#252925"></svg><i data-x="#abcdef"></i>';
   expect(findForeignInHtml(html, known)).toEqual(["#123456", "oklch(1 0 0)", "#abcdef"]);
 });
+
+// Added for the full native set (JW-237). Each case is forced by one registry file; the narrowing
+// is the smallest one that keeps a non-palette colour from shipping.
+
+test("scroll-fade custom properties feed a mask, so their colours are accepted", () => {
+  const css = ".f{--scroll-fade-x:linear-gradient(90deg,#123456,#123456)}";
+  expect(findForeignInCss(css, known)).toEqual([]);
+  // the same colour painted directly is still rejected
+  expect(findForeignInCss(".f{background-color:#123456}", known)).toEqual(["#123456"]);
+});
+
+test("the dead Canvas/CanvasText rules are dropped, the same names elsewhere are not", () => {
+  const css = ".bg-\\[Canvas\\]{background-color:Canvas}.text-\\[CanvasText\\]{color:CanvasText}";
+  expect(findForeignInCss(css, known)).toEqual([]);
+  expect(findForeignInCss(".x{color:Canvas;border-color:CanvasText}", known)).toHaveLength(2);
+});
+
+test("<noscript> fallbacks are not painted in a JS browser; outside them the same rule fails", () => {
+  const inside = "<noscript><style>.q{color:#fff;background:#000}</style></noscript>";
+  expect(findForeignInHtml(inside, known)).toEqual([]);
+  expect(findForeignInHtml("<style>.q{color:#fff}</style>", known)).toEqual(["#fff"]);
+});
