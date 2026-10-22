@@ -21,7 +21,9 @@
     "site:preview": "bun run --cwd site preview",
     "brand": "uv run --with cairosvg --with pillow python3 brand/export-avatar.py",
     "brand:check": "uv run --with cairosvg --with pillow python3 brand/validate-avatar.py",
-    "ui:drift": "bun run --cwd packages/ui ui:drift"
+    "ui:drift": "bun run --cwd packages/ui ui:drift",
+    "theme:sync": "bun run --cwd packages/ui theme:sync",
+    "theme:check": "bun run --cwd packages/ui theme:check"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.0",

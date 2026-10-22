@@ -12,11 +12,16 @@
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts",
     "./lib/utils": "./src/lib/utils.ts",
-    "./lib/highlighter": "./src/lib/highlighter.tsx"
+    "./lib/highlighter": "./src/lib/highlighter.tsx",
+    "./theme.css": "./src/styles/theme.css",
+    "./tokens.css": "./src/styles/tokens.css",
+    "./styles.css": "./src/styles/styles.css"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "ui:drift": "bun run scripts/ui-drift.ts"
+    "ui:drift": "bun run scripts/ui-drift.ts",
+    "theme:sync": "bun run scripts/gen-tokens.ts",
+    "theme:check": "bun run scripts/gen-tokens.ts --check"
   },
   "devDependencies": {
     "typescript": "^5.9.0",

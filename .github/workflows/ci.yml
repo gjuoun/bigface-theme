@@ -18,8 +18,9 @@ jobs:
       # typecheck + biome + every generator test + the site build test.
       # Tests that need a tool (ghostty, herdr, zellij, …) skip themselves when it is not installed.
       - run: bun run check
-      # A palette edit must come with regenerated themes/.
-      - name: themes/ is up to date
+      # A palette edit must come with regenerated themes/ and the package's default tokens.
+      - name: themes/ and tokens.css are up to date
         run: |
           bun run themes
-          git diff --exit-code themes
+          bun run theme:sync
+          git diff --exit-code themes packages/ui/src/styles/tokens.css
