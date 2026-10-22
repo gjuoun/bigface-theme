@@ -401,8 +401,8 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
       </div>
       <p class="mb-2 text-bf-fg-muted">
         Every component the CLI ships, installed and upgrade-clean (<code>ui:drift</code>). The four
-        above are documented in depth; the rest are registered with the exports and variant keys
-        their own source declares.
+        above are documented in depth; the rest are registered with how many parts each exports and
+        the variant keys its own source declares.
       </p>
       <div class="grid gap-4 md:grid-cols-2">
         {
@@ -417,11 +417,6 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
                   {c.parts.length} exports
                 </span>
               </div>
-              <BGCodeCard
-                path="import"
-                code={`import { ${c.parts.join(", ")} } from "@/components/ui/${c.name}";`}
-                truncated={false}
-              />
               {c.variants.length > 0 && (
                 <p class="mt-2 mb-0 text-[0.82rem] text-bf-fg-muted">
                   <code>variant</code>: {c.variants.join(" · ")}
@@ -456,7 +451,6 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
         <BGEntry entry={entry} source={bgSources[entry.file] ?? ""} base={base}>
           {entry.name === "BGButton" && (
             <div class="flex flex-wrap items-center gap-3">
-              <BGButton>none (shadcn default)</BGButton>
               <BGButton tone="glow">glow</BGButton>
               <BGButton tone="ghost">ghost</BGButton>
               <BGButton tone="copy">copy</BGButton>
@@ -472,7 +466,6 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
               <BGBadge tone="tool">tool</BGBadge>
               <BGBadge tone="schema">schema</BGBadge>
               <BGBadge tone="format">format</BGBadge>
-              <BGBadge>none (shadcn default)</BGBadge>
             </div>
           )}
           {entry.name === "BGCard" && (
