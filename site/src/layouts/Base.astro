@@ -1,6 +1,9 @@
 ---
-import "../styles/global.css";
-import { hex } from "../data/palette.ts";
+import "../styles/tailwind.css";
+import BGSiteFooter from "../components/bg/site-footer.astro";
+import BGSiteHeader from "../components/bg/site-header.astro";
+import BGToast from "../components/bg/toast.astro";
+import { hex, palette } from "../data/palette.ts";
 import { REPO, targets } from "../data/targets.ts";
 
 interface Props {
@@ -16,46 +19,21 @@ const origin = Astro.site ? new URL(Astro.site).origin : "";
 // Every colour on this site comes from palette/bigface.json: the chrome is the theme's own
 // surface ladder, the accents are its accents, and translucent steps are those same colours with
 // alpha. Gradients interpolate between palette stops; nothing else is invented.
+const kebab = (name: string) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 const vars: Record<string, string> = {
-  // surfaces (the scheme's own: bg, cursor-line row, matched-brace block, border greys)
-  "--bg": hex("bg"),
-  "--bg-2": hex("borderMuted"),
-  "--bg-deep": hex("borderMuted"),
-  "--panel": hex("cursorLine"),
-  "--panel-2": hex("braceMatch"),
-  "--selection": hex("selection"),
-  // ink
-  "--fg": hex("fg"),
-  "--cream": hex("fg"),
-  // bright controls (buttons, selected tabs) take the background colour as ink
-  "--ink-on-bright": hex("bg"),
-  "--muted": `color-mix(in srgb, ${hex("fg")} 75%, ${hex("bg")})`,
-  "--dim": `color-mix(in srgb, ${hex("fg")} 55%, ${hex("bg")})`,
-  "--comment": hex("comment"),
-  "--caret": hex("caret"),
-  // lines
-  "--border": hex("border"),
-  "--border-muted": hex("borderMuted"),
-  "--line-rgb": [1, 3, 5].map((i) => Number.parseInt(hex("border").slice(i, i + 2), 16)).join(", "),
-  // accents
-  "--blue": hex("blue"),
-  "--sky": hex("lightBlue"),
-  "--light-blue": hex("lightBlue"),
-  "--pale-blue": hex("paleBlue"),
-  "--cyan": hex("cyan"),
-  "--green": hex("green"),
-  "--lime": hex("lime"),
-  "--yellow": hex("yellow"),
-  "--bright-yellow": hex("brightYellow"),
-  "--orange": hex("burntOrange"),
-  "--burnt": hex("burntOrange"),
-  "--pink": hex("burntOrange"),
-  "--purple": hex("purple"),
-  // the scheme's search colours, and the theme's own editor background
-  "--search-bg": hex("selection"),
-  "--palette-bg": hex("bg"),
-  "--palette-panel": hex("cursorLine"),
-  "--palette-deep": hex("bg"),
+  // the palette itself, under our own names: --bf-<colour> and --bf-ansi-<name>. tailwind.css maps
+  // shadcn's semantic tokens and the bg-bf-* utilities onto these and nothing else.
+  ...Object.fromEntries(
+    Object.entries(palette.colors).map(([k, c]) => [`--bf-${kebab(k)}`, c.hex]),
+  ),
+  ...Object.fromEntries(
+    Object.entries(palette.ansi).map(([k, c]) => [`--bf-ansi-${kebab(k)}`, c.hex]),
+  ),
+  // bright plates (buttons, selected tabs and chips) take the background colour as ink
+  "--ink-on-bright": "var(--bf-bg)",
+  // the two text greys: palette fg blended toward bg (translucent steps of palette colours)
+  "--fg-muted": "color-mix(in srgb, var(--bf-fg) 75%, var(--bf-bg))",
+  "--dim": "color-mix(in srgb, var(--bf-fg) 55%, var(--bf-bg))",
 };
 const style = Object.entries(vars)
   .map(([k, v]) => `${k}:${v}`)
@@ -63,7 +41,7 @@ const style = Object.entries(vars)
 ---
 
 <!doctype html>
-<html lang="en" style={style}>
+<html lang="en" class="dark" style={style}>
   <head>
     <meta charset="utf-8" />
     <script is:inline>
@@ -95,45 +73,10 @@ const style = Object.entries(vars)
     />
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
-    <header class="top" id="site-header">
-      <div class="wrap bar">
-        <a class="brand" href={`${base}/`}>
-          <img src={`${base}/img/bigface-avatar.svg`} alt="" width="34" height="34" />
-          Bigface
-        </a>
-        <nav aria-label="Main">
-          <a href={`${base}/#apps`}>Apps</a>
-          <a href={`${base}/palette/`}>Palette</a>
-          <a href={`${base}/#install`}>Install</a>
-          <a class="cta" href={REPO}>GitHub</a>
-        </nav>
-      </div>
-    </header>
+    <BGSiteHeader base={base} repo={REPO} />
     <main id="main"><slot /></main>
-    <footer>
-      <div class="inner">
-        <div>
-          <div class="mark">
-            <img src={`${base}/img/bigface-avatar.svg`} alt="" width="40" height="40" />
-            Bigface
-          </div>
-          <p class="dim" style="margin:.6rem 0 0;font-size:.85rem;max-width:34ch">
-            One dark palette, {targets.length} ports, no per-tool adjustments. Started in 2018 as a
-            JetBrains scheme.
-          </p>
-        </div>
-        <nav aria-label="Footer">
-          <a href={`${base}/#apps`}>Apps</a>
-          <a href={`${base}/palette/`}>Palette</a>
-          <a href={`${base}/#install`}>Install</a>
-          <a href={`${base}/install.sh`}>install.sh</a>
-          <a href={REPO}>GitHub</a>
-          <a href={`${REPO}/blob/main/LICENSE`}>MIT licence</a>
-        </nav>
-      </div>
-    </footer>
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <BGSiteFooter base={base} repo={REPO} ports={targets.length} />
+    <BGToast />
 
     <script>
       const toast = document.getElementById("toast");

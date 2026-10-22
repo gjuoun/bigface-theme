@@ -2,8 +2,16 @@ import { beforeAll, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
+import {
+  findForeignInCss,
+  findForeignInHtml,
+  paletteHexes,
+  ringOffsetOffenders,
+} from "./color-guard.ts";
 import { contrastRatio, inkOn, palette } from "./data/palette.ts";
 import { targets } from "./data/targets.ts";
+import { bgCatalog } from "./data/ui-catalog.ts";
+import { findInklessBrightPlates } from "./ink-guard.ts";
 
 const siteDir = join(import.meta.dir, "..");
 const repo = join(siteDir, "..");
@@ -16,9 +24,10 @@ beforeAll(async () => {
   if (r.exitCode !== 0) throw new Error(`site build failed:\n${r.stderr.toString()}`);
 }, 120_000);
 
-test("one page per target plus home and palette", () => {
+test("one page per target plus home, palette and the component library", () => {
   expect(existsSync(join(dist, "index.html"))).toBe(true);
   expect(existsSync(join(dist, "palette/index.html"))).toBe(true);
+  expect(existsSync(join(dist, "ui/index.html"))).toBe(true);
   for (const t of targets)
     expect(existsSync(join(dist, "apps", t.id, "index.html")), t.id).toBe(true);
 });
@@ -149,76 +158,66 @@ test("every swatch prints an ink that actually contrasts on it", () => {
   for (const [name, color] of Object.entries(palette.ansi)) check(`ansi.${name}`, color.hex, 3);
 });
 
-test("anything painted with a bright plate writes dark ink on it", () => {
-  // Two bugs of this shape shipped: cream on lime swatches (1.2:1) and cream on the selected
-  // filter chip (1.7:1). Rules that fill with an accent or the pale blues must use the one ink
-  // token, so a new bright control cannot quietly inherit the page's cream foreground.
-  const css = readdirSync(join(repo, "site/dist/_astro"))
-    .filter((f) => f.endsWith(".css"))
-    .map((f) => readFileSync(join(repo, "site/dist/_astro", f), "utf8"))
-    .join("\n");
-  const bright = [
-    "var(--blue)",
-    "var(--light-blue)",
-    "var(--pale-blue)",
-    "var(--cyan)",
-    "var(--lime)",
-    "var(--yellow)",
-    "var(--bright-yellow)",
-  ];
-  const blocks = css.match(/[^{}]+\{[^{}]*\}/g) ?? [];
+// Bright plates are now utility classes, so the dark-ink rule is checked per element (ink-guard.ts):
+// cream on lime swatches (1.2:1) and cream on the selected filter chip (1.7:1) both shipped once.
+test("no element pairs a bright fill class with anything but the dark ink", () => {
   const offenders: string[] = [];
-  for (const block of blocks) {
-    const paints = /\.(?:btn|swatch|tab|filter|chip|pill|badge)/.test(block);
-    // only an opaque fill counts: a translucent tint (color-mix) sits on the dark plate, so cream
-    // ink on it is the normal case, not a bug
-    const decl = block.match(/(?:^|;)\s*background(?:-color)?:[^;]*/)?.[0] ?? "";
-    const fill = !decl.includes("color-mix") && bright.some((c) => decl.includes(c));
-    if (!paints || !fill) continue;
-    if (!/var\(--ink-on-bright\)/.test(block))
-      offenders.push(block.slice(0, 90).replace(/\s+/g, " "));
-  }
+  for (const f of readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
+    f.endsWith("index.html"),
+  ))
+    for (const cls of findInklessBrightPlates(readFileSync(join(dist, f), "utf8")))
+      offenders.push(`${f}: ${cls}`);
   expect(offenders).toEqual([]);
+});
+
+// Until shadcn is initialised there is no --primary token to pair.
+const tailwindCss = join(siteDir, "src/styles/tailwind.css");
+test.skipIf(!existsSync(tailwindCss))("the shadcn primary token writes the dark ink", () => {
+  const css = readdirSync(join(dist, "_astro"))
+    .filter((f) => f.endsWith(".css"))
+    .map((f) => readFileSync(join(dist, "_astro", f), "utf8"))
+    .join("\n");
+  expect(css).toMatch(/--primary-foreground:\s*var\(--ink-on-bright\)/);
 });
 
 test("the site only ships colours that exist in the palette", () => {
   // Chrome included: the site uses the theme's own surfaces. Gradients interpolate between palette
-  // stops, and translucent steps are palette colours with alpha, so no other hex may appear.
-  const palette = JSON.parse(readFileSync(join(repo, "palette/bigface.json"), "utf8")) as {
-    colors: Record<string, { hex: string }>;
-    ansi: Record<string, { hex: string }>;
-  };
-  const known = new Set(
-    [...Object.values(palette.colors), ...Object.values(palette.ansi)].map((c) =>
-      c.hex.toLowerCase(),
-    ),
+  // stops, and translucent steps are palette colours with alpha. The scanner (color-guard.ts) knows
+  // every CSS colour syntax — hex of any length, rgb(), oklch()/lab()/hsl()…, named colours — because
+  // Tailwind/shadcn defaults ship oklch() and short hex that a #rrggbb regex never saw.
+  const known = paletteHexes(palette);
+  const htmlFiles = readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
+    f.endsWith("index.html"),
   );
-  const triplets = new Set(
-    [...known].map((h) => [1, 3, 5].map((i) => Number.parseInt(h.slice(i, i + 2), 16)).join(",")),
-  );
-  const scan = (file: string) => {
-    const text = readFileSync(file, "utf8");
-    for (const m of text.matchAll(/#[0-9a-fA-F]{6}\b/g)) {
-      expect(known.has(m[0].toLowerCase()), `${file}: ${m[0]}`).toBe(true);
-    }
-    // rgb()/rgba() triples are palette colours too — a stray rgba(5,13,27,…) once slipped past.
-    for (const m of text.matchAll(/rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/g)) {
-      expect(triplets.has(`${m[1]},${m[2]},${m[3]}`), `${file}: rgb(${m[1]},${m[2]},${m[3]})`).toBe(
-        true,
-      );
-    }
-  };
-  scan(join(dist, "index.html"));
-  scan(join(dist, "palette/index.html"));
-  scan(join(dist, "apps/jetbrains/index.html"));
-  for (const css of ["Base", "index"]) {
-    const files = readdirSync(join(dist, "_astro")).filter(
-      (f) => f.startsWith(css) && f.endsWith(".css"),
-    );
-    for (const f of files) scan(join(dist, "_astro", f));
+  expect(htmlFiles.length).toBeGreaterThanOrEqual(16);
+  const offenders: string[] = [];
+  for (const f of htmlFiles)
+    for (const bad of findForeignInHtml(readFileSync(join(dist, f), "utf8"), known))
+      offenders.push(`${f}: ${bad}`);
+  const cssFiles = readdirSync(join(dist, "_astro")).filter((f) => f.endsWith(".css"));
+  for (const f of cssFiles) {
+    const css = readFileSync(join(dist, "_astro", f), "utf8");
+    for (const bad of findForeignInCss(css, known)) offenders.push(`_astro/${f}: ${bad}`);
+    // The ring-offset #fff default is only harmless while every ring-offset utility paints a
+    // palette-mapped token (resizable.tsx ships ring-offset-background).
+    expect(ringOffsetOffenders(css), f).toEqual([]);
   }
+  expect(offenders).toEqual([]);
   // And the theme's own background really is the page background.
   expect(page("")).toContain("#252925");
+});
+
+// native-select.tsx ships `bg-[Canvas] text-[CanvasText]`: arbitrary system-colour utilities. Their CSS
+// rules exist (the colour scan drops them as dead), so the reason they are harmless must stay true.
+test("no built page uses the Canvas/CanvasText system-colour classes", () => {
+  const users: string[] = [];
+  for (const f of readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
+    f.endsWith("index.html"),
+  )) {
+    const html = readFileSync(join(dist, f), "utf8");
+    if (html.includes("bg-[Canvas]") || html.includes("text-[CanvasText]")) users.push(f);
+  }
+  expect(users).toEqual([]);
 });
 
 test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 social card", () => {
@@ -242,4 +241,71 @@ test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 soci
   expect(home).toContain("img/bigface-avatar.svg");
   expect(home).toContain('property="og:image"');
   expect(home).toContain("img/og.png");
+});
+
+test("the component library page shows every native and BG component, and flags unfinished props", () => {
+  const html = page("ui");
+  for (const name of ["button", "badge", "card", "tabs"])
+    expect(html, name).toContain(`from &quot;@/components/ui/${name}&quot;`);
+  for (const e of bgCatalog) {
+    expect(html, e.name).toContain(`id="bg-${e.name}"`);
+    expect(html, e.name).toContain(`components/bg/${e.file}`);
+  }
+  const flagged = html.match(/>props not finalised</g) ?? [];
+  expect(flagged.length).toBe(bgCatalog.filter((e) => !e.finalised).length);
+  // every Button variant x size from the shadcn source is rendered
+  expect(
+    html.match(/data-slot="button" data-variant="destructive" data-size="icon-lg"/g)?.length,
+  ).toBeGreaterThanOrEqual(1);
+});
+
+test("the /ui page registers every shadcn native component in the directory", () => {
+  // Directory-driven: the page lists what components/ui holds, so the registry cannot fall behind
+  // the CLI. 63 = the registry's 64 (ui) items minus `form`, which ships no files.
+  const html = page("ui");
+  const files = readdirSync(join(siteDir, "src/components/ui")).filter((f) => f.endsWith(".tsx"));
+  expect(files.length).toBeGreaterThanOrEqual(63);
+  for (const f of files) expect(html, f).toContain(`data-native="${f.replace(/\.tsx$/, "")}"`);
+});
+
+test("app pages with a screenshot put it beside the instructions on desktop, stacked in DOM order", () => {
+  for (const t of targets) {
+    const html = page(`apps/${t.id}`);
+    const wrapper = html.match(/<div data-layout="(split|stack)"(?: class="([^"]*)")?/);
+    expect(wrapper, t.id).not.toBeNull();
+    const [, layout, cls = ""] = wrapper as RegExpMatchArray;
+    if (!t.screenshot) {
+      // no screenshot → no empty left column: the same order, no grid
+      expect(layout, t.id).toBe("stack");
+      expect(cls, t.id).not.toContain("lg:grid");
+      continue;
+    }
+    expect(layout, t.id).toBe("split");
+    // two columns only from lg (1024px), and the instructions column keeps at least 340px
+    expect(cls, t.id).toContain("lg:grid");
+    expect(cls, t.id).toContain("lg:grid-cols-[minmax(340px,45fr)_minmax(0,55fr)]");
+    expect(cls, t.id).not.toMatch(/(^|\s)grid(\s|$)/);
+    // desktop order is instructions on the left, media on the right (Jun picked E from the /ui/ mocks)
+    // the class attribute wraps over lines in the built HTML, so read the text just before the slot
+    const classesBefore = (slot: string) => {
+      const at = html.indexOf(`data-split="${slot}"`);
+      expect(at, `${t.id} ${slot}`).toBeGreaterThan(-1);
+      return html.slice(Math.max(0, at - 400), at);
+    };
+    expect(classesBefore("media"), t.id).toContain("lg:order-2");
+    expect(classesBefore("aside"), t.id).toContain("lg:order-1");
+    // stacked order: media column (the screenshot and its caption) before install before download
+    const start = html.indexOf('data-layout="split"');
+    const media = html.indexOf('data-split="media"', start);
+    const img = html.indexOf(`src="/${t.screenshot.file}"`, start);
+    const caption = html.indexOf("<figcaption", start);
+    const aside = html.indexOf('data-split="aside"', start);
+    const install = html.indexOf('id="install"', start);
+    const download = html.indexOf(">Download</h2>", start);
+    expect(media, t.id).toBeGreaterThan(start);
+    expect(
+      [media < img, img < caption, caption < aside, aside < install, install < download],
+      t.id,
+    ).toEqual([true, true, true, true, true]);
+  }
 });

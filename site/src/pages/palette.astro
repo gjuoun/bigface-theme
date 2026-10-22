@@ -1,7 +1,9 @@
 ---
-import ContrastTable from "../components/ContrastTable.astro";
-import Swatch from "../components/Swatch.astro";
-import SyntaxPreview from "../components/SyntaxPreview.astro";
+import BGContrastTable from "../components/bg/contrast-table.astro";
+import BGEyebrow from "../components/bg/eyebrow.astro";
+import BGPaletteGroup from "../components/bg/palette-group.astro";
+import BGSwatch from "../components/bg/swatch.astro";
+import BGSyntaxPreview from "../components/bg/syntax-preview.astro";
 import { hex, palette } from "../data/palette.ts";
 import { REPO } from "../data/targets.ts";
 import Base from "../layouts/Base.astro";
@@ -35,13 +37,20 @@ const groups: [string, string, string[]][] = [
 const syntaxRows = Object.entries(palette.syntax);
 const ansiRows = Object.entries(palette.ansi);
 const colourCount = Object.keys(palette.colors).length;
+const count =
+  "inline-flex items-baseline gap-[0.35rem] rounded-full border border-bf-border bg-bf-border/4 px-[0.75rem] py-[0.35rem] text-[0.78rem] text-bf-fg-muted";
+const subLink =
+  "rounded-full px-[0.7rem] py-[0.3rem] text-bf-fg-muted hover:bg-bf-border/10 hover:text-foreground";
+const swatches = "grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-[0.7rem]";
 ---
 
 <Base title="Bigface palette" description="Every colour in the Bigface theme, with the original JetBrains source for each one.">
-  <section class="pal-hero" data-reveal>
-    <p class="eyebrow">the source of truth</p>
-    <h1>One palette.<br /><span class="grad">Nothing else.</span></h1>
-    <p class="lead">
+  <section class="pt-[clamp(0.5rem,3vw,2rem)]" data-reveal>
+    <BGEyebrow>the source of truth</BGEyebrow>
+    <h1 class="text-[clamp(2.6rem,6vw,4.4rem)] leading-[1.02] font-extrabold">
+      One palette.<br /><span class="bf-grad">Nothing else.</span>
+    </h1>
+    <p class="bf-lead">
       Every theme in the repo is generated from <code>palette/bigface.json</code>, and every colour
       in it is <strong>byte-for-byte from the 2018 JetBrains scheme</strong> — each labelled with the
       exact <code>OPTION#FIELD</code> it came from and checked against the original XML by a test.
@@ -49,203 +58,76 @@ const colourCount = Object.keys(palette.colors).length;
       one of the scheme's own surfaces (the caret-row background, the matched-brace block, a border
       grey) instead of a new colour.
     </p>
-    <div class="counts">
-      <span><strong>{Object.keys(palette.colors).length}</strong> colours</span>
-      <span><strong>{ansiRows.length}</strong> ANSI slots, all aliases</span>
-      <span><strong>{syntaxRows.length}</strong> syntax roles</span>
-      <span><strong>{colourCount}</strong> distinct colours, total</span>
+    <div class="mt-[1.4rem] mb-0 flex flex-wrap gap-2">
+      <span class={count}><strong class="font-code text-foreground">{Object.keys(palette.colors).length}</strong> colours</span>
+      <span class={count}><strong class="font-code text-foreground">{ansiRows.length}</strong> ANSI slots, all aliases</span>
+      <span class={count}><strong class="font-code text-foreground">{syntaxRows.length}</strong> syntax roles</span>
+      <span class={count}><strong class="font-code text-foreground">{colourCount}</strong> distinct colours, total</span>
     </div>
   </section>
 
-  <div class="preview" data-reveal>
-    <SyntaxPreview terminal />
+  <div class="mt-8 max-w-[640px]" data-reveal>
+    <BGSyntaxPreview terminal />
   </div>
 
-  <nav class="subnav" aria-label="Palette sections">
-    {groups.map(([id, title]) => <a href={`#${id}`}>{title}</a>)}
-    <a href="#ansi">Terminal</a>
-    <a href="#syntax">Syntax</a>
-    <a href="#contrast">Contrast</a>
+  <nav
+    class="sticky top-[3.9rem] z-20 mt-[2.2rem] flex flex-wrap gap-[0.35rem] rounded-full border border-bf-border bg-bf-border-muted/82 p-[0.55rem] text-[0.8rem] backdrop-blur-[14px] max-[700px]:static max-[700px]:rounded-[16px]"
+    aria-label="Palette sections"
+  >
+    {groups.map(([id, title]) => <a class={subLink} href={`#${id}`}>{title}</a>)}
+    <a class={subLink} href="#ansi">Terminal</a>
+    <a class={subLink} href="#syntax">Syntax</a>
+    <a class={subLink} href="#contrast">Contrast</a>
   </nav>
 
   {groups.map(([id, title, names]) => (
-    <section id={id} class="group" data-reveal>
-      <h2>{title} <span class="count">{names.length}</span></h2>
-      <div class="swatches">
-        {names.map((n) => <Swatch name={n} color={palette.colors[n]!} />)}
+    <BGPaletteGroup id={id} title={title} count={names.length}>
+      <div class={swatches}>
+        {names.map((n) => <BGSwatch name={n} color={palette.colors[n]!} />)}
       </div>
-    </section>
+    </BGPaletteGroup>
   ))}
 
-  <section id="ansi" class="group" data-reveal>
-    <h2>Terminal (ANSI) <span class="count">{ansiRows.length}</span></h2>
-    <div class="swatches">
-      {ansiRows.map(([n, c]) => <Swatch name={n} color={c} />)}
+  <BGPaletteGroup id="ansi" title="Terminal (ANSI)" count={ansiRows.length}>
+    <div class={swatches}>
+      {ansiRows.map(([n, c]) => <BGSwatch name={n} color={c} />)}
     </div>
-  </section>
+  </BGPaletteGroup>
 
-  <section id="syntax" class="group" data-reveal>
-    <h2>Syntax roles <span class="count">{syntaxRows.length}</span></h2>
-    <table class="roles">
+  <BGPaletteGroup id="syntax" title="Syntax roles" count={syntaxRows.length}>
+    <table class="max-w-[640px]">
       <thead>
         <tr><th>Role</th><th>Colour</th><th>Hex</th></tr>
       </thead>
       <tbody>
         {syntaxRows.map(([role, name]) => (
           <tr>
-            <td class="role">{role}</td>
-            <td><i style={`background:${hex(name)}`} /> {name}</td>
+            <td class="font-code text-[0.8rem] text-bf-fg-muted">{role}</td>
+            <td>
+              <i
+                class="mr-[0.3rem] inline-block size-[0.8em] rounded-[3px] bg-(--c) align-[-0.06em]"
+                style={`--c:${hex(name)}`}
+              /> {name}
+            </td>
             <td><code>{hex(name)}</code></td>
           </tr>
         ))}
       </tbody>
     </table>
-  </section>
+  </BGPaletteGroup>
 
-  <section id="contrast" class="group" data-reveal>
-    <h2>Contrast</h2>
-    <p class="muted">
+  <BGPaletteGroup id="contrast" title="Contrast">
+    <p class="text-bf-fg-muted">
       Informational only. The colours are kept as designed, so a few roles (<code>fgDim</code>,
       <code>comment</code>) sit below the WCAG 4.5:1 body-text guideline by intent.
     </p>
-    <ContrastTable />
-  </section>
+    <BGContrastTable />
+  </BGPaletteGroup>
 
-  <p class="dim foot" data-reveal>
+  <p class="mt-12 text-[0.85rem] text-bf-dim" data-reveal>
     Raw file:
     <a href={`${REPO}/blob/main/palette/bigface.json`}>palette/bigface.json</a> ·
     <a href={`${REPO}/blob/main/src/targets.ts`}>generator targets</a> · Click any swatch to copy its
     hex.
   </p>
 </Base>
-
-<style>
-  .pal-hero {
-    padding-top: clamp(0.5rem, 3vw, 2rem);
-  }
-
-  .pal-hero h1 {
-    font-size: clamp(2.6rem, 6vw, 4.4rem);
-    font-weight: 800;
-    line-height: 1.02;
-  }
-
-  .counts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 1.4rem 0 0;
-  }
-
-  .counts span {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.35rem;
-    padding: 0.35rem 0.75rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    font-size: 0.78rem;
-    color: var(--muted);
-    background: rgba(var(--line-rgb), 0.04);
-  }
-
-  .counts strong {
-    color: var(--fg);
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-  }
-
-  .preview {
-    margin: 2rem 0 0;
-    max-width: 640px;
-  }
-
-  .subnav {
-    position: sticky;
-    top: 3.9rem;
-    z-index: 20;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin: 2.2rem 0 0;
-    padding: 0.55rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--bg-deep) 82.0%, transparent);
-    backdrop-filter: blur(14px);
-    font-size: 0.8rem;
-  }
-
-  .subnav a {
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    color: var(--muted);
-  }
-
-  .subnav a:hover {
-    color: var(--fg);
-    background: rgba(var(--line-rgb), 0.1);
-  }
-
-  .group {
-    margin-top: 2.8rem;
-  }
-
-  .group h2 {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    font-size: clamp(1.35rem, 2.4vw, 1.8rem);
-    margin-bottom: 1rem;
-  }
-
-  .count {
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    font-size: 0.7rem;
-    color: var(--dim);
-    letter-spacing: 0.08em;
-  }
-
-  .swatches {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.7rem;
-  }
-
-  .derived {
-    color: var(--orange);
-  }
-
-  .roles {
-    max-width: 640px;
-  }
-
-  .roles .role {
-    font-family: var(--font-mono);
-    font-variation-settings: "MONO" 1, "CASL" 0, "CRSV" 0.5;
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-
-  .roles i {
-    display: inline-block;
-    width: 0.8em;
-    height: 0.8em;
-    border-radius: 3px;
-    vertical-align: -0.06em;
-    margin-right: 0.3rem;
-  }
-
-  .foot {
-    margin-top: 3rem;
-    font-size: 0.85rem;
-  }
-
-  @media (max-width: 700px) {
-    .subnav {
-      position: static;
-      border-radius: 16px;
-    }
-  }
-</style>
