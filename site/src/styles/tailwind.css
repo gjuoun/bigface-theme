@@ -3,8 +3,10 @@
    var(--bf-*) that Base.astro writes onto <html> from palette/bigface.json. No colour literal lives in
    this file (the #000 in the grid's mask-image is alpha only, nothing is painted with it). The @theme inline keys are the ones shadcn wrote — keep them (the CLI rewrites component
    classes against them; removing --font-heading made `card` show as drifted in the probe). */
-/* Class scanning is limited to site/src and skips test fixtures (they spell offending classes on purpose). */
+/* Class scanning: site/src, plus the component library now that it lives in packages/ui. Test
+   fixtures are skipped (they spell offending classes on purpose). */
 @import "tailwindcss" source("../");
+@source "../../../packages/ui/src";
 @source not "../**/*.test.ts";
 @source not "../**/*.test.tsx";
 @import "tw-animate-css";

@@ -2,24 +2,26 @@
   "name": "bigface-theme",
   "version": "0.1.0",
   "private": true,
-  "description": "Bigface — one dark palette, ported to the tools you use",
+  "description": "Bigface \u2014 one dark palette, ported to the tools you use",
   "license": "MIT",
   "type": "module",
   "workspaces": [
-    "site"
+    "site",
+    "packages/*"
   ],
   "scripts": {
     "themes": "bun run src/build.ts",
     "contrast": "bun run src/contrast.ts",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
-    "test": "bun test src site/src",
-    "check": "bun run typecheck && bun run --cwd site typecheck && bun run lint && bun test src site/src",
+    "test": "bun test src site/src packages/ui/src",
+    "check": "bun run typecheck && bun run --cwd packages/ui typecheck && bun run --cwd site typecheck && bun run lint && bun test src site/src packages/ui/src",
     "site:dev": "bun run --cwd site dev",
     "site:build": "bun run --cwd site build",
     "site:preview": "bun run --cwd site preview",
     "brand": "uv run --with cairosvg --with pillow python3 brand/export-avatar.py",
-    "brand:check": "uv run --with cairosvg --with pillow python3 brand/validate-avatar.py"
+    "brand:check": "uv run --with cairosvg --with pillow python3 brand/validate-avatar.py",
+    "ui:drift": "bun run --cwd packages/ui ui:drift"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.0",

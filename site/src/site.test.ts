@@ -246,7 +246,7 @@ test("the brand mark ships as a vector favicon, a touch icon and a 1200x630 soci
 test("the component library page shows every native and BG component, and flags unfinished props", () => {
   const html = page("ui");
   for (const name of ["button", "badge", "card", "tabs"])
-    expect(html, name).toContain(`from &quot;@/components/ui/${name}&quot;`);
+    expect(html, name).toContain(`from &quot;@gjuoun/bigface-ui/components/ui/${name}&quot;`);
   for (const e of bgCatalog) {
     expect(html, e.name).toContain(`id="bg-${e.name}"`);
     expect(html, e.name).toContain(`components/bg/${e.file}`);
@@ -260,10 +260,13 @@ test("the component library page shows every native and BG component, and flags 
 });
 
 test("the /ui page registers every shadcn native component in the directory", () => {
-  // Directory-driven: the page lists what components/ui holds, so the registry cannot fall behind
-  // the CLI. 63 = the registry's 64 (ui) items minus `form`, which ships no files.
+  // Directory-driven: the page lists what the package's components/ui holds, so the registry
+  // cannot fall behind the CLI. 63 = the registry's 64 (ui) items minus `form`, which ships no
+  // files. The library lives in packages/ui since the npm-package round.
   const html = page("ui");
-  const files = readdirSync(join(siteDir, "src/components/ui")).filter((f) => f.endsWith(".tsx"));
+  const files = readdirSync(join(siteDir, "../packages/ui/src/components/ui")).filter((f) =>
+    f.endsWith(".tsx"),
+  );
   expect(files.length).toBeGreaterThanOrEqual(63);
   for (const f of files) expect(html, f).toContain(`data-native="${f.replace(/\.tsx$/, "")}"`);
 });
