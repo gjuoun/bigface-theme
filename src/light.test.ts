@@ -1,13 +1,45 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { contrastRatio } from "./contrast-math.ts";
-import { darkenUntil, lightPath, MIN_CONTRAST, mix, renderLightJson, toOklch } from "./light.ts";
+import { darkenUntil, lightPath, MIN_CONTRAST, mix, renderLightJson } from "./light.ts";
 import { loadPalette, parseLightPalette } from "./palette.ts";
 
 // palette/bigface-light.json is generated and committed, the same rule themes/ follows: the committed
 // file must equal a fresh render, and CI regenerates then diffs.
 const dark = await loadPalette();
 const committed = readFileSync(lightPath, "utf8");
+
+/** The accent family: borrowed exactly from the dark palette (ruled by Jun, 2026-10-24). */
+const ACCENTS = [
+  "blue",
+  "lightBlue",
+  "paleBlue",
+  "cyan",
+  "green",
+  "lime",
+  "yellow",
+  "brightYellow",
+  "burntOrange",
+  "purple",
+] as const;
+
+/**
+ * The measured contrast of each accent on the light canvas, recorded. Accepted below AA by Jun's ruling: vivid
+ * accents are the palette's own hues on paper, and the text-critical roles keep AA. A change to any of these
+ * numbers is a change to the palette, and this table is where it shows.
+ */
+const ACCENT_CONTRAST_ON_PAPER: Record<(typeof ACCENTS)[number], number> = {
+  blue: 2.27,
+  lightBlue: 1.86,
+  paleBlue: 1.27,
+  cyan: 1.54,
+  green: 2.1,
+  lime: 1.11,
+  yellow: 1.27,
+  brightYellow: 1.14,
+  burntOrange: 2.92,
+  purple: 2.66,
+};
 
 describe("bigface-light.json", () => {
   test("the committed file equals a fresh render", () => {
@@ -21,9 +53,27 @@ describe("bigface-light.json", () => {
       colors: Record<string, { hex: string }>;
     };
     expect(light.colors.blue?.hex).not.toBe(JSON.parse(committed).colors.blue.hex);
+    expect(light.colors.blue?.hex).toBe("#0040ff");
   });
 
-  test("every text-bearing colour clears WCAG AA on the light canvas", () => {
+  test("every accent is an exact borrow of its dark colour", () => {
+    const light = parseLightPalette(JSON.parse(committed), dark);
+    for (const name of ACCENTS) {
+      expect(light.colors[name].hex, name).toBe(dark.colors[name].hex);
+      expect(light.colors[name].source, name).toBe("dark:" + name);
+    }
+  });
+
+  test("the accent contrast on paper is what was recorded, and the tradeoff is explicit", () => {
+    const light = parseLightPalette(JSON.parse(committed), dark);
+    const canvas = light.colors.bg.hex;
+    for (const name of ACCENTS) {
+      const measured = Math.round(contrastRatio(light.colors[name].hex, canvas) * 100) / 100;
+      expect(measured, name).toBe(ACCENT_CONTRAST_ON_PAPER[name]);
+    }
+  });
+
+  test("text-critical colours still clear WCAG AA on the light canvas", () => {
     const light = parseLightPalette(JSON.parse(committed), dark);
     const canvas = light.colors.bg.hex;
     for (const name of ["fg", "fgDim", "comment"] as const) {
@@ -31,51 +81,13 @@ describe("bigface-light.json", () => {
         MIN_CONTRAST,
       );
     }
-    for (const name of [
-      "blue",
-      "lightBlue",
-      "paleBlue",
-      "cyan",
-      "green",
-      "lime",
-      "yellow",
-      "brightYellow",
-      "burntOrange",
-      "purple",
-    ] as const) {
-      expect(contrastRatio(light.colors[name].hex, canvas), name).toBeGreaterThanOrEqual(
-        MIN_CONTRAST,
-      );
-    }
   });
 
-  test("accents keep their hue, except the blue family which leans toward the palette cyan", () => {
+  test("the canvas and the ink are unchanged: paper and the dark ink, never white", () => {
     const light = parseLightPalette(JSON.parse(committed), dark);
-    const hueDelta = (name: keyof typeof light.colors) => {
-      const [, , lH] = toOklch(light.colors[name].hex);
-      const [, , dH] = toOklch(dark.colors[name].hex);
-      return ((lH - dH + 540) % 360) - 180;
-    };
-    for (const name of ["green", "burntOrange", "purple", "lime"] as const) {
-      expect(Math.abs(hueDelta(name)), name + " hue").toBeLessThanOrEqual(2);
-    }
-    // The blue family is pulled HUE_PULL_TOWARD_CYAN of the way to the palette's cyan, and the pull is
-    // the whole point: a frozen hue reads navy on paper.
-    for (const name of ["blue", "lightBlue", "paleBlue"] as const) {
-      const delta = hueDelta(name);
-      const cyanHue = toOklch(dark.colors.cyan.hex)[2];
-      const blueHue = toOklch(dark.colors[name].hex)[2];
-      const towardCyan = ((cyanHue - blueHue + 540) % 360) - 180;
-      expect(Math.sign(delta), name + " moves toward cyan").toBe(Math.sign(towardCyan));
-      expect(Math.abs(delta), name + " hue pull").toBeGreaterThan(2);
-      expect(Math.abs(delta), name + " hue pull").toBeLessThan(Math.abs(towardCyan) / 2);
-    }
-    // Chroma is never invented: it is re-maximised inside sRGB, never raised above the source.
-    for (const name of ["blue", "green", "burntOrange", "purple", "lime"] as const) {
-      const [, lC] = toOklch(light.colors[name].hex);
-      const [, dC] = toOklch(dark.colors[name].hex);
-      expect(lC, name + " chroma").toBeLessThanOrEqual(dC + 0.005);
-    }
+    expect(light.colors.bg.hex).toBe(dark.colors.caret.hex);
+    expect(light.colors.fg.hex).toBe(dark.colors.bg.hex);
+    for (const c of Object.values(light.colors)) expect(c.hex.toLowerCase()).not.toBe("#ffffff");
   });
 
   test("the surface ladder climbs from the canvas to the ink", () => {

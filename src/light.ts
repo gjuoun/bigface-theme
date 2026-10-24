@@ -7,8 +7,8 @@
 //
 // Why a rule instead of 20 hand-picked hexes: the light palette has to stay a function of the dark one,
 // so a palette edit upstream flows into both without anyone re-picking colours. Every value is either
-// an exact borrow (`dark:<name>`) or computed from one dark colour (`derived:<name>`) and checked
-// against the contrast floor below.
+// an exact borrow (`dark:<name>`: the accent family, and the canvas and ink) or computed from one dark colour
+// (`derived:<name>`: the surface ladder and the two muted greys, checked against the contrast floor below).
 import { writeFileSync } from "node:fs";
 import { contrastRatio } from "./contrast-math.ts";
 import {
@@ -107,28 +107,11 @@ export function mix(fg: string, bg: string, pct: number): string {
 
 /** The colour with its OKLCH lightness lowered (hue and chroma kept) until it clears `floor` on `bg`. */
 /**
- * The colour with its OKLCH lightness lowered until it clears `floor` on `bg`.
- *
- * Hue is not frozen while the lightness falls: a blue that is dark enough for a paper canvas reads
- * navy, which is not the palette's character. So the hue is first pulled a quarter of the way toward
- * the palette's own cyan (HUE_PULL_TOWARD_CYAN), and the chroma is re-maximised against sRGB at every
- * step instead of being carried down from the original. Same colour, leaning electric, at the lightest
- * lightness that still clears the floor.
+ * The colour with its OKLCH lightness lowered until it clears `floor` on `bg`. Hue and chroma are kept:
+ * the chroma is re-maximised against sRGB at every step, so the colour darkens without clipping.
  */
-export const HUE_PULL_TOWARD_CYAN = 0.25;
-
-export function darkenUntil(
-  hexIn: string,
-  bg: string,
-  floor = MIN_CONTRAST,
-  pullToward?: string,
-): string {
+export function darkenUntil(hexIn: string, bg: string, floor = MIN_CONTRAST): string {
   let [L, C, H] = toOklch(hexIn);
-  if (pullToward) {
-    const [, , targetHue] = toOklch(pullToward);
-    const delta = ((targetHue - H + 540) % 360) - 180; // shortest way round
-    H += delta * HUE_PULL_TOWARD_CYAN;
-  }
   let out = fromOklch([L, clampChroma(L, C, H), H]);
   while (contrastRatio(out, bg) < floor && L > 0.05) {
     L -= 0.004;
@@ -146,10 +129,16 @@ const SURFACES: { key: (typeof REQUIRED_COLORS)[number]; pct: number }[] = [
   { key: "selection", pct: 22 },
 ];
 
-/** The 10 accents and the two muted text greys: darkened, hue and chroma kept. */
-const DARKENED = [
-  "fgDim",
-  "comment",
+/** The two muted text greys: darkened in OKLCH until they clear AA, hue and chroma kept. Text-critical. */
+const DARKENED = ["fgDim", "comment"] as const;
+
+/**
+ * The accent family: EXACT borrows of the dark colour of the same name (`dark:<name>`), so a light page shows the
+ * palette's own vivid hues. Ruled by Jun on 2026-10-24: raw vivid accents on the paper canvas measure 1.1 to
+ * 2.9:1 (lime and brightYellow are about 1.1:1: as text they are not legible), and that is accepted for accents. The text-critical roles (ink, muted) are not in this list and keep AA.
+ * The measured ratios are recorded in light.test.ts, so a change in them is seen, not silent.
+ */
+const BORROWED = [
   "blue",
   "lightBlue",
   "paleBlue",
@@ -174,15 +163,13 @@ export function renderLightPalette(dark: Palette): Palette {
     colors[key] = { hex: mix(ink, canvas, pct), source: `derived:${key}` };
   }
   for (const key of DARKENED) {
-    // The blue family leans toward the palette's own cyan; every other accent keeps its hue.
-    const pull =
-      key === "blue" || key === "lightBlue" || key === "paleBlue"
-        ? dark.colors.cyan.hex
-        : undefined;
     colors[key] = {
-      hex: darkenUntil(dark.colors[key].hex, canvas, MIN_CONTRAST, pull),
+      hex: darkenUntil(dark.colors[key].hex, canvas, MIN_CONTRAST),
       source: `derived:${key}`,
     };
+  }
+  for (const key of BORROWED) {
+    colors[key] = { hex: dark.colors[key].hex, source: `dark:${key}` };
   }
   const ordered = Object.fromEntries(
     REQUIRED_COLORS.map((k) => [k, colors[k] as { hex: string; source: string }]),

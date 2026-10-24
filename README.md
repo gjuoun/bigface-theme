@@ -36,9 +36,11 @@ are low-contrast by design.
 and 16 ANSI slots, `bun run light` generates it from the dark one — it is never hand-edited, and CI
 regenerates it and fails on a diff. Every value says where it came from: `dark:<name>` is an exact
 borrow (the canvas is the dark caret, the ink the dark background), `derived:<name>` is computed from
-that dark colour — the surface ladder mixes ink into the canvas in OKLab, and the accents and muted
-texts are the dark colour darkened in OKLCH with hue and as much chroma as sRGB allows, until each
-clears 4.5:1 on the light canvas. That palette feeds the component library's light mode; the 13
+that dark colour — the surface ladder mixes ink into the canvas in OKLab, and the two muted texts are the dark
+colour darkened in OKLCH with hue and as much chroma as sRGB allows, until each clears 4.5:1 on the light canvas.
+The accent family (blue, cyan, green, lime, yellow, purple and their siblings) is borrowed exactly from the dark
+palette, so a light page shows the same vivid hues; those measure 1.1 to 2.9:1 on the canvas and are accepted for
+accents, not text (`light.test.ts` records each ratio). That palette feeds the component library's light mode; the 13
 editor ports above stay dark. `bun run light --html <file>` writes a swatch sheet with every value
 and its ratio.
 
