@@ -19,8 +19,9 @@ jobs:
       # Tests that need a tool (ghostty, herdr, zellij, …) skip themselves when it is not installed.
       - run: bun run check
       # A palette edit must come with regenerated themes/ and the package's default tokens.
-      - name: themes/ and tokens.css are up to date
+      - name: themes/, tokens.css and the light palette are up to date
         run: |
           bun run themes
           bun run theme:sync
-          git diff --exit-code themes packages/ui/src/styles/tokens.css
+          bun run light
+          git diff --exit-code themes packages/ui/src/styles/tokens.css palette/bigface-light.json

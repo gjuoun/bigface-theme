@@ -30,6 +30,18 @@ Dark only, no variants. Colours are never adjusted per tool or for contrast: eve
 from the 2018 scheme is checked against the original XML by a test. A few roles (`fgDim`, `comment`)
 are low-contrast by design.
 
+## Bigface Light
+
+[`palette/bigface-light.json`](palette/bigface-light.json) is a second palette with the same 20 colours
+and 16 ANSI slots, `bun run light` generates it from the dark one — it is never hand-edited, and CI
+regenerates it and fails on a diff. Every value says where it came from: `dark:<name>` is an exact
+borrow (the canvas is the dark caret, the ink the dark background), `derived:<name>` is computed from
+that dark colour — the surface ladder mixes ink into the canvas in OKLab, and the accents and muted
+texts are the dark colour darkened in OKLCH with hue and as much chroma as sRGB allows, until each
+clears 4.5:1 on the light canvas. That palette feeds the component library's light mode; the 13
+editor ports above stay dark. `bun run light --html <file>` writes a swatch sheet with every value
+and its ratio.
+
 ## Install
 
 ```sh
