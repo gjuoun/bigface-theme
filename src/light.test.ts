@@ -49,13 +49,31 @@ describe("bigface-light.json", () => {
     }
   });
 
-  test("a darkened accent keeps its hue (and its chroma is not invented)", () => {
+  test("accents keep their hue, except the blue family which leans toward the palette cyan", () => {
     const light = parseLightPalette(JSON.parse(committed), dark);
+    const hueDelta = (name: keyof typeof light.colors) => {
+      const [, , lH] = toOklch(light.colors[name].hex);
+      const [, , dH] = toOklch(dark.colors[name].hex);
+      return ((lH - dH + 540) % 360) - 180;
+    };
+    for (const name of ["green", "burntOrange", "purple", "lime"] as const) {
+      expect(Math.abs(hueDelta(name)), name + " hue").toBeLessThanOrEqual(2);
+    }
+    // The blue family is pulled HUE_PULL_TOWARD_CYAN of the way to the palette's cyan, and the pull is
+    // the whole point: a frozen hue reads navy on paper.
+    for (const name of ["blue", "lightBlue", "paleBlue"] as const) {
+      const delta = hueDelta(name);
+      const cyanHue = toOklch(dark.colors.cyan.hex)[2];
+      const blueHue = toOklch(dark.colors[name].hex)[2];
+      const towardCyan = ((cyanHue - blueHue + 540) % 360) - 180;
+      expect(Math.sign(delta), name + " moves toward cyan").toBe(Math.sign(towardCyan));
+      expect(Math.abs(delta), name + " hue pull").toBeGreaterThan(2);
+      expect(Math.abs(delta), name + " hue pull").toBeLessThan(Math.abs(towardCyan) / 2);
+    }
+    // Chroma is never invented: it is re-maximised inside sRGB, never raised above the source.
     for (const name of ["blue", "green", "burntOrange", "purple", "lime"] as const) {
-      const [lL, lC, lH] = toOklch(light.colors[name].hex);
-      const [, dC, dH] = toOklch(dark.colors[name].hex);
-      const delta = Math.min(Math.abs(lH - dH), 360 - Math.abs(lH - dH));
-      expect(delta, name + " hue").toBeLessThanOrEqual(2);
+      const [, lC] = toOklch(light.colors[name].hex);
+      const [, dC] = toOklch(dark.colors[name].hex);
       expect(lC, name + " chroma").toBeLessThanOrEqual(dC + 0.005);
     }
   });

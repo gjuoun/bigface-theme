@@ -106,9 +106,30 @@ export function mix(fg: string, bg: string, pct: number): string {
 }
 
 /** The colour with its OKLCH lightness lowered (hue and chroma kept) until it clears `floor` on `bg`. */
-export function darkenUntil(hexIn: string, bg: string, floor = MIN_CONTRAST): string {
+/**
+ * The colour with its OKLCH lightness lowered until it clears `floor` on `bg`.
+ *
+ * Hue is not frozen while the lightness falls: a blue that is dark enough for a paper canvas reads
+ * navy, which is not the palette's character. So the hue is first pulled a quarter of the way toward
+ * the palette's own cyan (HUE_PULL_TOWARD_CYAN), and the chroma is re-maximised against sRGB at every
+ * step instead of being carried down from the original. Same colour, leaning electric, at the lightest
+ * lightness that still clears the floor.
+ */
+export const HUE_PULL_TOWARD_CYAN = 0.25;
+
+export function darkenUntil(
+  hexIn: string,
+  bg: string,
+  floor = MIN_CONTRAST,
+  pullToward?: string,
+): string {
   let [L, C, H] = toOklch(hexIn);
-  let out = hexIn;
+  if (pullToward) {
+    const [, , targetHue] = toOklch(pullToward);
+    const delta = ((targetHue - H + 540) % 360) - 180; // shortest way round
+    H += delta * HUE_PULL_TOWARD_CYAN;
+  }
+  let out = fromOklch([L, clampChroma(L, C, H), H]);
   while (contrastRatio(out, bg) < floor && L > 0.05) {
     L -= 0.004;
     out = fromOklch([L, clampChroma(L, C, H), H]);
@@ -153,7 +174,15 @@ export function renderLightPalette(dark: Palette): Palette {
     colors[key] = { hex: mix(ink, canvas, pct), source: `derived:${key}` };
   }
   for (const key of DARKENED) {
-    colors[key] = { hex: darkenUntil(dark.colors[key].hex, canvas), source: `derived:${key}` };
+    // The blue family leans toward the palette's own cyan; every other accent keeps its hue.
+    const pull =
+      key === "blue" || key === "lightBlue" || key === "paleBlue"
+        ? dark.colors.cyan.hex
+        : undefined;
+    colors[key] = {
+      hex: darkenUntil(dark.colors[key].hex, canvas, MIN_CONTRAST, pull),
+      source: `derived:${key}`,
+    };
   }
   const ordered = Object.fromEntries(
     REQUIRED_COLORS.map((k) => [k, colors[k] as { hex: string; source: string }]),
