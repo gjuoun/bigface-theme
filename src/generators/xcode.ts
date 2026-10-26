@@ -61,7 +61,7 @@ export function xcodeTheme(p: Palette): string {
     ["DVTSourceTextBackground", x(c("bg"))],
     ["DVTSourceTextBlockDimBackgroundColor", x(c("fgDim"))],
     ["DVTSourceTextCurrentLineHighlightColor", x(c("highlight"))],
-    ["DVTSourceTextInsertionPointColor", x(c("paper"))],
+    ["DVTSourceTextInsertionPointColor", x(c("fg"))],
     ["DVTSourceTextInvisiblesColor", x(c("border"))],
     ["DVTSourceTextSelectionColor", x(c("highlight"))],
   ];

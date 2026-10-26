@@ -23,7 +23,7 @@ export const vim: Target = {
       hi("Normal", c("fg"), c("bg")),
       hi("NonText", c("border")),
       hi("EndOfBuffer", c("bg")),
-      hi("Cursor", c("bg"), c("paper")),
+      hi("Cursor", c("bg"), c("fg")),
       hi("CursorLine", undefined, c("highlight")),
       hi("CursorLineNr", c("fg"), c("highlight")),
       hi("LineNr", c("fgDim"), c("bg")),

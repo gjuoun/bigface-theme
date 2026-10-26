@@ -10,7 +10,7 @@ export const ghostty: Target = {
       ...ANSI_NAMES.map((n, i) => `palette = ${i}=${ansi(p, n)}`),
       `background = ${color(p, "bg")}`,
       `foreground = ${color(p, "fg")}`,
-      `cursor-color = ${color(p, "paper")}`,
+      `cursor-color = ${color(p, "fg")}`,
       `cursor-text = ${color(p, "bg")}`,
       `selection-background = ${color(p, "highlight")}`,
       `selection-foreground = ${color(p, "fg")}`,

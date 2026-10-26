@@ -11,6 +11,7 @@ import {
   renderSwatchSheet,
 } from "./light.ts";
 import { loadPalette, parseLightPalette } from "./palette.ts";
+import { SCHEME_CARET } from "./seeds.ts";
 
 // palette/bigface-light.json is generated and committed, the same rule themes/ follows: the committed
 // file must equal a fresh render, and CI regenerates then diffs.
@@ -91,10 +92,10 @@ describe("bigface-light.json", () => {
     }
   });
 
-  test("the canvas and the ink are unchanged: paper and the dark ink, never white", () => {
+  test("the canvas and the ink are unchanged: the scheme caret and the dark ink, never white", () => {
     const light = parseLightPalette(JSON.parse(committed), dark);
-    expect(light.colors.bg.hex).toBe(dark.colors.paper.hex);
-    expect(light.colors.fg.hex).toBe(deriveNeutrals(dark.colors.bg.hex, dark.colors.paper.hex).fg);
+    expect(light.colors.bg.hex).toBe(SCHEME_CARET);
+    expect(light.colors.fg.hex).toBe(deriveNeutrals(dark.colors.bg.hex, SCHEME_CARET).fg);
     for (const c of Object.values(light.colors)) expect(c.hex.toLowerCase()).not.toBe("#ffffff");
   });
 
@@ -132,18 +133,24 @@ describe("neutral collapse: derivation", () => {
     }
   });
 
-  test("the swatch sheet has one row per light colour: seventeen", () => {
+  test("the swatch sheet has one row per light colour: sixteen", () => {
     const rows = renderSwatchSheet(dark).match(/<tr data-swatch=/g) ?? [];
-    expect(rows.length).toBe(17);
+    expect(rows.length).toBe(16);
   });
 
-  test("the light panel follows the light bg (the paper): changing the paper moves it, by mix(fg, paper, 5)", () => {
-    const changed = structuredClone(dark);
-    changed.colors.paper.hex = "#f0f0e6";
-    const before = JSON.parse(committed).colors as Record<string, { hex: string }>;
-    const after = JSON.parse(renderLightJson(changed)).colors as Record<string, { hex: string }>;
-    expect(after.panel?.hex).not.toBe(before.panel?.hex);
-    expect(after.panel?.hex).toBe(mix(after.fg?.hex as string, "#f0f0e6", 5));
+  test("the swatch sheet lists the six neutrals lightest first, then the ten accents", () => {
+    const names = [...renderSwatchSheet(dark).matchAll(/<tr data-swatch="([a-zA-Z]+)"/g)].map(
+      (m) => m[1],
+    );
+    expect(names).toEqual(["bg", "panel", "border", "highlight", "fgDim", "fg", ...ACCENTS]);
+  });
+
+  test("the panel follows the canvas: mix(fg, canvas, 5) moves when the canvas moves", () => {
+    const ink = dark.colors.bg.hex;
+    const before = deriveNeutrals(ink, SCHEME_CARET);
+    const after = deriveNeutrals(ink, "#f0f0e6");
+    expect(after.panel).not.toBe(before.panel);
+    expect(after.panel).toBe(mix(after.fg, "#f0f0e6", 5));
   });
 
   test("the panel tier is mix(fg, bg, 5) in light: the one formula, not a typed hex", () => {

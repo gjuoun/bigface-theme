@@ -12,13 +12,16 @@
 import { writeFileSync } from "node:fs";
 import { contrastRatio } from "./contrast-math.ts";
 import {
+  ACCENT_NAMES,
   ANSI_NAMES,
   loadPalette,
+  neutralsLightToDark,
   type Palette,
   parseLightPalette,
   REQUIRED_COLORS,
   SYNTAX_ROLES,
 } from "./palette.ts";
+import { CARET_SOURCE, SCHEME_CARET } from "./seeds.ts";
 
 /** Every text-bearing colour clears WCAG AA on the light canvas. */
 export const MIN_CONTRAST = 4.5;
@@ -137,7 +140,7 @@ export function solveShare(anchor: string, base: string, target: number): number
 
 /**
  * The one neutral rule (plan 2026-10-25; Jun's ruling): every neutral and fg derives from a background by this
- * formula, run in both modes with the mode's own bg. `anchor` is the palette's OTHER seed: the dark paper for the
+ * formula, run in both modes with the mode's own bg. `anchor` is the palette's OTHER seed: the scheme's caret for the
  * dark background, the dark background for the light one. fg is the anchor mixed into bg at the smallest share that
  * gives fg FG_TARGET on bg; fgDim is fg mixed into bg at the smallest share that gives MIN_CONTRAST; border and
  * highlight are fg mixed into bg at 14% and 22% (Jun's Q3 and Q4); panel is the surface tier, fg mixed into bg at 5%
@@ -175,14 +178,19 @@ const BORROWED = [
   "purple",
 ] as const;
 
+/**
+ * Bright white is the lightest neutral. The dark palette's brightWhite aliases fg, its lightest colour; the light
+ * palette's lightest is the canvas, so light aliases bg. Every other ANSI slot follows its dark alias unchanged.
+ */
+const LIGHT_ANSI_TARGET: Partial<Record<string, string>> = { brightWhite: "bg" };
+
 /** Build the light palette from the dark one. Deterministic: same input, same file, byte for byte. */
 export function renderLightPalette(dark: Palette): Palette {
-  const paper = dark.colors.paper.hex; // the light canvas: the dark paper seed, borrowed
+  const canvas = SCHEME_CARET; // the light canvas: the scheme's caret colour, named by its source
   const ink = dark.colors.bg.hex; // the dark background: the anchor of the light neutral family
-  const n = deriveNeutrals(ink, paper);
+  const n = deriveNeutrals(ink, canvas);
   const colors: Record<string, { hex: string; source: string }> = {};
-  colors.bg = { hex: paper, source: "dark:paper" };
-  colors.paper = { hex: paper, source: "dark:paper" };
+  colors.bg = { hex: canvas, source: CARET_SOURCE };
   colors.fg = { hex: n.fg, source: "derived:fg" };
   colors.fgDim = { hex: n.fgDim, source: "derived:fgDim" };
   colors.border = { hex: n.border, source: "derived:border" };
@@ -195,7 +203,9 @@ export function renderLightPalette(dark: Palette): Palette {
   const ansi = Object.fromEntries(
     ANSI_NAMES.map((slot) => {
       const source = dark.ansi[slot].source;
-      const target = source.startsWith("alias:") ? source.slice("alias:".length) : slot;
+      const target =
+        LIGHT_ANSI_TARGET[slot] ??
+        (source.startsWith("alias:") ? source.slice("alias:".length) : slot);
       const borrowed = ordered[target];
       if (!borrowed) throw new Error(`ansi.${slot} -> ${source}: no light colour named ${target}`);
       return [slot, { hex: borrowed.hex, source: `alias:${target}` }];
@@ -234,7 +244,21 @@ export function renderSwatchSheet(dark: Palette): string {
       `    </tr>`,
     ].join("\n");
   };
-  const rows = Object.entries(light.colors).map(row).join("\n");
+  // The sheet lists the six neutrals lightest first, then the ten accents as their own group (Jun, 2026-10-26).
+  const order = [
+    ...neutralsLightToDark(light.colors as Record<string, { hex: string }>),
+    ...ACCENT_NAMES,
+  ];
+  const rows = order
+    .map(
+      (name) =>
+        [name, light.colors[name as keyof typeof light.colors]] as [
+          string,
+          { hex: string; source: string },
+        ],
+    )
+    .map(row)
+    .join("\n");
   return [
     "<!doctype html>",
     '<html lang="en"><head><meta charset="utf-8"><title>Bigface Light</title>',

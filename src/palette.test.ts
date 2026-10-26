@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { loadPalette, PaletteSchema, parseLightPalette, parsePalette } from "./palette.ts";
 import { lookupSource } from "./scheme-xml.ts";
+import { SCHEME_CARET } from "./seeds.ts";
 
 const xml = await Bun.file(new URL("./fixtures/Bigface.original.xml", import.meta.url)).text();
 
@@ -37,8 +38,8 @@ describe("scheme tokens match original XML", () => {
     const p = await loadPalette();
     const entries = [...Object.entries(p.colors), ...Object.entries(p.ansi)];
     const sourced = entries.filter(([, c]) => c.source.startsWith("jetbrains:"));
-    // Neutral collapse: the dark seeds are the background, the paper and the ten accents. The rest is derived.
-    expect(sourced.length).toBe(12);
+    // The dark seeds are the background and the ten accents. The canvas and the anchor are the scheme caret (seeds.ts).
+    expect(sourced.length).toBe(11);
     const mismatches = sourced
       .map(([name, c]) => ({ name, want: lookupSource(xml, c.source), got: c.hex, src: c.source }))
       .filter((r) => r.want !== r.got);
@@ -108,8 +109,8 @@ describe("light palette schema", () => {
     const fixture = lightFixture(dark);
     // A colour and the ANSI slots aliasing it move together, so the borrow check is what fires —
     // not the alias-drift check parsePalette already runs.
-    setHex(fixture, "paper", "#000000");
-    expect(() => parseLightPalette(fixture, parsePalette(dark))).toThrow(/dark:paper/);
+    setHex(fixture, "blue", "#000000");
+    expect(() => parseLightPalette(fixture, parsePalette(dark))).toThrow(/dark:blue/);
   });
 
   test("a derived: source naming an unknown dark colour is rejected", async () => {
@@ -143,11 +144,11 @@ const ACCENTS = [
   "burntOrange",
   "purple",
 ] as const;
-const NEUTRALS = ["bg", "paper", "panel", "fg", "fgDim", "border", "highlight"] as const;
+const NEUTRALS = ["bg", "panel", "fg", "fgDim", "border", "highlight"] as const;
 const DERIVED = ["panel", "fg", "fgDim", "border", "highlight"] as const;
 
 describe("neutral collapse: the role set", () => {
-  test("REQUIRED_COLORS is exactly the seven neutrals and the ten accents", async () => {
+  test("REQUIRED_COLORS is exactly the six neutrals and the ten accents", async () => {
     const { REQUIRED_COLORS } = await import("./palette.ts");
     expect([...REQUIRED_COLORS].sort()).toEqual([...NEUTRALS, ...ACCENTS].sort());
   });
@@ -164,25 +165,27 @@ describe("neutral collapse: the role set", () => {
       "borderMuted",
       "comment",
       "caret",
+      "paper",
     ]) {
       expect(Object.keys(dark.colors), "dark " + gone).not.toContain(gone);
       expect(Object.keys(light.colors), "light " + gone).not.toContain(gone);
     }
   });
 
-  test("the dark bg and paper are the JetBrains seeds; every other dark neutral is derived from them", async () => {
+  test("the dark bg is the JetBrains seed and paper is gone; every other dark neutral is derived", async () => {
     const dark = await loadPalette();
     expect(dark.colors.bg.source.startsWith("jetbrains:")).toBe(true);
-    expect(dark.colors.paper.source.startsWith("jetbrains:")).toBe(true);
+    expect(Object.keys(dark.colors)).not.toContain("paper");
     for (const k of DERIVED) expect(dark.colors[k].source, "dark " + k).toMatch(/^derived:/);
   });
 
-  test("in light, the paper and bg borrow the dark paper, and fg, fgDim, border and highlight are derived", async () => {
+  test("in light, bg is the scheme caret by source, paper is gone, and fg, fgDim, border, highlight and panel are derived", async () => {
     const light = JSON.parse(
       await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text(),
     );
-    expect(light.colors.bg.source).toBe("dark:paper");
-    expect(light.colors.paper.source).toBe("dark:paper");
+    expect(light.colors.bg.source).toBe("jetbrains:colors#CARET_COLOR");
+    expect(light.colors.bg.hex).toBe(SCHEME_CARET);
+    expect(Object.keys(light.colors)).not.toContain("paper");
     for (const k of DERIVED) expect(light.colors[k].source, "light " + k).toMatch(/^derived:/);
   });
 });
@@ -213,6 +216,7 @@ describe("neutral collapse: references", () => {
       "borderMuted",
       "comment",
       "caret",
+      "paper",
     ]);
     const dark = await loadPalette();
     const light = JSON.parse(

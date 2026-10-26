@@ -24,6 +24,7 @@ export const LEGACY_ADDRESSES: [source: string, role: "fg" | "fgDim" | "border" 
   ["jetbrains:colors#INDENT_GUIDE", "border"],
   ["jetbrains:colors#RIGHT_MARGIN_COLOR", "border"],
   ["jetbrains:colors#SELECTION_BACKGROUND", "highlight"],
+  ["jetbrains:colors#CARET_COLOR", "fg"],
   ["jetbrains:colors#CARET_ROW_COLOR", "highlight"],
   ["jetbrains:MATCHED_BRACE_ATTRIBUTES#BACKGROUND", "highlight"],
 ];

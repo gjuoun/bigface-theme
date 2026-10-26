@@ -1,7 +1,7 @@
-// The dark palette's neutral family (plan 2026-10-25, Steps 3 and 4). The seeds are JetBrains values and stay exact:
-// the background, the paper (the scheme's caret foreground, renamed) and the ten accents. Every other neutral is
-// derived from those seeds by deriveNeutrals in light.ts, the one formula both modes share. Re-running this on its own
-// output gives the same file, so the generator is a function of the seeds.
+// The dark palette's neutral family (plan 2026-10-25; Jun, 2026-10-26). The seeds are JetBrains values and stay exact:
+// the background and the ten accents. The scheme's caret colour (SCHEME_CARET, read from the original scheme) is the anchor
+// the neutrals derive from. Every other neutral is derived by deriveNeutrals in light.ts, the one formula both modes share.
+// Re-running this on its own output gives the same file, so the generator is a function of the seeds.
 //
 //   bun run src/dark-derive.ts           write palette/bigface.json
 //   bun run src/dark-derive.ts --check   fail when the committed file is stale
@@ -14,33 +14,22 @@ import {
   REQUIRED_COLORS,
   SYNTAX_ROLES,
 } from "./palette.ts";
+import { SCHEME_CARET } from "./seeds.ts";
 
 type Named = { hex: string; source: string };
 
-/** Old role names and their successors (plan Q2 = b; the neutral-collapse rulings). */
-export const RENAMES: Record<string, string> = {
-  caret: "paper",
-  comment: "fgDim",
-  borderMuted: "border",
-  cursorLine: "highlight",
-  selection: "highlight",
-  braceMatch: "highlight",
-};
-
 export function renderDarkPalette(seed: Palette): Palette {
   const raw = seed.colors as Record<string, Named>;
-  const paperSeed = raw.paper ?? raw.caret;
   const bg = raw.bg;
-  if (!paperSeed || !bg) throw new Error("dark seed needs a background and a paper (caret) colour");
-  const n = deriveNeutrals(paperSeed.hex, bg.hex);
+  if (!bg) throw new Error("dark seed needs a background colour");
+  const n = deriveNeutrals(SCHEME_CARET, bg.hex);
   const colors: Record<string, Named> = {
     bg: { hex: bg.hex, source: bg.source },
-    paper: { hex: paperSeed.hex, source: paperSeed.source },
+    panel: { hex: n.panel, source: "derived:panel" },
     fg: { hex: n.fg, source: "derived:fg" },
     fgDim: { hex: n.fgDim, source: "derived:fgDim" },
     border: { hex: n.border, source: "derived:border" },
     highlight: { hex: n.highlight, source: "derived:highlight" },
-    panel: { hex: n.panel, source: "derived:panel" },
   };
   for (const key of REQUIRED_COLORS) if (!colors[key] && raw[key]) colors[key] = raw[key];
   const ordered = Object.fromEntries(REQUIRED_COLORS.map((k) => [k, colors[k] as Named]));
@@ -49,18 +38,14 @@ export function renderDarkPalette(seed: Palette): Palette {
       const s = seed.ansi[slot] as Named;
       if (!s.source.startsWith("alias:")) return [slot, s];
       const target = s.source.slice("alias:".length);
-      const to = RENAMES[target] ?? target;
-      const resolved = (ordered as Record<string, Named>)[to];
+      const resolved = (ordered as Record<string, Named>)[target];
       if (!resolved)
-        throw new Error("ansi." + slot + " aliases " + to + ", which is not a dark colour");
-      return [slot, { hex: resolved.hex, source: "alias:" + to }];
+        throw new Error("ansi." + slot + " aliases " + target + ", which is not a dark colour");
+      return [slot, { hex: resolved.hex, source: "alias:" + target }];
     }),
   );
   const syntax = Object.fromEntries(
-    SYNTAX_ROLES.map((role) => {
-      const v = seed.syntax[role] as string;
-      return [role, RENAMES[v] ?? v];
-    }),
+    SYNTAX_ROLES.map((role) => [role, seed.syntax[role] as string]),
   );
   return parsePalette({
     name: seed.name,

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { luminance } from "./contrast-math.ts";
 
 const Hex = z.string().regex(/^#[0-9a-f]{6}$/, "6-digit lowercase hex like #00b0ff");
 
@@ -23,14 +24,10 @@ const Source = z
 
 const Color = z.object({ hex: Hex, source: Source });
 
-export const REQUIRED_COLORS = [
-  "bg",
-  "paper",
-  "panel",
-  "fg",
-  "fgDim",
-  "border",
-  "highlight",
+/** The six neutral roles, the whole neutral family in both modes (Jun, 2026-10-26: paper is retired). */
+export const NEUTRAL_NAMES = ["bg", "panel", "fg", "fgDim", "border", "highlight"] as const;
+
+export const ACCENT_NAMES = [
   "blue",
   "lightBlue",
   "paleBlue",
@@ -42,6 +39,15 @@ export const REQUIRED_COLORS = [
   "burntOrange",
   "purple",
 ] as const;
+
+export const REQUIRED_COLORS = [...NEUTRAL_NAMES, ...ACCENT_NAMES] as const;
+
+/** The neutrals of one palette, lightest first. Each mode sorts by its own lightness, so dark reads fg first. */
+export const neutralsLightToDark = (colors: Record<string, { hex: string }>): string[] =>
+  [...NEUTRAL_NAMES].sort(
+    (a, b) =>
+      luminance((colors[b] as { hex: string }).hex) - luminance((colors[a] as { hex: string }).hex),
+  );
 
 export const ANSI_NAMES = [
   "black",

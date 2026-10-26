@@ -69,7 +69,7 @@ export function obsidianVariables(p: Palette): { title: string; rows: Rows }[] {
         ["--color-base-50", c("fgDim")],
         ["--color-base-60", c("fgDim")],
         ["--color-base-70", c("fg")],
-        ["--color-base-100", c("paper")],
+        ["--color-base-100", c("fg")],
       ],
     },
     {
@@ -122,7 +122,7 @@ export function obsidianVariables(p: Palette): { title: string; rows: Rows }[] {
         ["--text-error", c("burntOrange")],
         ["--text-selection", a("highlight", "99")],
         ["--text-highlight-bg", c("highlight")],
-        ["--caret-color", c("paper")],
+        ["--caret-color", c("fg")],
       ],
     },
     {
