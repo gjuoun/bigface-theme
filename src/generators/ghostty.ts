@@ -10,9 +10,9 @@ export const ghostty: Target = {
       ...ANSI_NAMES.map((n, i) => `palette = ${i}=${ansi(p, n)}`),
       `background = ${color(p, "bg")}`,
       `foreground = ${color(p, "fg")}`,
-      `cursor-color = ${color(p, "caret")}`,
+      `cursor-color = ${color(p, "paper")}`,
       `cursor-text = ${color(p, "bg")}`,
-      `selection-background = ${color(p, "selection")}`,
+      `selection-background = ${color(p, "highlight")}`,
       `selection-foreground = ${color(p, "fg")}`,
     ];
     return { Bigface: `${lines.join("\n")}\n` };

@@ -19,11 +19,11 @@ export const slack: Target = {
   files(p: Palette) {
     const c = (n: ColorName) => color(p, n);
     const values = [
-      c("borderMuted"), // Column BG
-      c("cursorLine"), // Menu BG Hover
+      c("border"), // Column BG
+      c("highlight"), // Menu BG Hover
       c("blue"), // Active Item
       c("bg"), // Active Item Text
-      c("braceMatch"), // Hover Item
+      c("highlight"), // Hover Item
       c("fg"), // Text Color
       c("green"), // Active Presence
       c("burntOrange"), // Mention Badge
