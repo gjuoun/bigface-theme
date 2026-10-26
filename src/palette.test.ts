@@ -180,3 +180,18 @@ describe("neutral collapse: the dark derivation", () => {
     expect(contrastRatio(p.colors.fgDim.hex, p.colors.bg.hex)).toBeGreaterThanOrEqual(4.5);
   });
 });
+
+// Neutral collapse, Step 7: no ANSI slot and no syntax role names a removed colour, in either palette.
+describe("neutral collapse: references", () => {
+  test("no ANSI slot or syntax role in either palette names a removed colour", async () => {
+    const removed = new Set(["braceMatch", "cursorLine", "selection", "borderMuted", "comment", "caret"]);
+    const dark = await loadPalette();
+    const light = JSON.parse(await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text());
+    for (const p of [dark, light] as const) {
+      for (const [slot, c] of Object.entries(p.ansi) as [string, { source: string }][]) {
+        if (c.source.startsWith("alias:")) expect(removed.has(c.source.slice(6)), "ansi " + slot).toBe(false);
+      }
+      for (const [role, v] of Object.entries(p.syntax) as [string, string][]) expect(removed.has(v), "syntax " + role).toBe(false);
+    }
+  });
+});
