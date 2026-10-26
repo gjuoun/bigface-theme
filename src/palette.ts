@@ -25,13 +25,11 @@ const Color = z.object({ hex: Hex, source: Source });
 
 export const REQUIRED_COLORS = [
   "bg",
+  "paper",
   "fg",
   "fgDim",
   "border",
-  "borderMuted",
-  "selection",
-  "cursorLine",
-  "braceMatch",
+  "highlight",
   "blue",
   "lightBlue",
   "paleBlue",
@@ -42,8 +40,6 @@ export const REQUIRED_COLORS = [
   "brightYellow",
   "burntOrange",
   "purple",
-  "comment",
-  "caret",
 ] as const;
 
 export const ANSI_NAMES = [

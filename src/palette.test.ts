@@ -13,7 +13,7 @@ describe("palette schema", () => {
 
   test("a missing token is rejected", async () => {
     const raw = await Bun.file(new URL("../palette/bigface.json", import.meta.url)).json();
-    delete raw.colors.cursorLine;
+    delete raw.colors.highlight;
     expect(PaletteSchema.safeParse(raw).success).toBe(false);
   });
 
@@ -37,7 +37,8 @@ describe("scheme tokens match original XML", () => {
     const p = await loadPalette();
     const entries = [...Object.entries(p.colors), ...Object.entries(p.ansi)];
     const sourced = entries.filter(([, c]) => c.source.startsWith("jetbrains:"));
-    expect(sourced.length).toBe(20);
+    // Neutral collapse: the dark seeds are the background, the paper and the ten accents. The rest is derived.
+    expect(sourced.length).toBe(12);
     const mismatches = sourced
       .map(([name, c]) => ({ name, want: lookupSource(xml, c.source), got: c.hex, src: c.source }))
       .filter((r) => r.want !== r.got);
@@ -107,8 +108,8 @@ describe("light palette schema", () => {
     const fixture = lightFixture(dark);
     // A colour and the ANSI slots aliasing it move together, so the borrow check is what fires —
     // not the alias-drift check parsePalette already runs.
-    setHex(fixture, "caret", "#000000");
-    expect(() => parseLightPalette(fixture, parsePalette(dark))).toThrow(/dark:caret/);
+    setHex(fixture, "paper", "#000000");
+    expect(() => parseLightPalette(fixture, parsePalette(dark))).toThrow(/dark:paper/);
   });
 
   test("a derived: source naming an unknown dark colour is rejected", async () => {
@@ -124,5 +125,58 @@ describe("light palette schema", () => {
     fixture.name = "Bigface";
     fixture.appearance = "dark";
     expect(() => parseLightPalette(fixture, parsePalette(dark))).toThrow(/light palette/);
+  });
+});
+
+// Neutral collapse (plan 2026-10-25; Q2 = (b): caret is renamed paper, same value). The palette keeps six neutrals and
+// the ten accents. The six: bg (the dark seed), paper (the light canvas seed), fg, fgDim, border and highlight.
+const ACCENTS = ["blue", "lightBlue", "paleBlue", "cyan", "green", "lime", "yellow", "brightYellow", "burntOrange", "purple"] as const;
+const NEUTRALS = ["bg", "paper", "fg", "fgDim", "border", "highlight"] as const;
+const DERIVED = ["fg", "fgDim", "border", "highlight"] as const;
+
+describe("neutral collapse: the role set", () => {
+  test("REQUIRED_COLORS is exactly the six neutrals and the ten accents", async () => {
+    const { REQUIRED_COLORS } = await import("./palette.ts");
+    expect([...REQUIRED_COLORS].sort()).toEqual([...NEUTRALS, ...ACCENTS].sort());
+  });
+
+  test("the removed roles (braceMatch, cursorLine, selection, borderMuted, comment, caret) are in neither palette", async () => {
+    const dark = await loadPalette();
+    const light = JSON.parse(await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text());
+    for (const gone of ["braceMatch", "cursorLine", "selection", "borderMuted", "comment", "caret"]) {
+      expect(Object.keys(dark.colors), "dark " + gone).not.toContain(gone);
+      expect(Object.keys(light.colors), "light " + gone).not.toContain(gone);
+    }
+  });
+
+  test("the dark bg and paper are the JetBrains seeds; every other dark neutral is derived from them", async () => {
+    const dark = await loadPalette();
+    expect(dark.colors.bg.source.startsWith("jetbrains:")).toBe(true);
+    expect(dark.colors.paper.source.startsWith("jetbrains:")).toBe(true);
+    for (const k of DERIVED) expect(dark.colors[k].source, "dark " + k).toMatch(/^derived:/);
+  });
+
+  test("in light, the paper and bg borrow the dark paper, and fg, fgDim, border and highlight are derived", async () => {
+    const light = JSON.parse(await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text());
+    expect(light.colors.bg.source).toBe("dark:paper");
+    expect(light.colors.paper.source).toBe("dark:paper");
+    for (const k of DERIVED) expect(light.colors[k].source, "light " + k).toMatch(/^derived:/);
+  });
+});
+
+
+// Neutral collapse, Step 4: each derived dark neutral reproduces from the generator, so no value is typed by hand.
+describe("neutral collapse: the dark derivation", () => {
+  test("renderDarkPalette reproduces the committed dark palette", async () => {
+    const { renderDarkPalette } = await import("./dark-derive.ts");
+    const committed = await loadPalette();
+    expect(renderDarkPalette(committed)).toEqual(committed);
+  });
+
+  test("the dark fg reaches the target on bg in both settings: 12:1, and the fgDim floor is 4.5:1", async () => {
+    const { contrastRatio } = await import("./contrast-math.ts");
+    const p = await loadPalette();
+    expect(contrastRatio(p.colors.fg.hex, p.colors.bg.hex)).toBeGreaterThanOrEqual(12);
+    expect(contrastRatio(p.colors.fgDim.hex, p.colors.bg.hex)).toBeGreaterThanOrEqual(4.5);
   });
 });
