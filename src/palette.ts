@@ -26,6 +26,7 @@ const Color = z.object({ hex: Hex, source: Source });
 export const REQUIRED_COLORS = [
   "bg",
   "paper",
+  "panel",
   "fg",
   "fgDim",
   "border",

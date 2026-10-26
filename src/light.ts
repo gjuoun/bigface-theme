@@ -140,15 +140,25 @@ export function solveShare(anchor: string, base: string, target: number): number
  * formula, run in both modes with the mode's own bg. `anchor` is the palette's OTHER seed: the dark paper for the
  * dark background, the dark background for the light one. fg is the anchor mixed into bg at the smallest share that
  * gives fg FG_TARGET on bg; fgDim is fg mixed into bg at the smallest share that gives MIN_CONTRAST; border and
- * highlight are fg mixed into bg at 14% and 22% (Jun's Q3 and Q4).
+ * highlight are fg mixed into bg at 14% and 22% (Jun's Q3 and Q4); panel is the surface tier, fg mixed into bg at 5%
+ * (Jun, 2026-10-26: the one surface role every surface consumer reads).
+ *
+ * Rule for the fill ink (Jun, 2026-10-26): the ink on a fill is the mode's own darkest readable value. Light uses its fg;
+ * dark keeps the dark canvas. Dark's fg cannot be the ink on the blue fill: it measures 1.98:1 on #00b0ff.
  */
 export function deriveNeutrals(
   anchor: string,
   base: string,
-): { fg: string; fgDim: string; border: string; highlight: string } {
+): { fg: string; fgDim: string; border: string; highlight: string; panel: string } {
   const fg = mix(anchor, base, solveShare(anchor, base, FG_TARGET) * 100);
   const fgDim = mix(fg, base, solveShare(fg, base, MIN_CONTRAST) * 100);
-  return { fg, fgDim, border: mix(fg, base, 14), highlight: mix(fg, base, 22) };
+  return {
+    fg,
+    fgDim,
+    border: mix(fg, base, 14),
+    highlight: mix(fg, base, 22),
+    panel: mix(fg, base, 5),
+  };
 }
 
 /** The accent family: EXACT borrows of the dark colour of the same name (`dark:<name>`), ruled 2026-10-24. */
@@ -177,6 +187,7 @@ export function renderLightPalette(dark: Palette): Palette {
   colors.fgDim = { hex: n.fgDim, source: "derived:fgDim" };
   colors.border = { hex: n.border, source: "derived:border" };
   colors.highlight = { hex: n.highlight, source: "derived:highlight" };
+  colors.panel = { hex: n.panel, source: "derived:panel" };
   for (const key of BORROWED) colors[key] = { hex: dark.colors[key].hex, source: `dark:${key}` };
   const ordered = Object.fromEntries(
     REQUIRED_COLORS.map((k) => [k, colors[k] as { hex: string; source: string }]),

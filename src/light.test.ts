@@ -126,13 +126,29 @@ describe("neutral collapse: derivation", () => {
     changed.colors.bg.hex = "#101110";
     const before = JSON.parse(committed).colors as Record<string, { hex: string }>;
     const after = JSON.parse(renderLightJson(changed)).colors as Record<string, { hex: string }>;
+    // panel is checked below: it is 5% of the light fg, and the contrast-pinned fg moves by less than one 8-bit step here.
     for (const k of ["fg", "fgDim", "border", "highlight"]) {
       expect(after[k]?.hex, k).not.toBe(before[k]?.hex);
     }
   });
 
-  test("the swatch sheet has one row per light colour: sixteen", () => {
+  test("the swatch sheet has one row per light colour: seventeen", () => {
     const rows = renderSwatchSheet(dark).match(/<tr data-swatch=/g) ?? [];
-    expect(rows.length).toBe(16);
+    expect(rows.length).toBe(17);
+  });
+
+  test("the light panel follows the light bg (the paper): changing the paper moves it, by mix(fg, paper, 5)", () => {
+    const changed = structuredClone(dark);
+    changed.colors.paper.hex = "#f0f0e6";
+    const before = JSON.parse(committed).colors as Record<string, { hex: string }>;
+    const after = JSON.parse(renderLightJson(changed)).colors as Record<string, { hex: string }>;
+    expect(after.panel?.hex).not.toBe(before.panel?.hex);
+    expect(after.panel?.hex).toBe(mix(after.fg?.hex as string, "#f0f0e6", 5));
+  });
+
+  test("the panel tier is mix(fg, bg, 5) in light: the one formula, not a typed hex", () => {
+    const light = parseLightPalette(JSON.parse(committed), dark);
+    expect(light.colors.panel.hex).toBe(mix(light.colors.fg.hex, light.colors.bg.hex, 5));
+    expect(light.colors.panel.source).toBe("derived:panel");
   });
 });

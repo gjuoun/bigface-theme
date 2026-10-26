@@ -128,8 +128,9 @@ describe("light palette schema", () => {
   });
 });
 
-// Neutral collapse (plan 2026-10-25; Q2 = (b): caret is renamed paper, same value). The palette keeps six neutrals and
-// the ten accents. The six: bg (the dark seed), paper (the light canvas seed), fg, fgDim, border and highlight.
+// Neutral collapse (plan 2026-10-25; Q2 = (b): caret is renamed paper, same value), then the panel tier (Jun, 2026-10-26).
+// The palette keeps seven neutrals and the ten accents. The seven: bg (the dark seed), paper (the light canvas seed), panel
+// (the surface tier, mix(fg, bg, 5)), fg, fgDim, border and highlight.
 const ACCENTS = [
   "blue",
   "lightBlue",
@@ -142,11 +143,11 @@ const ACCENTS = [
   "burntOrange",
   "purple",
 ] as const;
-const NEUTRALS = ["bg", "paper", "fg", "fgDim", "border", "highlight"] as const;
-const DERIVED = ["fg", "fgDim", "border", "highlight"] as const;
+const NEUTRALS = ["bg", "paper", "panel", "fg", "fgDim", "border", "highlight"] as const;
+const DERIVED = ["panel", "fg", "fgDim", "border", "highlight"] as const;
 
 describe("neutral collapse: the role set", () => {
-  test("REQUIRED_COLORS is exactly the six neutrals and the ten accents", async () => {
+  test("REQUIRED_COLORS is exactly the seven neutrals and the ten accents", async () => {
     const { REQUIRED_COLORS } = await import("./palette.ts");
     expect([...REQUIRED_COLORS].sort()).toEqual([...NEUTRALS, ...ACCENTS].sort());
   });

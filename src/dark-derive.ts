@@ -40,6 +40,7 @@ export function renderDarkPalette(seed: Palette): Palette {
     fgDim: { hex: n.fgDim, source: "derived:fgDim" },
     border: { hex: n.border, source: "derived:border" },
     highlight: { hex: n.highlight, source: "derived:highlight" },
+    panel: { hex: n.panel, source: "derived:panel" },
   };
   for (const key of REQUIRED_COLORS) if (!colors[key] && raw[key]) colors[key] = raw[key];
   const ordered = Object.fromEntries(REQUIRED_COLORS.map((k) => [k, colors[k] as Named]));
