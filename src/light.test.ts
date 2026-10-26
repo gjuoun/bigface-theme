@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { contrastRatio } from "./contrast-math.ts";
-import { darkenUntil, lightPath, MIN_CONTRAST, mix, renderLightJson } from "./light.ts";
+import { darkenUntil, deriveNeutrals, lightPath, MIN_CONTRAST, mix, renderLightJson, renderSwatchSheet } from "./light.ts";
 import { loadPalette, parseLightPalette } from "./palette.ts";
 
 // palette/bigface-light.json is generated and committed, the same rule themes/ follows: the committed
@@ -76,7 +76,7 @@ describe("bigface-light.json", () => {
   test("text-critical colours still clear WCAG AA on the light canvas", () => {
     const light = parseLightPalette(JSON.parse(committed), dark);
     const canvas = light.colors.bg.hex;
-    for (const name of ["fg", "fgDim", "comment"] as const) {
+    for (const name of ["fg", "fgDim"] as const) {
       expect(contrastRatio(light.colors[name].hex, canvas), name).toBeGreaterThanOrEqual(
         MIN_CONTRAST,
       );
@@ -85,14 +85,14 @@ describe("bigface-light.json", () => {
 
   test("the canvas and the ink are unchanged: paper and the dark ink, never white", () => {
     const light = parseLightPalette(JSON.parse(committed), dark);
-    expect(light.colors.bg.hex).toBe(dark.colors.caret.hex);
-    expect(light.colors.fg.hex).toBe(dark.colors.bg.hex);
+    expect(light.colors.bg.hex).toBe(dark.colors.paper.hex);
+    expect(light.colors.fg.hex).toBe(deriveNeutrals(dark.colors.bg.hex, dark.colors.paper.hex).fg);
     for (const c of Object.values(light.colors)) expect(c.hex.toLowerCase()).not.toBe("#ffffff");
   });
 
   test("the surface ladder climbs from the canvas to the ink", () => {
     const light = parseLightPalette(JSON.parse(committed), dark);
-    const ladder = ["bg", "cursorLine", "borderMuted", "braceMatch", "border", "selection", "fg"];
+    const ladder = ["bg", "border", "highlight", "fg"];
     const colors = light.colors as Record<string, { hex: string }>;
     const lum = (name: string) => contrastRatio((colors[name] as { hex: string }).hex, "#000000");
     for (let i = 1; i < ladder.length; i++) {
@@ -108,5 +108,23 @@ describe("bigface-light.json", () => {
     const five = contrastRatio(mix("#252925", "#f8f8f0", 5), "#f8f8f0");
     const twenty = contrastRatio(mix("#252925", "#f8f8f0", 20), "#f8f8f0");
     expect(twenty).toBeGreaterThan(five);
+  });
+});
+
+// Neutral collapse: the derivation is a function of bg. Changing the dark bg must move every derived neutral in light.
+describe("neutral collapse: derivation", () => {
+  test("changing the dark bg changes every derived neutral in the light palette", () => {
+    const changed = structuredClone(dark);
+    changed.colors.bg.hex = "#101110";
+    const before = JSON.parse(committed).colors as Record<string, { hex: string }>;
+    const after = JSON.parse(renderLightJson(changed)).colors as Record<string, { hex: string }>;
+    for (const k of ["fg", "fgDim", "border", "highlight"]) {
+      expect(after[k]?.hex, k).not.toBe(before[k]?.hex);
+    }
+  });
+
+  test("the swatch sheet has one row per light colour: sixteen", () => {
+    const rows = renderSwatchSheet(dark).match(/<tr data-swatch=/g) ?? [];
+    expect(rows.length).toBe(16);
   });
 });

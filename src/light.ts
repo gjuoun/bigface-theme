@@ -120,24 +120,35 @@ export function darkenUntil(hexIn: string, bg: string, floor = MIN_CONTRAST): st
   return out;
 }
 
-/** The surface ladder: how much of `ink` is mixed into the canvas, per role. */
-const SURFACES: { key: (typeof REQUIRED_COLORS)[number]; pct: number }[] = [
-  { key: "cursorLine", pct: 5 },
-  { key: "borderMuted", pct: 8 },
-  { key: "braceMatch", pct: 11 },
-  { key: "border", pct: 14 },
-  { key: "selection", pct: 22 },
-];
+/** Contrast fg reaches on its own background, in both modes (Jun, 2026-10-26: T = 12). */
+export const FG_TARGET = 12;
 
-/** The two muted text greys: darkened in OKLCH until they clear AA, hue and chroma kept. Text-critical. */
-const DARKENED = ["fgDim", "comment"] as const;
+/** The smallest share of `anchor` mixed into `base` whose contrast on `base` reaches `target` (bisection). */
+export function solveShare(anchor: string, base: string, target: number): number {
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2;
+    if (contrastRatio(mix(anchor, base, mid * 100), base) >= target) hi = mid;
+    else lo = mid;
+  }
+  return hi;
+}
 
 /**
- * The accent family: EXACT borrows of the dark colour of the same name (`dark:<name>`), so a light page shows the
- * palette's own vivid hues. Ruled by Jun on 2026-10-24: raw vivid accents on the paper canvas measure 1.1 to
- * 2.9:1 (lime and brightYellow are about 1.1:1: as text they are not legible), and that is accepted for accents. The text-critical roles (ink, muted) are not in this list and keep AA.
- * The measured ratios are recorded in light.test.ts, so a change in them is seen, not silent.
+ * The one neutral rule (plan 2026-10-25; Jun's ruling): every neutral and fg derives from a background by this
+ * formula, run in both modes with the mode's own bg. `anchor` is the palette's OTHER seed: the dark paper for the
+ * dark background, the dark background for the light one. fg is the anchor mixed into bg at the smallest share that
+ * gives fg FG_TARGET on bg; fgDim is fg mixed into bg at the smallest share that gives MIN_CONTRAST; border and
+ * highlight are fg mixed into bg at 14% and 22% (Jun's Q3 and Q4).
  */
+export function deriveNeutrals(anchor: string, base: string): { fg: string; fgDim: string; border: string; highlight: string } {
+  const fg = mix(anchor, base, solveShare(anchor, base, FG_TARGET) * 100);
+  const fgDim = mix(fg, base, solveShare(fg, base, MIN_CONTRAST) * 100);
+  return { fg, fgDim, border: mix(fg, base, 14), highlight: mix(fg, base, 22) };
+}
+
+/** The accent family: EXACT borrows of the dark colour of the same name (`dark:<name>`), ruled 2026-10-24. */
 const BORROWED = [
   "blue",
   "lightBlue",
@@ -153,24 +164,17 @@ const BORROWED = [
 
 /** Build the light palette from the dark one. Deterministic: same input, same file, byte for byte. */
 export function renderLightPalette(dark: Palette): Palette {
-  const canvas = dark.colors.caret.hex; // the lightest surface the dark palette owns
-  const ink = dark.colors.bg.hex; // its darkest
+  const paper = dark.colors.paper.hex; // the light canvas: the dark paper seed, borrowed
+  const ink = dark.colors.bg.hex; // the dark background: the anchor of the light neutral family
+  const n = deriveNeutrals(ink, paper);
   const colors: Record<string, { hex: string; source: string }> = {};
-  colors.bg = { hex: canvas, source: "dark:caret" };
-  colors.fg = { hex: ink, source: "dark:bg" };
-  colors.caret = { hex: ink, source: "dark:bg" };
-  for (const { key, pct } of SURFACES) {
-    colors[key] = { hex: mix(ink, canvas, pct), source: `derived:${key}` };
-  }
-  for (const key of DARKENED) {
-    colors[key] = {
-      hex: darkenUntil(dark.colors[key].hex, canvas, MIN_CONTRAST),
-      source: `derived:${key}`,
-    };
-  }
-  for (const key of BORROWED) {
-    colors[key] = { hex: dark.colors[key].hex, source: `dark:${key}` };
-  }
+  colors.bg = { hex: paper, source: "dark:paper" };
+  colors.paper = { hex: paper, source: "dark:paper" };
+  colors.fg = { hex: n.fg, source: "derived:fg" };
+  colors.fgDim = { hex: n.fgDim, source: "derived:fgDim" };
+  colors.border = { hex: n.border, source: "derived:border" };
+  colors.highlight = { hex: n.highlight, source: "derived:highlight" };
+  for (const key of BORROWED) colors[key] = { hex: dark.colors[key].hex, source: `dark:${key}` };
   const ordered = Object.fromEntries(
     REQUIRED_COLORS.map((k) => [k, colors[k] as { hex: string; source: string }]),
   );
@@ -179,7 +183,7 @@ export function renderLightPalette(dark: Palette): Palette {
       const source = dark.ansi[slot].source;
       const target = source.startsWith("alias:") ? source.slice("alias:".length) : slot;
       const borrowed = ordered[target];
-      if (!borrowed) throw new Error(`ansi.${slot} → ${source}: no light colour named ${target}`);
+      if (!borrowed) throw new Error(`ansi.${slot} -> ${source}: no light colour named ${target}`);
       return [slot, { hex: borrowed.hex, source: `alias:${target}` }];
     }),
   );
