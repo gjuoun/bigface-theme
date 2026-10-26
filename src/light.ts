@@ -142,7 +142,10 @@ export function solveShare(anchor: string, base: string, target: number): number
  * gives fg FG_TARGET on bg; fgDim is fg mixed into bg at the smallest share that gives MIN_CONTRAST; border and
  * highlight are fg mixed into bg at 14% and 22% (Jun's Q3 and Q4).
  */
-export function deriveNeutrals(anchor: string, base: string): { fg: string; fgDim: string; border: string; highlight: string } {
+export function deriveNeutrals(
+  anchor: string,
+  base: string,
+): { fg: string; fgDim: string; border: string; highlight: string } {
   const fg = mix(anchor, base, solveShare(anchor, base, FG_TARGET) * 100);
   const fgDim = mix(fg, base, solveShare(fg, base, MIN_CONTRAST) * 100);
   return { fg, fgDim, border: mix(fg, base, 14), highlight: mix(fg, base, 22) };

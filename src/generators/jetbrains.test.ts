@@ -13,7 +13,8 @@ test("every JetBrains-sourced colour and every legacy address reads back as the 
   for (const [name, c] of Object.entries(p.colors)) {
     if (c.source.startsWith("jetbrains:")) expect(lookupSource(out, c.source), name).toBe(c.hex);
   }
-  for (const [source, role] of LEGACY_ADDRESSES) expect(lookupSource(out, source), source + " <- " + role).toBe(p.colors[role].hex);
+  for (const [source, role] of LEGACY_ADDRESSES)
+    expect(lookupSource(out, source), source + " <- " + role).toBe(p.colors[role].hex);
 });
 
 test("the regenerated scheme keeps the original shape: the same number of colour values, over 150", async () => {

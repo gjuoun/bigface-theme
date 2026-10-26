@@ -1,7 +1,15 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { contrastRatio } from "./contrast-math.ts";
-import { darkenUntil, deriveNeutrals, lightPath, MIN_CONTRAST, mix, renderLightJson, renderSwatchSheet } from "./light.ts";
+import {
+  darkenUntil,
+  deriveNeutrals,
+  lightPath,
+  MIN_CONTRAST,
+  mix,
+  renderLightJson,
+  renderSwatchSheet,
+} from "./light.ts";
 import { loadPalette, parseLightPalette } from "./palette.ts";
 
 // palette/bigface-light.json is generated and committed, the same rule themes/ follows: the committed

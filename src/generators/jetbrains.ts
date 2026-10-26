@@ -39,7 +39,9 @@ export function renderJetBrains(p: Palette, base = ORIGINAL_XML): string {
   const write = (source: string, hex: string, name: string) => {
     const prev = seen.get(source);
     if (prev && prev !== hex) {
-      throw new Error(name + " disagrees with another token about " + source + ": " + prev + " vs " + hex);
+      throw new Error(
+        name + " disagrees with another token about " + source + ": " + prev + " vs " + hex,
+      );
     }
     seen.set(source, hex);
     xml = replaceSource(xml, source, hex);

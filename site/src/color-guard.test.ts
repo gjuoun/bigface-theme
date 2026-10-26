@@ -25,9 +25,9 @@ test("Tailwind's default shadow colour #0000001a is rejected", () => {
   ).toEqual(["#0000001a"]);
 });
 
-test("short hex is expanded: #000 rejected; #333 (borderMuted, removed by the neutral collapse) rejected too", () => {
+test("short hex is expanded: #000 rejected; #333 (a neutral the collapse removed) rejected too", () => {
   expect(findForeignInCss(".a{color:#000}", known)).toEqual(["#000"]);
-  // The collapse removed borderMuted (#333333): the expansion is checked against the palette, so #333 is foreign now.
+  // The neutral collapse removed #333333: the expansion is checked against the palette, so #333 is foreign now.
   expect(findForeignInCss(".a{color:#333}", known)).toEqual(["#333"]);
 });
 

@@ -130,7 +130,18 @@ describe("light palette schema", () => {
 
 // Neutral collapse (plan 2026-10-25; Q2 = (b): caret is renamed paper, same value). The palette keeps six neutrals and
 // the ten accents. The six: bg (the dark seed), paper (the light canvas seed), fg, fgDim, border and highlight.
-const ACCENTS = ["blue", "lightBlue", "paleBlue", "cyan", "green", "lime", "yellow", "brightYellow", "burntOrange", "purple"] as const;
+const ACCENTS = [
+  "blue",
+  "lightBlue",
+  "paleBlue",
+  "cyan",
+  "green",
+  "lime",
+  "yellow",
+  "brightYellow",
+  "burntOrange",
+  "purple",
+] as const;
 const NEUTRALS = ["bg", "paper", "fg", "fgDim", "border", "highlight"] as const;
 const DERIVED = ["fg", "fgDim", "border", "highlight"] as const;
 
@@ -142,8 +153,17 @@ describe("neutral collapse: the role set", () => {
 
   test("the removed roles (braceMatch, cursorLine, selection, borderMuted, comment, caret) are in neither palette", async () => {
     const dark = await loadPalette();
-    const light = JSON.parse(await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text());
-    for (const gone of ["braceMatch", "cursorLine", "selection", "borderMuted", "comment", "caret"]) {
+    const light = JSON.parse(
+      await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text(),
+    );
+    for (const gone of [
+      "braceMatch",
+      "cursorLine",
+      "selection",
+      "borderMuted",
+      "comment",
+      "caret",
+    ]) {
       expect(Object.keys(dark.colors), "dark " + gone).not.toContain(gone);
       expect(Object.keys(light.colors), "light " + gone).not.toContain(gone);
     }
@@ -157,13 +177,14 @@ describe("neutral collapse: the role set", () => {
   });
 
   test("in light, the paper and bg borrow the dark paper, and fg, fgDim, border and highlight are derived", async () => {
-    const light = JSON.parse(await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text());
+    const light = JSON.parse(
+      await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text(),
+    );
     expect(light.colors.bg.source).toBe("dark:paper");
     expect(light.colors.paper.source).toBe("dark:paper");
     for (const k of DERIVED) expect(light.colors[k].source, "light " + k).toMatch(/^derived:/);
   });
 });
-
 
 // Neutral collapse, Step 4: each derived dark neutral reproduces from the generator, so no value is typed by hand.
 describe("neutral collapse: the dark derivation", () => {
@@ -184,14 +205,25 @@ describe("neutral collapse: the dark derivation", () => {
 // Neutral collapse, Step 7: no ANSI slot and no syntax role names a removed colour, in either palette.
 describe("neutral collapse: references", () => {
   test("no ANSI slot or syntax role in either palette names a removed colour", async () => {
-    const removed = new Set(["braceMatch", "cursorLine", "selection", "borderMuted", "comment", "caret"]);
+    const removed = new Set([
+      "braceMatch",
+      "cursorLine",
+      "selection",
+      "borderMuted",
+      "comment",
+      "caret",
+    ]);
     const dark = await loadPalette();
-    const light = JSON.parse(await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text());
+    const light = JSON.parse(
+      await Bun.file(new URL("../palette/bigface-light.json", import.meta.url)).text(),
+    );
     for (const p of [dark, light] as const) {
       for (const [slot, c] of Object.entries(p.ansi) as [string, { source: string }][]) {
-        if (c.source.startsWith("alias:")) expect(removed.has(c.source.slice(6)), "ansi " + slot).toBe(false);
+        if (c.source.startsWith("alias:"))
+          expect(removed.has(c.source.slice(6)), "ansi " + slot).toBe(false);
       }
-      for (const [role, v] of Object.entries(p.syntax) as [string, string][]) expect(removed.has(v), "syntax " + role).toBe(false);
+      for (const [role, v] of Object.entries(p.syntax) as [string, string][])
+        expect(removed.has(v), "syntax " + role).toBe(false);
     }
   });
 });

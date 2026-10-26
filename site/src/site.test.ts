@@ -65,8 +65,10 @@ test("pages use the palette: background, a syntax colour, and the original JetBr
   const pal = page("palette");
   expect(pal).toContain("#00b0ff");
   expect(pal).toContain("DEFAULT_KEYWORD#FOREGROUND");
-  // No colour may be described as blended/invented: every token is a scheme value.
-  expect(pal).not.toContain("derived");
+  // Neutral collapse (2026-10-25): the neutrals are derived from the background by one formula, and the accents are
+  // the scheme's own bytes. The page says both, and describes no colour as blended or invented.
+  expect(pal).toContain("derived from the background");
+  expect(pal).not.toContain("blended");
   expect(pal).toContain("byte-for-byte");
 });
 

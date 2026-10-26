@@ -7,7 +7,13 @@
 //   bun run src/dark-derive.ts --check   fail when the committed file is stale
 import { readFileSync, writeFileSync } from "node:fs";
 import { deriveNeutrals } from "./light.ts";
-import { ANSI_NAMES, type Palette, parsePalette, REQUIRED_COLORS, SYNTAX_ROLES } from "./palette.ts";
+import {
+  ANSI_NAMES,
+  type Palette,
+  parsePalette,
+  REQUIRED_COLORS,
+  SYNTAX_ROLES,
+} from "./palette.ts";
 
 type Named = { hex: string; source: string };
 
@@ -44,7 +50,8 @@ export function renderDarkPalette(seed: Palette): Palette {
       const target = s.source.slice("alias:".length);
       const to = RENAMES[target] ?? target;
       const resolved = (ordered as Record<string, Named>)[to];
-      if (!resolved) throw new Error("ansi." + slot + " aliases " + to + ", which is not a dark colour");
+      if (!resolved)
+        throw new Error("ansi." + slot + " aliases " + to + ", which is not a dark colour");
       return [slot, { hex: resolved.hex, source: "alias:" + to }];
     }),
   );
@@ -54,7 +61,13 @@ export function renderDarkPalette(seed: Palette): Palette {
       return [role, RENAMES[v] ?? v];
     }),
   );
-  return parsePalette({ name: seed.name, appearance: seed.appearance, colors: ordered, ansi, syntax });
+  return parsePalette({
+    name: seed.name,
+    appearance: seed.appearance,
+    colors: ordered,
+    ansi,
+    syntax,
+  });
 }
 
 const path = new URL("../palette/bigface.json", import.meta.url);
