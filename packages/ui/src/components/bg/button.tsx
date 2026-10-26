@@ -11,7 +11,7 @@ export const bgButtonVariants = cva("", {
     tone: {
       none: "",
       // the bright call to action: blue gradient plate, dark ink
-      glow: "h-auto rounded-full bg-transparent hover:bg-transparent px-[1.15rem] py-[0.7rem] text-[0.94rem] font-semibold no-underline bg-linear-135/srgb from-bf-blue to-bf-light-blue text-ink-on-bright shadow-[0_8px_26px_color-mix(in_srgb,var(--bf-blue)_30%,transparent),inset_0_1px_0_color-mix(in_srgb,var(--bf-paper)_50%,transparent)] hover:-translate-y-0.5 hover:from-bf-light-blue hover:to-bf-pale-blue hover:text-ink-on-bright hover:shadow-[0_14px_34px_color-mix(in_srgb,var(--bf-blue)_40%,transparent),inset_0_1px_0_color-mix(in_srgb,var(--bf-paper)_60%,transparent)]",
+      glow: "h-auto rounded-full bg-transparent hover:bg-transparent px-[1.15rem] py-[0.7rem] text-[0.94rem] font-semibold no-underline bg-linear-135/srgb from-bf-blue to-bf-light-blue text-ink-on-bright shadow-[0_8px_26px_color-mix(in_srgb,var(--bf-blue)_30%,transparent),inset_0_1px_0_color-mix(in_srgb,var(--bf-fg)_50%,transparent)] hover:-translate-y-0.5 hover:from-bf-light-blue hover:to-bf-pale-blue hover:text-ink-on-bright hover:shadow-[0_14px_34px_color-mix(in_srgb,var(--bf-blue)_40%,transparent),inset_0_1px_0_color-mix(in_srgb,var(--bf-fg)_60%,transparent)]",
       // quiet outline pill next to the glow button
       ghost:
         "h-auto rounded-full border-bf-highlight bg-bf-border/6 px-[1.15rem] py-[0.7rem] text-[0.94rem] font-semibold text-foreground no-underline hover:border-bf-blue hover:bg-bf-blue/8 hover:text-bf-blue",
