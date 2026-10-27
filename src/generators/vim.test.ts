@@ -8,6 +8,7 @@ import { vim } from "./vim.ts";
 
 const have = Bun.which("vim") !== null;
 const files = vim.files(await loadPalette()) as Record<string, string>;
+const FG = (await loadPalette()).colors.fg.hex;
 
 async function setup(contents: string) {
   const dir = await mkdtemp(join(tmpdir(), "bf-vim-"));
@@ -26,7 +27,7 @@ async function hlNormal(dir: string): Promise<string> {
 
 test("defines core highlight groups with palette colours", () => {
   const v = files["colors/bigface.vim"] as string;
-  expect(v).toContain("hi Normal guifg=#d9d9d4 guibg=#252925");
+  expect(v).toContain("hi Normal guifg=" + FG + " guibg=#252925");
   expect(v).toContain("hi Statement guifg=#00b0ff");
   expect(v).toContain("hi String guifg=#e5e500");
   expect(v).toContain("hi Function guifg=#c6ff00");
@@ -35,7 +36,7 @@ test("defines core highlight groups with palette colours", () => {
 
 test.skipIf(!have)("vim loads the colorscheme and Normal gets the palette background", async () => {
   const text = await hlNormal(await setup(files["colors/bigface.vim"] as string));
-  expect(text).toContain("guifg=#d9d9d4");
+  expect(text).toContain("guifg=" + FG);
   expect(text).toContain("guibg=#252925");
 });
 

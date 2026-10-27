@@ -12,6 +12,7 @@
   "scripts": {
     "themes": "bun run src/build.ts",
     "contrast": "bun run src/contrast.ts",
+    "light": "bun run src/light.ts",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "test": "bun test src site/src packages/ui/src",

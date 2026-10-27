@@ -16,7 +16,7 @@ test("emits 16 palette entries, background, foreground and selection", async () 
   const t = await theme();
   expect(t.match(/^palette = \d+=#[0-9a-f]{6}$/gm)?.length).toBe(16);
   expect(t).toContain("background = #252925");
-  expect(t).toContain("foreground = #d9d9d4");
+  expect(t).toContain("foreground = " + (await loadPalette()).colors.fg.hex);
   // ANSI slots alias the scheme's own colours, so slot 1 is whatever `red` borrows.
   const p = await loadPalette();
   expect(t).toContain(`palette = 1=${p.ansi.red.hex}`);

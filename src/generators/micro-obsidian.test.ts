@@ -45,7 +45,7 @@ describe("micro (format: zyedidia/micro runtime/help/colors.md)", () => {
     }
   });
   test("uses the palette", () => {
-    expect(text).toContain('color-link default "#d9d9d4,#252925"');
+    expect(text).toContain('color-link default "' + p.colors.fg.hex + ',#252925"');
     expect(text).toContain('color-link statement "#00b0ff,#252925"');
   });
 });

@@ -34,7 +34,7 @@ export function zellijTheme(p: Palette): string {
     "themes {",
     "    bigface {",
     comp("text_unselected", c("fg"), c("bg"), accents),
-    comp("text_selected", c("fg"), c("cursorLine"), accents),
+    comp("text_selected", c("fg"), c("highlight"), accents),
     comp("ribbon_selected", c("bg"), c("blue"), mixed),
     comp("ribbon_unselected", c("fg"), c("border"), [
       c("burntOrange"),
@@ -43,9 +43,9 @@ export function zellijTheme(p: Palette): string {
       c("lime"),
     ]),
     comp("table_title", c("blue"), c("bg"), accents),
-    comp("table_cell_selected", c("fg"), c("cursorLine"), accents),
+    comp("table_cell_selected", c("fg"), c("highlight"), accents),
     comp("table_cell_unselected", c("fg"), c("bg"), accents),
-    comp("list_selected", c("fg"), c("cursorLine"), accents),
+    comp("list_selected", c("fg"), c("highlight"), accents),
     comp("list_unselected", c("fg"), c("bg"), accents),
     comp("frame_selected", c("blue"), c("bg"), accents),
     comp("frame_highlight", c("burntOrange"), c("bg"), [

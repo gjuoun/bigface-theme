@@ -32,7 +32,7 @@ const NAMED: [string, ColorName][] = [
   ["bigface_pink", "burntOrange"],
   ["bigface_cyan", "cyan"],
   ["bigface_purple", "purple"],
-  ["bigface_comment", "comment"],
+  ["bigface_comment", "fgDim"],
 ];
 
 export const starship: Target = {

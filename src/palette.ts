@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { luminance } from "./contrast-math.ts";
 
 const Hex = z.string().regex(/^#[0-9a-f]{6}$/, "6-digit lowercase hex like #00b0ff");
 
@@ -7,26 +8,26 @@ const Hex = z.string().regex(/^#[0-9a-f]{6}$/, "6-digit lowercase hex like #00b0
  * - `jetbrains:<OPTION>#<FIELD>` — an attribute in the original scheme (e.g. `DEFAULT_KEYWORD#FOREGROUND`)
  * - `jetbrains:colors#<KEY>`     — a `<colors>` option in the original scheme (e.g. `CARET_ROW_COLOR`)
  * - `alias:<colour>`            — a standard slot (ANSI) borrowing one of the scheme's colours
+ * - `dark:<colour>`             — Bigface Light borrowing the same-named colour of the dark palette
+ * - `derived:<colour>`          — Bigface Light computing the value from that dark colour
  *
  * There is deliberately no "invented" option: every colour the themes use has to exist in the
- * original scheme, so a tool that wants a surface the scheme lacks is given one of the scheme's
- * existing surfaces instead of a new blend.
+ * original scheme (or, for the light palette, be derived from a colour that does), so a tool that
+ * wants a surface the scheme lacks is given one of the scheme's existing surfaces instead of a new
+ * blend.
  */
 const Source = z
   .string()
-  .regex(/^(jetbrains:(colors#[A-Z_]+|[A-Za-z0-9_.]+#[A-Z_]+)|alias:[A-Za-z]+)$/);
+  .regex(
+    /^(jetbrains:(colors#[A-Z_]+|[A-Za-z0-9_.]+#[A-Z_]+)|alias:[A-Za-z]+|(dark|derived):[A-Za-z]+)$/,
+  );
 
 const Color = z.object({ hex: Hex, source: Source });
 
-export const REQUIRED_COLORS = [
-  "bg",
-  "fg",
-  "fgDim",
-  "border",
-  "borderMuted",
-  "selection",
-  "cursorLine",
-  "braceMatch",
+/** The six neutral roles, the whole neutral family in both modes (Jun, 2026-10-26: paper is retired). */
+export const NEUTRAL_NAMES = ["bg", "panel", "fg", "fgDim", "border", "highlight"] as const;
+
+export const ACCENT_NAMES = [
   "blue",
   "lightBlue",
   "paleBlue",
@@ -37,9 +38,16 @@ export const REQUIRED_COLORS = [
   "brightYellow",
   "burntOrange",
   "purple",
-  "comment",
-  "caret",
 ] as const;
+
+export const REQUIRED_COLORS = [...NEUTRAL_NAMES, ...ACCENT_NAMES] as const;
+
+/** The neutrals of one palette, lightest first. Each mode sorts by its own lightness, so dark reads fg first. */
+export const neutralsLightToDark = (colors: Record<string, { hex: string }>): string[] =>
+  [...NEUTRAL_NAMES].sort(
+    (a, b) =>
+      luminance((colors[b] as { hex: string }).hex) - luminance((colors[a] as { hex: string }).hex),
+  );
 
 export const ANSI_NAMES = [
   "black",
@@ -90,8 +98,8 @@ const syntaxShape = Object.fromEntries(SYNTAX_ROLES.map((k) => [k, z.string()]))
 
 export const PaletteSchema = z
   .object({
-    name: z.literal("Bigface"),
-    appearance: z.literal("dark"),
+    name: z.enum(["Bigface", "Bigface Light"]),
+    appearance: z.enum(["dark", "light"]),
     colors: z.object(colorsShape).strict(),
     ansi: z.object(ansiShape).strict(),
     /** Syntax role → name of an entry in `colors`. */
@@ -127,6 +135,38 @@ export function parsePalette(json: unknown): Palette {
 
 export async function loadPalette(path = new URL("../palette/bigface.json", import.meta.url)) {
   return parsePalette(await Bun.file(path).json());
+}
+
+/**
+ * Bigface Light. It is a palette of its own (§ name/appearance), but every colour must come from the
+ * dark one: `dark:<name>` has to equal that dark colour exactly, `derived:<name>` has to name a dark
+ * colour that exists. Generators read the light palette exactly like the dark one.
+ */
+export function parseLightPalette(json: unknown, dark: Palette): Palette {
+  const light = parsePalette(json);
+  if (light.appearance !== "light" || light.name !== "Bigface Light") {
+    throw new Error("a light palette must be named 'Bigface Light' with appearance 'light'");
+  }
+  for (const entries of [light.colors, light.ansi] as Record<
+    string,
+    { hex: string; source: string }
+  >[]) {
+    for (const [name, c] of Object.entries(entries)) {
+      const m = /^(dark|derived):(.+)$/.exec(c.source);
+      if (!m) continue;
+      const kind = m[1] as "dark" | "derived";
+      const ref = m[2] as string;
+      const target =
+        (dark.colors as Record<string, { hex: string }>)[ref] ??
+        (dark.ansi as Record<string, { hex: string }>)[ref];
+      if (!target)
+        throw new Error(`${kind}:${ref} names no colour of the dark palette (at ${name})`);
+      if (kind === "dark" && target.hex !== c.hex) {
+        throw new Error(`${name} says ${c.hex} but dark:${ref} is ${target.hex}`);
+      }
+    }
+  }
+  return light;
 }
 
 export const color = (p: Palette, name: ColorName): string => p.colors[name].hex;
