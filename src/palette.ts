@@ -35,7 +35,6 @@ export const ACCENT_NAMES = [
   "green",
   "lime",
   "yellow",
-  "brightYellow",
   "burntOrange",
   "purple",
 ] as const;

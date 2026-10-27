@@ -38,8 +38,9 @@ describe("scheme tokens match original XML", () => {
     const p = await loadPalette();
     const entries = [...Object.entries(p.colors), ...Object.entries(p.ansi)];
     const sourced = entries.filter(([, c]) => c.source.startsWith("jetbrains:"));
-    // The dark seeds are the background and the ten accents. The canvas and the anchor are the scheme caret (seeds.ts).
-    expect(sourced.length).toBe(11);
+    // The dark seeds are the background and the nine accents. The canvas and the anchor are the scheme caret (seeds.ts).
+    // yellow is the scheme's operator colour now (brightYellow, renamed); the scheme's string yellow is gone.
+    expect(sourced.length).toBe(10);
     const mismatches = sourced
       .map(([name, c]) => ({ name, want: lookupSource(xml, c.source), got: c.hex, src: c.source }))
       .filter((r) => r.want !== r.got);
@@ -130,7 +131,7 @@ describe("light palette schema", () => {
 });
 
 // Neutral collapse (plan 2026-10-25; Q2 = (b): caret is renamed paper, same value), then the panel tier (Jun, 2026-10-26).
-// The palette keeps seven neutrals and the ten accents. The seven: bg (the dark seed), paper (the light canvas seed), panel
+// The palette keeps six neutrals and the nine accents. The seven: bg (the dark seed), paper (the light canvas seed), panel
 // (the surface tier, mix(fg, bg, 5)), fg, fgDim, border and highlight.
 const ACCENTS = [
   "blue",
@@ -140,7 +141,6 @@ const ACCENTS = [
   "green",
   "lime",
   "yellow",
-  "brightYellow",
   "burntOrange",
   "purple",
 ] as const;
@@ -148,7 +148,7 @@ const NEUTRALS = ["bg", "panel", "fg", "fgDim", "border", "highlight"] as const;
 const DERIVED = ["panel", "fg", "fgDim", "border", "highlight"] as const;
 
 describe("neutral collapse: the role set", () => {
-  test("REQUIRED_COLORS is exactly the six neutrals and the ten accents", async () => {
+  test("REQUIRED_COLORS is exactly the six neutrals and the nine accents", async () => {
     const { REQUIRED_COLORS } = await import("./palette.ts");
     expect([...REQUIRED_COLORS].sort()).toEqual([...NEUTRALS, ...ACCENTS].sort());
   });

@@ -173,7 +173,6 @@ const BORROWED = [
   "green",
   "lime",
   "yellow",
-  "brightYellow",
   "burntOrange",
   "purple",
 ] as const;
@@ -244,7 +243,7 @@ export function renderSwatchSheet(dark: Palette): string {
       `    </tr>`,
     ].join("\n");
   };
-  // The sheet lists the six neutrals lightest first, then the ten accents as their own group (Jun, 2026-10-26).
+  // The sheet lists the six neutrals lightest first, then the nine accents as their own group (Jun, 2026-10-26).
   const order = [
     ...neutralsLightToDark(light.colors as Record<string, { hex: string }>),
     ...ACCENT_NAMES,

@@ -27,7 +27,6 @@ const ACCENTS = [
   "green",
   "lime",
   "yellow",
-  "brightYellow",
   "burntOrange",
   "purple",
 ] as const;
@@ -44,8 +43,7 @@ const ACCENT_CONTRAST_ON_PAPER: Record<(typeof ACCENTS)[number], number> = {
   cyan: 1.54,
   green: 2.1,
   lime: 1.11,
-  yellow: 1.27,
-  brightYellow: 1.14,
+  yellow: 1.14,
   burntOrange: 2.92,
   purple: 2.66,
 };
@@ -133,12 +131,12 @@ describe("neutral collapse: derivation", () => {
     }
   });
 
-  test("the swatch sheet has one row per light colour: sixteen", () => {
+  test("the swatch sheet has one row per light colour: fifteen", () => {
     const rows = renderSwatchSheet(dark).match(/<tr data-swatch=/g) ?? [];
-    expect(rows.length).toBe(16);
+    expect(rows.length).toBe(15);
   });
 
-  test("the swatch sheet lists the six neutrals lightest first, then the ten accents", () => {
+  test("the swatch sheet lists the six neutrals lightest first, then the nine accents", () => {
     const names = [...renderSwatchSheet(dark).matchAll(/<tr data-swatch="([a-zA-Z]+)"/g)].map(
       (m) => m[1],
     );
