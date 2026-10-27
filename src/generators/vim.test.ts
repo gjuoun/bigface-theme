@@ -29,7 +29,7 @@ test("defines core highlight groups with palette colours", () => {
   const v = files["colors/bigface.vim"] as string;
   expect(v).toContain("hi Normal guifg=" + FG + " guibg=#252925");
   expect(v).toContain("hi Statement guifg=#00b0ff");
-  expect(v).toContain("hi String guifg=#e5e500");
+  expect(v).toContain("hi String guifg=#ffeb3b");
   expect(v).toContain("hi Function guifg=#c6ff00");
   expect(v).toContain("g:terminal_ansi_colors");
 });

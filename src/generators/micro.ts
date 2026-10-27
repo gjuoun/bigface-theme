@@ -45,7 +45,7 @@ export const micro: Target = {
       ["current-line-number", fgbg(c("fg"), c("highlight"))],
       ["gutter-info", fgbg(c("lightBlue"), c("bg"))],
       ["gutter-error", fgbg(c("burntOrange"), c("bg"))],
-      ["gutter-warning", fgbg(c("brightYellow"), c("bg"))],
+      ["gutter-warning", fgbg(c("yellow"), c("bg"))],
       ["diff-added", `"${c("green")}"`],
       ["diff-modified", `"${c("lightBlue")}"`],
       ["diff-deleted", `"${c("burntOrange")}"`],

@@ -44,7 +44,7 @@ export const vim: Target = {
       hi("TabLineFill", undefined, c("border")),
       hi("Folded", c("fgDim"), c("highlight")),
       hi("ErrorMsg", c("burntOrange"), c("bg"), "bold"),
-      hi("WarningMsg", c("brightYellow")),
+      hi("WarningMsg", c("yellow")),
       hi("Directory", c("blue")),
       hi("Title", c("lime"), undefined, "bold"),
       "",

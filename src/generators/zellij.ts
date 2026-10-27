@@ -26,7 +26,6 @@ export function zellijTheme(p: Palette): string {
     c("burntOrange"),
     c("yellow"),
     c("lightBlue"),
-    c("brightYellow"),
   ];
   return [
     "// Bigface — https://github.com/gjuoun/bigface-theme",

@@ -20,7 +20,7 @@ const MAP: [key: string, from: ColorName | `ansi.${string}`, note: string][] = [
   ["red", "burntOrange", "danger"],
   ["blue", "blue", "accent blue"],
   ["teal", "cyan", "info"],
-  ["peach", "brightYellow", "warning / severe"],
+  ["peach", "yellow", "warning / severe"],
   ["mauve", "purple", "merged / done"],
 ];
 
