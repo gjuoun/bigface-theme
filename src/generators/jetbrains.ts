@@ -17,7 +17,10 @@ export const ORIGINAL_XML = readFileSync(
  * options (selection, cursorLine, braceMatch) now share the one highlight colour. This table keeps the scheme on the
  * palette until the JetBrains-side realignment, which is deferred to a later round. Delete the table when that lands.
  */
-export const LEGACY_ADDRESSES: [source: string, role: "fg" | "fgDim" | "border" | "highlight" | "yellow"][] = [
+export const LEGACY_ADDRESSES: [
+  source: string,
+  role: "fg" | "fgDim" | "border" | "highlight" | "yellow",
+][] = [
   ["jetbrains:TEXT#FOREGROUND", "fg"],
   ["jetbrains:colors#LINE_NUMBERS_COLOR", "fgDim"],
   ["jetbrains:OC.LINE_COMMENT#FOREGROUND", "fgDim"],

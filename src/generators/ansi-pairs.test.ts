@@ -14,14 +14,21 @@ const out = async (id: string, p: Awaited<ReturnType<typeof loadPalette>>) => {
 
 test("the palette: yellow, red, magenta and white pair identically in the dark palette", async () => {
   const p = await loadPalette();
-  for (const [a, b] of [["yellow", "brightYellow"], ["red", "brightRed"], ["magenta", "brightMagenta"], ["white", "brightWhite"]] as const) {
+  for (const [a, b] of [
+    ["yellow", "brightYellow"],
+    ["red", "brightRed"],
+    ["magenta", "brightMagenta"],
+    ["white", "brightWhite"],
+  ] as const) {
     expect(p.ansi[a].hex, a + "/" + b).toBe(p.ansi[b].hex);
   }
   expect(p.ansi.yellow.hex).toBe(YELLOW);
 });
 
 test("the light palette: yellow and red pair, and white stays the ruled difference (ink vs canvas)", async () => {
-  const light = JSON.parse(await Bun.file(new URL("../../palette/bigface-light.json", import.meta.url)).text());
+  const light = JSON.parse(
+    await Bun.file(new URL("../../palette/bigface-light.json", import.meta.url)).text(),
+  );
   expect(light.ansi.yellow.hex).toBe(light.ansi.brightYellow.hex);
   expect(light.ansi.red.hex).toBe(light.ansi.brightRed.hex);
   expect(light.ansi.white.hex).toBe(light.colors.fg.hex);
@@ -44,7 +51,11 @@ test("every port writes both yellow ANSI slots as #ffeb3b", async () => {
   expect(vscode).toContain('"terminal.ansiBrightYellow": "' + YELLOW + '"');
   // vim: g:terminal_ansi_colors indices 3 and 11
   const vim = await out("vim", p);
-  const list = /g:terminal_ansi_colors = \[([^\]]+)\]/.exec(vim)?.[1]?.split(",").map((s) => s.trim().replace(/'/g, "")) ?? [];
+  const list =
+    /g:terminal_ansi_colors = \[([^\]]+)\]/
+      .exec(vim)?.[1]
+      ?.split(",")
+      .map((s) => s.trim().replace(/'/g, "")) ?? [];
   expect(list[3]).toBe(YELLOW);
   expect(list[11]).toBe(YELLOW);
   // starship: yellow and bright-yellow
