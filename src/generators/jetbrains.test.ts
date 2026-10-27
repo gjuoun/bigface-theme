@@ -17,6 +17,18 @@ test("every JetBrains-sourced colour and every legacy address reads back as the 
     expect(lookupSource(out, source), source + " <- " + role).toBe(p.colors[role].hex);
 });
 
+test("strings take the single yellow: DEFAULT_STRING writes #ffeb3b, and the 2018 fixture is untouched", async () => {
+  const p = await loadPalette();
+  const out = renderJetBrains(p);
+  expect(lookupSource(out, "jetbrains:DEFAULT_STRING#FOREGROUND")).toBe("#ffeb3b");
+  expect(lookupSource(out, "jetbrains:DEFAULT_STRING#FOREGROUND")).toBe(p.colors.yellow.hex);
+  expect(lookupSource(ORIGINAL_XML, "jetbrains:DEFAULT_STRING#FOREGROUND")).toBe("#e5e500");
+  // Exactly one fixture address changes: the fixture's e5e500 count drops by one. Other e5e500 addresses the fixture owns
+  // (for example PY.STRING.U) are not palette roles and stay as the fixture has them.
+  const count = (s: string) => s.split('value="e5e500"').length - 1;
+  expect(count(out)).toBe(count(ORIGINAL_XML) - 1);
+});
+
 test("the regenerated scheme keeps the original shape: the same number of colour values, over 150", async () => {
   const out = renderJetBrains(await loadPalette());
   expect(allColorValues(out).length).toBe(allColorValues(ORIGINAL_XML).length);
