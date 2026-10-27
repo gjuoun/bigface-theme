@@ -32,7 +32,24 @@ export const LEGACY_ADDRESSES: [
   ["jetbrains:MATCHED_BRACE_ATTRIBUTES#BACKGROUND", "highlight"],
   // The scheme's string colour was the old accent yellow (#e5e500), deleted on 2026-10-27. Strings now take the one
   // yellow, like every other editor. The 2018 fixture still says e5e500 here; this row is what overwrites it.
+  // The yellow family (2026-10-27, one-yellow rule). Every fixture address whose colour is yellow-hued (hue 40-70,
+  // chroma >= 100) and off-palette now takes the single yellow; the fixture is untouched. CONSOLE_YELLOW_BRIGHT_OUTPUT is
+  // ccff90 (hue 88) and is included because the scheme names it yellow. Lime (c6ff00) and the greens are not yellow and
+  // are not in this list. The punctuation and instance-method rows (COMMA, DOT, INSTANCE_METHOD) differ from the palette's
+  // syntax map (punctuation fg, function lime); they follow the rule and can be reverted row by row.
   ["jetbrains:DEFAULT_STRING#FOREGROUND", "yellow"],
+  ["jetbrains:PY.STRING.U#FOREGROUND", "yellow"],
+  ["jetbrains:CONSOLE_YELLOW_BRIGHT_OUTPUT#FOREGROUND", "yellow"],
+  ["jetbrains:CONSOLE_SYSTEM_OUTPUT#FOREGROUND", "yellow"],
+  ["jetbrains:OC.STRING#FOREGROUND", "yellow"],
+  ["jetbrains:SQL_STRING#FOREGROUND", "yellow"],
+  ["jetbrains:JSP_DIRECTIVE_BACKGROUND#FOREGROUND", "yellow"],
+  ["jetbrains:TEXT_SEARCH_RESULT_ATTRIBUTES#BACKGROUND", "yellow"],
+  ["jetbrains:WARNING_ATTRIBUTES#ERROR_STRIPE_COLOR", "yellow"],
+  ["jetbrains:DEFAULT_COMMA#FOREGROUND", "yellow"],
+  ["jetbrains:DEFAULT_DOT#FOREGROUND", "yellow"],
+  ["jetbrains:DEFAULT_INSTANCE_METHOD#FOREGROUND", "yellow"],
+  ["jetbrains:KOTLIN_ANNOTATION#FOREGROUND", "yellow"],
 ];
 
 /**

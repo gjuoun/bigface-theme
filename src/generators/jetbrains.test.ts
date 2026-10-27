@@ -7,6 +7,26 @@ import { LEGACY_ADDRESSES, ORIGINAL_XML, renderJetBrains } from "./jetbrains.ts"
 // the collapsed neutrals (the transition shim in jetbrains.ts) read back exactly as the palette has them. The
 // round trip against the ORIGINAL scheme is no longer byte-identical, because the derived neutrals moved on purpose.
 
+/** Every colour field of the fixture as a jetbrains source string: attribute options, then the <colors> block. */
+function fixtureSources(xml: string): string[] {
+  const out: string[] = [];
+  for (const m of xml.matchAll(
+    /<option name="([^"]+)"(?: baseAttributes="[^"]*")?>\s*<value>([\s\S]*?)<\/value>/g,
+  )) {
+    for (const f of (m[2] as string).matchAll(
+      /<option name="([A-Z_]+)" value="([0-9a-fA-F]{1,6})"/g,
+    ))
+      out.push(`jetbrains:${m[1]}#${f[1]}`);
+  }
+  for (const c of xml.matchAll(/<colors>([\s\S]*?)<\/colors>/g)) {
+    for (const f of (c[1] as string).matchAll(
+      /<option name="([A-Z_]+)" value="([0-9a-fA-F]{1,6})"/g,
+    ))
+      out.push(`jetbrains:colors#${f[1]}`);
+  }
+  return out;
+}
+
 test("every JetBrains-sourced colour and every legacy address reads back as the palette's value", async () => {
   const p = await loadPalette();
   const out = renderJetBrains(p);
@@ -17,16 +37,31 @@ test("every JetBrains-sourced colour and every legacy address reads back as the 
     expect(lookupSource(out, source), source + " <- " + role).toBe(p.colors[role].hex);
 });
 
-test("strings take the single yellow: DEFAULT_STRING writes #ffeb3b, and the 2018 fixture is untouched", async () => {
+test("the fixture is untouched: every address the table does not own reads back as the 2018 scheme has it", async () => {
   const p = await loadPalette();
   const out = renderJetBrains(p);
-  expect(lookupSource(out, "jetbrains:DEFAULT_STRING#FOREGROUND")).toBe("#ffeb3b");
-  expect(lookupSource(out, "jetbrains:DEFAULT_STRING#FOREGROUND")).toBe(p.colors.yellow.hex);
-  expect(lookupSource(ORIGINAL_XML, "jetbrains:DEFAULT_STRING#FOREGROUND")).toBe("#e5e500");
-  // Exactly one fixture address changes: the fixture's e5e500 count drops by one. Other e5e500 addresses the fixture owns
-  // (for example PY.STRING.U) are not palette roles and stay as the fixture has them.
-  const count = (s: string) => s.split('value="e5e500"').length - 1;
-  expect(count(out)).toBe(count(ORIGINAL_XML) - 1);
+  const owned = new Set([
+    ...LEGACY_ADDRESSES.map(([s]) => s),
+    ...Object.values(p.colors).map((c) => c.source),
+    ...Object.values(p.ansi).map((c) => c.source),
+  ]);
+  const sources = fixtureSources(ORIGINAL_XML);
+  expect(sources.length).toBeGreaterThan(150);
+  const changed = sources.filter((s) => lookupSource(out, s) !== lookupSource(ORIGINAL_XML, s));
+  for (const s of changed)
+    expect(owned.has(s), s + " changed but the table does not own it").toBe(true);
+});
+
+test("the yellow family: every row writes the single palette yellow, and no yellow-hued fixture address is left off-palette", async () => {
+  const p = await loadPalette();
+  const out = renderJetBrains(p);
+  const yellowRows = LEGACY_ADDRESSES.filter(([, role]) => role === "yellow").map(([s]) => s);
+  expect(yellowRows.length).toBe(13);
+  for (const s of yellowRows) expect(lookupSource(out, s), s).toBe("#ffeb3b");
+  for (const old of ["#e5e500", "#ccff90", "#ffe792", "#eeff41", "#f7f700", "#808000", "#ebc700"]) {
+    const left = fixtureSources(out).filter((s) => lookupSource(out, s) === old);
+    expect(left, old).toEqual([]);
+  }
 });
 
 test("the regenerated scheme keeps the original shape: the same number of colour values, over 150", async () => {
