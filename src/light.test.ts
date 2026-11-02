@@ -2,13 +2,16 @@ import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { contrastRatio } from "./contrast-math.ts";
 import {
+  ACCENT_OVERRIDES,
   darkenUntil,
   deriveNeutrals,
+  fromOklch,
   lightPath,
   MIN_CONTRAST,
   mix,
   renderLightJson,
   renderSwatchSheet,
+  toOklch,
 } from "./light.ts";
 import { loadPalette, parseLightPalette } from "./palette.ts";
 import { SCHEME_CARET } from "./seeds.ts";
@@ -25,7 +28,6 @@ const ACCENTS = [
   "paleBlue",
   "cyan",
   "green",
-  "lime",
   "yellow",
   "burntOrange",
   "purple",
@@ -37,15 +39,14 @@ const ACCENTS = [
  * numbers is a change to the palette, and this table is where it shows.
  */
 const ACCENT_CONTRAST_ON_PAPER: Record<(typeof ACCENTS)[number], number> = {
-  blue: 2.27,
-  lightBlue: 1.86,
-  paleBlue: 1.27,
-  cyan: 1.54,
-  green: 2.1,
-  lime: 1.11,
-  yellow: 1.14,
-  burntOrange: 2.92,
-  purple: 2.66,
+  blue: 4.5,
+  lightBlue: 4.5,
+  paleBlue: 4.51,
+  cyan: 4.52,
+  green: 4.52,
+  yellow: 4,
+  burntOrange: 4.52,
+  purple: 4.51,
 };
 
 describe("bigface-light.json", () => {
@@ -60,14 +61,32 @@ describe("bigface-light.json", () => {
       colors: Record<string, { hex: string }>;
     };
     expect(light.colors.blue?.hex).not.toBe(JSON.parse(committed).colors.blue.hex);
-    expect(light.colors.blue?.hex).toBe("#0040ff");
+    expect(light.colors.blue?.hex).toBe("#0040ff"); // already under the floor: not darkened further
   });
 
-  test("every accent is an exact borrow of its dark colour", () => {
+  test("every accent keeps its hue and chroma, solved to the one contrast floor", () => {
     const light = parseLightPalette(JSON.parse(committed), dark);
     for (const name of ACCENTS) {
-      expect(light.colors[name].hex, name).toBe(dark.colors[name].hex);
-      expect(light.colors[name].source, name).toBe("dark:" + name);
+      const [L, C, H] = toOklch(dark.colors[name].hex);
+      const [lightL, lightC, lightH] = toOklch(light.colors[name].hex);
+      expect(light.colors[name].source, name).toBe("derived:" + name);
+      expect(lightL, name + " must darken").toBeLessThan(L);
+      // At a lower L the sRGB gamut is narrower, so the hex round-trip clips chroma (yellow: 0.18 → 0.11).
+      // It never grows, and the hue survives within a few degrees of clipping.
+      expect(lightC, name + " chroma never grows").toBeLessThanOrEqual(C + 0.01);
+      // Lowering L narrows the sRGB gamut, so the hex round-trip can clip the hue by a few degrees;
+      // an override (yellow's gold) starts from a warmer hue on purpose.
+      const override = ACCENT_OVERRIDES[name];
+      if (override) {
+        expect(lightH, name + " warmer than the dark accent").toBeLessThan(H);
+        expect(Math.abs(lightH - override.hue), name + " near its override hue").toBeLessThan(40);
+      } else {
+        expect(Math.abs(lightH - H), name + " keeps hue within clipping").toBeLessThan(15);
+      }
+      expect(
+        contrastRatio(light.colors[name].hex, light.colors.bg.hex),
+        name + " clears its floor",
+      ).toBeGreaterThanOrEqual(override?.floor ?? 4.5);
     }
   });
 
@@ -131,12 +150,12 @@ describe("neutral collapse: derivation", () => {
     }
   });
 
-  test("the swatch sheet has one row per light colour: fifteen", () => {
+  test("the swatch sheet has one row per light colour: fourteen", () => {
     const rows = renderSwatchSheet(dark).match(/<tr data-swatch=/g) ?? [];
-    expect(rows.length).toBe(15);
+    expect(rows.length).toBe(14);
   });
 
-  test("the swatch sheet lists the six neutrals lightest first, then the nine accents", () => {
+  test("the swatch sheet lists the six neutrals lightest first, then the eight accents", () => {
     const names = [...renderSwatchSheet(dark).matchAll(/<tr data-swatch="([a-zA-Z]+)"/g)].map(
       (m) => m[1],
     );

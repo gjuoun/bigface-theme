@@ -38,9 +38,9 @@ describe("scheme tokens match original XML", () => {
     const p = await loadPalette();
     const entries = [...Object.entries(p.colors), ...Object.entries(p.ansi)];
     const sourced = entries.filter(([, c]) => c.source.startsWith("jetbrains:"));
-    // The dark seeds are the background and the nine accents. The canvas and the anchor are the scheme caret (seeds.ts).
+    // The dark seeds are the background and the eight accents. The canvas and the anchor are the scheme caret (seeds.ts).
     // yellow is the scheme's operator colour now (brightYellow, renamed); the scheme's string yellow is gone.
-    expect(sourced.length).toBe(10);
+    expect(sourced.length).toBe(9);
     const mismatches = sourced
       .map(([name, c]) => ({ name, want: lookupSource(xml, c.source), got: c.hex, src: c.source }))
       .filter((r) => r.want !== r.got);
@@ -139,7 +139,6 @@ const ACCENTS = [
   "paleBlue",
   "cyan",
   "green",
-  "lime",
   "yellow",
   "burntOrange",
   "purple",
@@ -148,7 +147,7 @@ const NEUTRALS = ["bg", "panel", "fg", "fgDim", "border", "highlight"] as const;
 const DERIVED = ["panel", "fg", "fgDim", "border", "highlight"] as const;
 
 describe("neutral collapse: the role set", () => {
-  test("REQUIRED_COLORS is exactly the six neutrals and the nine accents", async () => {
+  test("REQUIRED_COLORS is exactly the six neutrals and the eight accents", async () => {
     const { REQUIRED_COLORS } = await import("./palette.ts");
     expect([...REQUIRED_COLORS].sort()).toEqual([...NEUTRALS, ...ACCENTS].sort());
   });

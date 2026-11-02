@@ -46,10 +46,6 @@
       "hex": "#00c853",
       "source": "jetbrains:DEFAULT_IDENTIFIER#FOREGROUND"
     },
-    "lime": {
-      "hex": "#c6ff00",
-      "source": "jetbrains:DEFAULT_FUNCTION_CALL#FOREGROUND"
-    },
     "yellow": {
       "hex": "#ffeb3b",
       "source": "jetbrains:DEFAULT_OPERATION_SIGN#FOREGROUND"
@@ -105,8 +101,8 @@
       "source": "alias:burntOrange"
     },
     "brightGreen": {
-      "hex": "#c6ff00",
-      "source": "alias:lime"
+      "hex": "#00c853",
+      "source": "alias:green"
     },
     "brightYellow": {
       "hex": "#ffeb3b",
@@ -132,14 +128,14 @@
   "syntax": {
     "comment": "fgDim",
     "keyword": "blue",
-    "function": "lime",
+    "function": "fg",
     "variable": "green",
     "string": "yellow",
     "number": "burntOrange",
     "type": "cyan",
-    "operator": "yellow",
+    "operator": "fg",
     "punctuation": "fg",
-    "constant": "purple",
+    "constant": "paleBlue",
     "tag": "lightBlue",
     "parameter": "paleBlue"
   }
