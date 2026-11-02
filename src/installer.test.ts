@@ -335,7 +335,6 @@ describe("uninstall", () => {
     expect(await tree(vault)).toEqual(["note.md"]);
     expect(await readdir(join(vault, ".obsidian/themes"))).toEqual([]);
   });
-
 });
 
 describe("interactive menu", () => {

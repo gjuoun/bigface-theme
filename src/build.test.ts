@@ -5,20 +5,9 @@ import { join, relative } from "node:path";
 import { buildThemes } from "./build.ts";
 import { targets } from "./targets.ts";
 
-const EXPECTED = [
-  "pi",
-  "ghostty",
-  "vscode",
-  "zed",
-  "jetbrains",
-  "obsidian",
-];
+const EXPECTED = ["pi", "ghostty", "vscode", "zed", "jetbrains", "obsidian"];
 /** These formats take 6-digit colours only; the others (VS Code, Zed, Obsidian) use alpha on purpose. */
-const NO_ALPHA = new Set([
-  "pi",
-  "ghostty",
-  "jetbrains",
-]);
+const NO_ALPHA = new Set(["pi", "ghostty", "jetbrains"]);
 
 async function walk(root: string, dir = root): Promise<string[]> {
   const out: string[] = [];

@@ -7,11 +7,4 @@ import { vscode } from "./generators/vscode.ts";
 import { zed } from "./generators/zed.ts";
 
 /** Every target, in display order. Add new generators here. */
-export const targets: Target[] = [
-  pi,
-  ghostty,
-  vscode,
-  zed,
-  jetbrains,
-  obsidian,
-];
+export const targets: Target[] = [pi, ghostty, vscode, zed, jetbrains, obsidian];
