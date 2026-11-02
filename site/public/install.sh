@@ -20,7 +20,7 @@ BASE="${BIGFACE_BASE:-https://bigface.qqntt.com}"
 DRY="${BIGFACE_DRY_RUN:-}"
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
 TTY="${BIGFACE_TTY:-/dev/tty}"
-IDS="pi ghostty herdr vscode zed jetbrains obsidian"
+IDS="pi ghostty vscode zed jetbrains obsidian"
 ALL="pi ghostty vscode zed"
 MODE="install"
 
@@ -33,7 +33,6 @@ blurb() {
   case "$1" in
     pi) echo 'installs the theme file' ;;
     ghostty) echo 'installs the theme file' ;;
-    herdr) echo 'downloads the file and prints the steps' ;;
     vscode) echo 'installs the extension into code and cursor' ;;
     zed) echo 'installs the theme file' ;;
     jetbrains) echo 'downloads the file and prints the steps' ;;
@@ -117,7 +116,6 @@ is_installed() {
   case "$1" in
     pi) [ -e "$HOME/.pi/agent/themes/bigface.json" ] ;;
     ghostty) [ -e "$CFG/ghostty/themes/Bigface" ] ;;
-    herdr) [ -e "$CFG/bigface/herdr/theme.toml" ] ;;
     vscode) for editor in code cursor; do
         if command -v "$editor" >/dev/null 2>&1; then
           case "$("$editor" --list-extensions 2>/dev/null)" in *gjuoun.bigface-theme*) return 0 ;; esac
@@ -139,11 +137,6 @@ install_pi() {
 install_ghostty() {
   put 'themes/ghostty/Bigface' "$CFG/ghostty/themes/Bigface" || return 1
   note "Add \`theme = Bigface\` to $CFG/ghostty/config and reload."
-}
-
-install_herdr() {
-  put 'themes/herdr/theme.toml' "$CFG/bigface/herdr/theme.toml" || return 1
-  note "herdr has no theme-file format: paste that file into $CFG/herdr/config.toml under your [theme] table, then run \`herdr config check\`."
 }
 
 install_vscode() {
@@ -193,13 +186,6 @@ uninstall_pi() {
 uninstall_ghostty() {
   remove "$CFG/ghostty/themes/Bigface"
   note "Remove \`theme = Bigface\` from $CFG/ghostty/config."
-}
-
-uninstall_herdr() {
-  remove "$CFG/bigface/herdr/theme.toml"
-  drop_dir "$CFG/bigface/herdr"
-  drop_dir "$CFG/bigface"
-  note "Remove the [theme.custom] block you pasted from $CFG/herdr/config.toml."
 }
 
 uninstall_vscode() {

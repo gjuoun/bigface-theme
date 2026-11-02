@@ -205,8 +205,8 @@ test("the site only ships colours that exist in the palette", () => {
   const htmlFiles = readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
     f.endsWith("index.html"),
   );
-  // home + palette + ui + one page per target (7 after the 2026-11-01 target retirement).
-  expect(htmlFiles.length).toBeGreaterThanOrEqual(10);
+  // home + palette + ui + one page per target (6 after herdr retired on 2026-11-02).
+  expect(htmlFiles.length).toBeGreaterThanOrEqual(9);
   const offenders: string[] = [];
   for (const f of htmlFiles)
     for (const bad of findForeignInHtml(readFileSync(join(dist, f), "utf8"), known))

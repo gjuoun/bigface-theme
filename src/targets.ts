@@ -1,5 +1,4 @@
 import { ghostty } from "./generators/ghostty.ts";
-import { herdr } from "./generators/herdr.ts";
 import { jetbrains } from "./generators/jetbrains.ts";
 import { obsidian } from "./generators/obsidian.ts";
 import { pi } from "./generators/pi.ts";
@@ -11,7 +10,6 @@ import { zed } from "./generators/zed.ts";
 export const targets: Target[] = [
   pi,
   ghostty,
-  herdr,
   vscode,
   zed,
   jetbrains,

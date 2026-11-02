@@ -120,7 +120,6 @@ describe("running the script", () => {
     ["pi", ".pi/agent/themes/bigface.json", "bigface.json"],
     ["ghostty", ".config/ghostty/themes/Bigface", "Bigface"],
     ["zed", ".config/zed/themes/bigface.json", "themes/bigface.json"],
-    ["herdr", ".config/bigface/herdr/theme.toml", "theme.toml"],
     ["jetbrains", ".config/bigface/jetbrains/Bigface.xml", "Bigface.xml"],
   ];
   for (const [id, rel, remote] of placed) {
@@ -239,10 +238,10 @@ describe("running the script", () => {
   });
 
   test("uninstall leaves unrelated files alone and removes only the empty dirs it created", async () => {
-    const r = await run(["herdr", "ghostty"]);
+    const r = await run(["jetbrains", "ghostty"]);
     const other = join(r.home, ".config/ghostty/themes/Other");
     await writeFile(other, "mine");
-    const un = await $`sh ${script} --uninstall herdr ghostty`
+    const un = await $`sh ${script} --uninstall jetbrains ghostty`
       .env({ HOME: r.home, PATH: basic, BIGFACE_BASE: `file://${site}` })
       .quiet()
       .nothrow();
@@ -263,9 +262,9 @@ describe("uninstall", () => {
   });
 
   test("install then uninstall every file-based app leaves the home empty", async () => {
-    const ids = ["pi", "ghostty", "zed", "herdr", "jetbrains"];
+    const ids = ["pi", "ghostty", "zed", "jetbrains"];
     const r = await run(ids);
-    expect((await tree(r.home)).length).toBe(5);
+    expect((await tree(r.home)).length).toBe(4);
     const un = await $`sh ${script} --uninstall ${ids}`.env(homeEnv(r.home)).quiet().nothrow();
     expect(un.exitCode, un.stderr.toString()).toBe(0);
     expect(un.stdout.toString()).toContain("removed ~/");
@@ -368,9 +367,8 @@ describe("interactive menu", () => {
       .quiet()
       .nothrow();
     const out = r.stdout.toString();
-    expect(out).toMatch(/5\) zed\s+installed/);
+    expect(out).toMatch(/4\) zed\s+installed/);
     expect(out).toMatch(/2\) ghostty\s+detected/);
-    expect(out).toMatch(/3\) herdr\s{2,}downloads/);
   });
 
   test("uninstall: choose 2, pick an app, confirm, file is gone", async () => {

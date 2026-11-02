@@ -56,14 +56,6 @@ export const installSpecs: InstallSpec[] = [
     undo: "Remove `theme = Bigface` from $CFG/ghostty/config.",
   },
   {
-    id: "herdr",
-    kind: "manual",
-    files: [["theme.toml", "$CFG/bigface/herdr/theme.toml"]],
-    note: "herdr has no theme-file format: paste that file into $CFG/herdr/config.toml under your [theme] table, then run `herdr config check`.",
-    undo: "Remove the [theme.custom] block you pasted from $CFG/herdr/config.toml.",
-    owned: ["$CFG/bigface/herdr", "$CFG/bigface"],
-  },
-  {
     id: "vscode",
     kind: "vsix",
     detect: "command -v code >/dev/null 2>&1 || command -v cursor >/dev/null 2>&1",

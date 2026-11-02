@@ -63,7 +63,7 @@ curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --list
 The installer writes (and on uninstall removes) Bigface's own files only, for example
 `~/.config/ghostty/themes/Bigface`. It never edits your config: it prints the one line you still need to add
 or remove. Add `--dry-run` to see what it would do, or read the script first: it is generated from
-[`src/installer.ts`](src/installer.ts). Apps with no drop-in location (herdr, starship, JetBrains) are
+[`src/installer.ts`](src/installer.ts). Apps with no drop-in location (JetBrains, Obsidian) are
 downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs `BIGFACE_VAULT=/path/to/vault`
 (the interactive mode asks for it). Slack writes nothing to disk.
 
@@ -73,17 +73,10 @@ downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs 
 |---|---|---|
 | pi | `themes/pi/bigface.json` | pi's theme loader |
 | Ghostty | `themes/ghostty/Bigface` | `ghostty +validate-config` |
-| herdr | `themes/herdr/theme.toml` | `herdr config check` |
 | VS Code / Cursor | `themes/vscode/` | `vsce package` + `code --install-extension` |
 | Zed | `themes/zed/` | Zed's published JSON schema |
 | JetBrains | `themes/jetbrains/Bigface.xml` | identical to the original scheme |
-| zellij | `themes/zellij/bigface.kdl` | `zellij setup --check` |
-| starship | `themes/starship/palette.toml` | `starship print-config` |
-| Vim / Neovim | `themes/vim/colors/bigface.vim` | vim loads it, `hi Normal` |
-| Xcode | `themes/xcode/Bigface.xccolortheme` | `plutil -lint` + Xcode's own key set |
-| micro | `themes/micro/bigface.micro` | format test only |
 | Obsidian | `themes/obsidian/Bigface/` | format test only |
-| Slack | `themes/slack/theme.txt` | format test only |
 
 The site's app pages say exactly how far each theme was checked. "Format test only" means the file
 matches the tool's documented format; it was not opened in the app.

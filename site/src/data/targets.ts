@@ -76,28 +76,6 @@ export const targets: Target[] = [
     },
   },
   {
-    id: "herdr",
-    name: "herdr",
-    kind: "Terminal",
-    tagline: "A `[theme.custom]` block layered on a base theme.",
-    files: [{ path: "theme.toml", label: "theme.toml" }],
-    steps: [
-      "herdr has no theme-file format, so paste the contents of `theme.toml` into `~/.config/herdr/config.toml`, below your `[theme]` table.",
-      "Run `herdr config check`, then `herdr server reload-config`.",
-    ],
-    check: {
-      level: "tool",
-      text: "`herdr config check` reports `config: ok` with a base theme plus this block. It does not validate colour values.",
-    },
-    terminalPreview: true,
-    screenshot: {
-      file: "img/apps/herdr.png",
-      alt: "herdr with the Bigface theme: the spaces sidebar, the active space row, the tab strip and the pane border all in the palette's colours.",
-      width: 1100,
-      height: 330,
-    },
-  },
-  {
     id: "vscode",
     name: "VS Code / Cursor",
     kind: "Editor",

@@ -8,7 +8,6 @@ import { targets } from "./targets.ts";
 const EXPECTED = [
   "pi",
   "ghostty",
-  "herdr",
   "vscode",
   "zed",
   "jetbrains",
@@ -18,7 +17,6 @@ const EXPECTED = [
 const NO_ALPHA = new Set([
   "pi",
   "ghostty",
-  "herdr",
   "jetbrains",
 ]);
 
