@@ -16,7 +16,7 @@ export const bgButtonVariants = cva("", {
       ghost:
         "h-auto rounded-full border-bf-highlight bg-bf-border/6 px-[1.15rem] py-[0.7rem] text-[0.94rem] font-semibold text-foreground no-underline hover:border-bf-blue hover:bg-bf-blue/8 hover:text-bf-blue",
       // the small mono "copy" pill
-      copy: "h-auto cursor-pointer gap-1.5 rounded-full border-bf-highlight bg-bf-border/8 px-[0.6rem] py-[0.35rem] font-code text-[0.72rem] font-normal tracking-[0.04em] text-bf-fg-muted hover:border-bf-blue hover:bg-bf-blue/12 hover:text-foreground [&.done]:border-bf-lime [&.done]:text-bf-lime",
+      copy: "h-auto cursor-pointer gap-1.5 rounded-full border-bf-highlight bg-bf-border/8 px-[0.6rem] py-[0.35rem] font-code text-[0.72rem] font-normal tracking-[0.04em] text-bf-fg-muted hover:border-bf-blue hover:bg-bf-blue/12 hover:text-foreground [&.done]:border-bf-green [&.done]:text-bf-green",
       // header link with a hairline: the GitHub call to action
       nav: "h-auto rounded-full border-bf-highlight bg-transparent px-3 py-[0.4rem] text-[0.9rem] font-normal text-foreground no-underline hover:border-bf-blue hover:bg-transparent hover:text-bf-blue",
       // filter / chip that fills when aria-pressed

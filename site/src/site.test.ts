@@ -147,7 +147,6 @@ test("every swatch prints an ink that actually contrasts on it", () => {
     "paleBlue",
     "cyan",
     "green",
-    "lime",
     "yellow",
     "burntOrange",
     "purple",
@@ -206,7 +205,8 @@ test("the site only ships colours that exist in the palette", () => {
   const htmlFiles = readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
     f.endsWith("index.html"),
   );
-  expect(htmlFiles.length).toBeGreaterThanOrEqual(16);
+  // home + palette + ui + one page per target (7 after the 2026-11-01 target retirement).
+  expect(htmlFiles.length).toBeGreaterThanOrEqual(10);
   const offenders: string[] = [];
   for (const f of htmlFiles)
     for (const bad of findForeignInHtml(readFileSync(join(dist, f), "utf8"), known))

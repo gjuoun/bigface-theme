@@ -119,7 +119,7 @@ export const targets: Target[] = [
     terminalPreview: false,
     screenshot: {
       file: "img/apps/vscode.png",
-      alt: "VS Code with Bigface: blue keywords, lime function names and yellow strings on the theme's green-grey background, with a small TypeScript project in the explorer.",
+      alt: "VS Code with Bigface: blue keywords, cream function names and yellow strings on the theme's green-grey background, with a small TypeScript project in the explorer.",
       width: 758,
       height: 303,
     },
@@ -142,7 +142,7 @@ export const targets: Target[] = [
     terminalPreview: false,
     screenshot: {
       file: "img/apps/zed.png",
-      alt: "Zed with the Bigface theme: blue keywords, lime function calls, purple constants such as ENDPOINT, yellow strings and cyan types, with the project panel on the right.",
+      alt: "Zed with the Bigface theme: blue keywords, cream function calls, pale blue constants such as ENDPOINT, yellow strings and cyan types, with the project panel on the right.",
       width: 1100,
       height: 424,
     },
@@ -169,120 +169,9 @@ export const targets: Target[] = [
     },
     screenshot: {
       file: "img/apps/jetbrains.png",
-      alt: "IntelliJ IDEA using the Bigface .icls scheme: blue keywords, lime function calls, yellow strings, cyan types on the theme's green-grey background.",
+      alt: "IntelliJ IDEA using the Bigface .icls scheme: blue keywords, cream function calls, yellow strings, cyan types on the theme's green-grey background.",
       width: 758,
       height: 264,
-    },
-  },
-  {
-    id: "zellij",
-    name: "zellij",
-    kind: "Terminal",
-    tagline: "A theme block for the zellij terminal workspace.",
-    files: [{ path: "bigface.kdl", label: "bigface.kdl" }],
-    steps: [
-      "Copy `bigface.kdl` to `~/.config/zellij/themes/`.",
-      'Set `theme "bigface"` in `~/.config/zellij/config.kdl`.',
-    ],
-    check: {
-      level: "tool",
-      text: "`zellij setup --check` reports the config is well defined; a non-hex colour is rejected.",
-    },
-    terminalPreview: true,
-    screenshot: {
-      file: "img/apps/zellij.png",
-      alt: "zellij styled by Bigface: the mode indicator, tab, session name and key hints in the theme's status bar colours.",
-      width: 1100,
-      height: 420,
-    },
-  },
-  {
-    id: "starship",
-    name: "starship",
-    kind: "Shell",
-    tagline: "A starship palette that recolours the standard colour names.",
-    files: [{ path: "palette.toml", label: "palette.toml" }],
-    steps: [
-      "Paste `palette.toml` at the top of `~/.config/starship.toml` (the `palette` line must come before any table).",
-      "Open a new prompt. Modules that use `green`, `cyan`, … now render in Bigface colours.",
-    ],
-    check: {
-      level: "tool",
-      text: "`starship print-config` reads it, and a `green` style renders as the palette's green.",
-    },
-    terminalPreview: true,
-    screenshot: {
-      file: "img/apps/starship.png",
-      alt: "The starship prompt drawing the Bigface palette through ANSI colour names: cyan directory, purple branch, yellow status and a lime prompt character over a git log.",
-      width: 496,
-      height: 221,
-    },
-  },
-  {
-    id: "vim",
-    name: "Vim / Neovim",
-    kind: "Editor",
-    tagline: "A single `colors/bigface.vim` file, with terminal ANSI colours.",
-    files: [{ path: "colors/bigface.vim", label: "bigface.vim" }],
-    steps: [
-      "Copy it to `~/.vim/colors/bigface.vim` (Neovim: `~/.config/nvim/colors/`).",
-      "Run `:colorscheme bigface`. It sets `termguicolors` when available.",
-    ],
-    check: {
-      level: "tool",
-      text: "vim loads it headless and `hi Normal` reports the palette's foreground and background.",
-    },
-    terminalPreview: false,
-    screenshot: {
-      file: "img/apps/vim.png",
-      alt: "Vim with the Bigface colorscheme inside Ghostty: line-numbered TypeScript in the theme's keyword and string colours.",
-      width: 1100,
-      height: 330,
-    },
-  },
-  {
-    id: "xcode",
-    name: "Xcode",
-    kind: "IDE",
-    tagline: "A source-editor and console theme.",
-    files: [{ path: "Bigface.xccolortheme", label: "Bigface.xccolortheme" }],
-    steps: [
-      "Run `mkdir -p ~/Library/Developer/Xcode/UserData/FontAndColorThemes`.",
-      "Copy `Bigface.xccolortheme` into it and restart Xcode.",
-      "Open *Xcode → Settings → Themes* and choose **Bigface**.",
-    ],
-    check: {
-      level: "tool",
-      text: "`plutil -lint` passes and every key in Xcode's own *Default (Dark)* theme is present. Not opened in Xcode.",
-    },
-    terminalPreview: false,
-    screenshot: {
-      file: "img/apps/xcode.png",
-      alt: "Xcode using the Bigface .xccolortheme: Swift keywords in blue, strings in yellow, types in cyan on the theme's green-grey background.",
-      width: 816,
-      height: 613,
-    },
-  },
-  {
-    id: "micro",
-    name: "micro",
-    kind: "Editor",
-    tagline: "A colour scheme for the micro terminal editor.",
-    files: [{ path: "bigface.micro", label: "bigface.micro" }],
-    steps: [
-      "Copy `bigface.micro` to `~/.config/micro/colorschemes/`.",
-      "In micro press `ctrl-e` and run `set colorscheme bigface`. Needs a truecolor terminal (`COLORTERM=truecolor`).",
-    ],
-    check: {
-      level: "format",
-      text: "Format-checked against micro's documented syntax. micro is not installed here, so it was not run.",
-    },
-    terminalPreview: false,
-    screenshot: {
-      file: "img/apps/micro.png",
-      alt: "micro with the Bigface colorscheme: line-numbered TypeScript in the theme's colours and micro's own status bar, cursor on the last line.",
-      width: 1100,
-      height: 390,
     },
   },
   {
@@ -305,26 +194,10 @@ export const targets: Target[] = [
     terminalPreview: false,
     screenshot: {
       file: "img/obsidian-preview.png",
-      alt: "Obsidian in reading view with Bigface: lime headings, orange list markers, a purple blockquote, a table, info and warning callouts and a highlighted code block on a dark green-gray background.",
+      alt: "Obsidian in reading view with Bigface: cream headings, orange list markers, a purple blockquote, a table, info and warning callouts and a highlighted code block on a dark green-gray background.",
       width: 1514,
       height: 1362,
     },
-  },
-  {
-    id: "slack",
-    name: "Slack",
-    kind: "Chat",
-    tagline: "A sidebar colour string (the legacy 8-colour format).",
-    files: [{ path: "theme.txt", label: "theme.txt" }],
-    steps: [
-      "Open *Preferences → Appearance → Custom theme → Import theme*.",
-      "Paste the contents of `theme.txt` and apply.",
-    ],
-    check: {
-      level: "format",
-      text: "Eight `#rrggbb` values in the documented order. Slack's current import of this legacy string was not tried.",
-    },
-    terminalPreview: false,
   },
 ];
 

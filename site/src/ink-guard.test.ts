@@ -3,7 +3,7 @@ import { findInklessBrightPlates, splitVariant } from "./ink-guard.ts";
 
 test("a bright fill with the page's cream ink is flagged", () => {
   expect(
-    findInklessBrightPlates('<button class="bg-bf-lime text-foreground">x</button>'),
+    findInklessBrightPlates('<button class="bg-bf-yellow text-foreground">x</button>'),
   ).toHaveLength(1);
 });
 
@@ -56,7 +56,7 @@ test("translucent tints and paired fills are not flagged", () => {
   expect(findInklessBrightPlates('<i class="bg-bf-blue/20 text-foreground"></i>')).toEqual([]);
   expect(findInklessBrightPlates('<b class="bg-primary text-primary-foreground"></b>')).toEqual([]);
   expect(
-    findInklessBrightPlates('<b class="bg-bf-lime text-ink-on-bright hover:bg-bf-lime"></b>'),
+    findInklessBrightPlates('<b class="bg-bf-yellow text-ink-on-bright hover:bg-bf-yellow"></b>'),
   ).toEqual([]);
 });
 

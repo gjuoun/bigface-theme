@@ -11,7 +11,6 @@ export const bgTextClass: Record<string, string> = {
   paleBlue: "text-bf-pale-blue",
   cyan: "text-bf-cyan",
   green: "text-bf-green",
-  lime: "text-bf-lime",
   yellow: "text-bf-yellow",
   burntOrange: "text-bf-burnt-orange",
   purple: "text-bf-purple",
