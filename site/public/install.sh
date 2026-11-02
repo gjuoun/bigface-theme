@@ -2,7 +2,7 @@
 # Bigface installer — https://github.com/gjuoun/bigface-theme
 #
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh                          # interactive: asks what to install or remove
-#   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty vim       # install named apps
+#   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- pi zed           # install named apps
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- all                # every drop-in app it detects
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --uninstall all    # remove what it installed
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --list
@@ -20,8 +20,8 @@ BASE="${BIGFACE_BASE:-https://bigface.qqntt.com}"
 DRY="${BIGFACE_DRY_RUN:-}"
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
 TTY="${BIGFACE_TTY:-/dev/tty}"
-IDS="pi ghostty herdr vscode zed jetbrains zellij starship vim xcode micro obsidian slack"
-ALL="pi ghostty vscode zed zellij vim xcode micro"
+IDS="pi vscode zed jetbrains obsidian"
+ALL="pi vscode zed"
 MODE="install"
 
 usage() {
@@ -32,18 +32,10 @@ usage() {
 blurb() {
   case "$1" in
     pi) echo 'installs the theme file' ;;
-    ghostty) echo 'installs the theme file' ;;
-    herdr) echo 'downloads the file and prints the steps' ;;
     vscode) echo 'installs the extension into code and cursor' ;;
     zed) echo 'installs the theme file' ;;
     jetbrains) echo 'downloads the file and prints the steps' ;;
-    zellij) echo 'installs the theme file' ;;
-    starship) echo 'downloads the file and prints the steps' ;;
-    vim) echo 'installs the theme file' ;;
-    xcode) echo 'installs the theme file' ;;
-    micro) echo 'installs the theme file' ;;
     obsidian) echo 'needs BIGFACE_VAULT=/path/to/vault' ;;
-    slack) echo 'prints the theme string' ;;
   esac
 }
 
@@ -111,13 +103,8 @@ note() { echo "  -> $(tilde "$1")"; }
 detected() {
   case "$1" in
     pi) command -v pi >/dev/null 2>&1 || [ -d "$HOME/.pi/agent" ] ;;
-    ghostty) [ -d "${BIGFACE_APPS:-/Applications}"/Ghostty.app ] || command -v ghostty >/dev/null 2>&1 || [ -d "$CFG/ghostty" ] ;;
     vscode) command -v code >/dev/null 2>&1 || command -v cursor >/dev/null 2>&1 ;;
     zed) [ -d "${BIGFACE_APPS:-/Applications}"/Zed.app ] || command -v zed >/dev/null 2>&1 || [ -d "$CFG/zed" ] ;;
-    zellij) command -v zellij >/dev/null 2>&1 || [ -d "$CFG/zellij" ] ;;
-    vim) command -v vim >/dev/null 2>&1 || command -v nvim >/dev/null 2>&1 ;;
-    xcode) [ -d "${BIGFACE_APPS:-/Applications}"/Xcode.app ] ;;
-    micro) command -v micro >/dev/null 2>&1 || [ -d "$CFG/micro" ] ;;
     *) return 1 ;;
   esac
 }
@@ -126,8 +113,6 @@ detected() {
 is_installed() {
   case "$1" in
     pi) [ -e "$HOME/.pi/agent/themes/bigface.json" ] ;;
-    ghostty) [ -e "$CFG/ghostty/themes/Bigface" ] ;;
-    herdr) [ -e "$CFG/bigface/herdr/theme.toml" ] ;;
     vscode) for editor in code cursor; do
         if command -v "$editor" >/dev/null 2>&1; then
           case "$("$editor" --list-extensions 2>/dev/null)" in *gjuoun.bigface-theme*) return 0 ;; esac
@@ -136,13 +121,7 @@ is_installed() {
       return 1 ;;
     zed) [ -e "$CFG/zed/themes/bigface.json" ] ;;
     jetbrains) [ -e "$CFG/bigface/jetbrains/Bigface.xml" ] ;;
-    zellij) [ -e "$CFG/zellij/themes/bigface.kdl" ] ;;
-    starship) [ -e "$CFG/bigface/starship/palette.toml" ] ;;
-    vim) [ -e "$HOME/.vim/colors/bigface.vim" ] || [ -e "$CFG/nvim/colors/bigface.vim" ] ;;
-    xcode) [ -e "$HOME/Library/Developer/Xcode/UserData/FontAndColorThemes/Bigface.xccolortheme" ] ;;
-    micro) [ -e "$CFG/micro/colorschemes/bigface.micro" ] ;;
     obsidian) [ -n "${BIGFACE_VAULT:-}" ] && [ -e "$BIGFACE_VAULT/.obsidian/themes/Bigface/theme.css" ] && [ -e "$BIGFACE_VAULT/.obsidian/themes/Bigface/manifest.json" ] ;;
-    slack) return 1 ;;
     *) return 1 ;;
   esac
 }
@@ -150,16 +129,6 @@ is_installed() {
 install_pi() {
   put 'themes/pi/bigface.json' "$HOME/.pi/agent/themes/bigface.json" || return 1
   note "Run \`pi --use-theme bigface\`, or pick it under /settings -> Theme."
-}
-
-install_ghostty() {
-  put 'themes/ghostty/Bigface' "$CFG/ghostty/themes/Bigface" || return 1
-  note "Add \`theme = Bigface\` to $CFG/ghostty/config and reload."
-}
-
-install_herdr() {
-  put 'themes/herdr/theme.toml' "$CFG/bigface/herdr/theme.toml" || return 1
-  note "herdr has no theme-file format: paste that file into $CFG/herdr/config.toml under your [theme] table, then run \`herdr config check\`."
 }
 
 install_vscode() {
@@ -194,32 +163,6 @@ install_jetbrains() {
   note "In your IDE: Settings -> Editor -> Color Scheme -> gear icon -> Import Scheme..., then choose that file."
 }
 
-install_zellij() {
-  put 'themes/zellij/bigface.kdl' "$CFG/zellij/themes/bigface.kdl" || return 1
-  note "Set \`theme \"bigface\"\` in $CFG/zellij/config.kdl."
-}
-
-install_starship() {
-  put 'themes/starship/palette.toml' "$CFG/bigface/starship/palette.toml" || return 1
-  note "Paste that file at the top of $CFG/starship.toml (the \`palette\` line must come before any table)."
-}
-
-install_vim() {
-  put 'themes/vim/colors/bigface.vim' "$HOME/.vim/colors/bigface.vim" || return 1
-  put 'themes/vim/colors/bigface.vim' "$CFG/nvim/colors/bigface.vim" || return 1
-  note "Run \`:colorscheme bigface\`."
-}
-
-install_xcode() {
-  put 'themes/xcode/Bigface.xccolortheme' "$HOME/Library/Developer/Xcode/UserData/FontAndColorThemes/Bigface.xccolortheme" || return 1
-  note "Restart Xcode, then choose Bigface in Settings -> Themes."
-}
-
-install_micro() {
-  put 'themes/micro/bigface.micro' "$CFG/micro/colorschemes/bigface.micro" || return 1
-  note "In micro press ctrl-e and run \`set colorscheme bigface\` (needs COLORTERM=truecolor)."
-}
-
 install_obsidian() {
   need_vault || return 1
   put 'themes/obsidian/Bigface/theme.css' "$BIGFACE_VAULT/.obsidian/themes/Bigface/theme.css" || return 1
@@ -227,28 +170,9 @@ install_obsidian() {
   note "Select Bigface under Settings -> Appearance -> Themes. Needs BIGFACE_VAULT=/path/to/vault."
 }
 
-install_slack() {
-  if [ -n "$DRY" ]; then echo "  would print slack theme"; else
-    echo "  $(get 'themes/slack/theme.txt' -)"
-  fi
-  note "Paste it in Preferences -> Appearance -> Custom theme -> Import theme."
-}
-
 uninstall_pi() {
   remove "$HOME/.pi/agent/themes/bigface.json"
   note "If Bigface is your selected theme, pick another under /settings -> Theme."
-}
-
-uninstall_ghostty() {
-  remove "$CFG/ghostty/themes/Bigface"
-  note "Remove \`theme = Bigface\` from $CFG/ghostty/config."
-}
-
-uninstall_herdr() {
-  remove "$CFG/bigface/herdr/theme.toml"
-  drop_dir "$CFG/bigface/herdr"
-  drop_dir "$CFG/bigface"
-  note "Remove the [theme.custom] block you pasted from $CFG/herdr/config.toml."
 }
 
 uninstall_vscode() {
@@ -277,44 +201,12 @@ uninstall_jetbrains() {
   note "The scheme you imported lives inside the IDE: Settings -> Editor -> Color Scheme, pick another, then delete Bigface from the gear menu."
 }
 
-uninstall_zellij() {
-  remove "$CFG/zellij/themes/bigface.kdl"
-  note "Remove \`theme \"bigface\"\` from $CFG/zellij/config.kdl."
-}
-
-uninstall_starship() {
-  remove "$CFG/bigface/starship/palette.toml"
-  drop_dir "$CFG/bigface/starship"
-  drop_dir "$CFG/bigface"
-  note "Remove the \`palette = bigface\` line and the [palettes.bigface] table from $CFG/starship.toml."
-}
-
-uninstall_vim() {
-  remove "$HOME/.vim/colors/bigface.vim"
-  remove "$CFG/nvim/colors/bigface.vim"
-  note "Remove any \`colorscheme bigface\` line from your vimrc."
-}
-
-uninstall_xcode() {
-  remove "$HOME/Library/Developer/Xcode/UserData/FontAndColorThemes/Bigface.xccolortheme"
-  note "If Bigface is your selected theme, pick another in Xcode -> Settings -> Themes."
-}
-
-uninstall_micro() {
-  remove "$CFG/micro/colorschemes/bigface.micro"
-  note "In micro run \`set colorscheme default\` (or your usual scheme)."
-}
-
 uninstall_obsidian() {
   need_vault || return 1
   remove "$BIGFACE_VAULT/.obsidian/themes/Bigface/theme.css"
   remove "$BIGFACE_VAULT/.obsidian/themes/Bigface/manifest.json"
   drop_dir "$BIGFACE_VAULT/.obsidian/themes/Bigface"
   note "Select another theme under Settings -> Appearance -> Themes."
-}
-
-uninstall_slack() {
-  note "Nothing was written to disk. In Slack: Preferences -> Appearance -> pick another theme."
 }
 
 valid() { case " $IDS " in *" $1 "*) return 0 ;; esac; return 1; }

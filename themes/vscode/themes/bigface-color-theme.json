@@ -10,7 +10,7 @@
     "descriptionForeground": "#8c8f89",
     "errorForeground": "#fc5d23",
     "textLink.foreground": "#00b0ff",
-    "textLink.activeForeground": "#c6ff00",
+    "textLink.activeForeground": "#00b0ff",
     "textCodeBlock.background": "#3c403c",
     "icon.foreground": "#8c8f89",
     "editor.background": "#252925",
@@ -60,7 +60,7 @@
     "list.activeSelectionForeground": "#e8e9e1",
     "list.inactiveSelectionBackground": "#4b4e49",
     "list.hoverBackground": "#4b4e49",
-    "list.highlightForeground": "#c6ff00",
+    "list.highlightForeground": "#00b0ff",
     "list.focusBackground": "#4b4e49",
     "tab.activeBackground": "#252925",
     "tab.activeForeground": "#e8e9e1",
@@ -112,14 +112,14 @@
     "terminal.ansiBlack": "#3c403c",
     "terminal.ansiRed": "#fc5d23",
     "terminal.ansiGreen": "#00c853",
-    "terminal.ansiYellow": "#e5e500",
+    "terminal.ansiYellow": "#ffeb3b",
     "terminal.ansiBlue": "#00b0ff",
     "terminal.ansiMagenta": "#ae81ff",
     "terminal.ansiCyan": "#66d9ef",
     "terminal.ansiWhite": "#e8e9e1",
     "terminal.ansiBrightBlack": "#8c8f89",
     "terminal.ansiBrightRed": "#fc5d23",
-    "terminal.ansiBrightGreen": "#c6ff00",
+    "terminal.ansiBrightGreen": "#00c853",
     "terminal.ansiBrightYellow": "#ffeb3b",
     "terminal.ansiBrightBlue": "#40c4ff",
     "terminal.ansiBrightMagenta": "#ae81ff",
@@ -153,7 +153,7 @@
         "keyword.operator.assignment"
       ],
       "settings": {
-        "foreground": "#ffeb3b"
+        "foreground": "#e8e9e1"
       }
     },
     {
@@ -163,7 +163,7 @@
         "punctuation.definition.string"
       ],
       "settings": {
-        "foreground": "#e5e500"
+        "foreground": "#ffeb3b"
       }
     },
     {
@@ -182,7 +182,7 @@
         "support.constant"
       ],
       "settings": {
-        "foreground": "#ae81ff"
+        "foreground": "#b3e5fc"
       }
     },
     {
@@ -193,7 +193,7 @@
         "variable.function"
       ],
       "settings": {
-        "foreground": "#c6ff00"
+        "foreground": "#e8e9e1"
       }
     },
     {
@@ -267,7 +267,7 @@
         "entity.name.section"
       ],
       "settings": {
-        "foreground": "#c6ff00",
+        "foreground": "#e8e9e1",
         "fontStyle": "bold"
       }
     },
@@ -293,7 +293,7 @@
         "markup.fenced_code"
       ],
       "settings": {
-        "foreground": "#e5e500"
+        "foreground": "#ffeb3b"
       }
     },
     {

@@ -91,7 +91,7 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Bigface names: every palette colour and ANSI alias as a Tailwind colour (bg-bf-lime, …). */
+  /* Bigface names: every palette colour and ANSI alias as a Tailwind colour (bg-bf-cyan, …). */
   --color-ink-on-bright: var(--ink-on-bright);
   --color-bf-bg: var(--bf-bg);
   --color-bf-fg: var(--bf-fg);
@@ -106,9 +106,7 @@
   --color-bf-pale-blue: var(--bf-pale-blue);
   --color-bf-cyan: var(--bf-cyan);
   --color-bf-green: var(--bf-green);
-  --color-bf-lime: var(--bf-lime);
   --color-bf-yellow: var(--bf-yellow);
-  --color-bf-bright-yellow: var(--bf-bright-yellow);
   --color-bf-burnt-orange: var(--bf-burnt-orange);
   --color-bf-purple: var(--bf-purple);
   --color-bf-comment: var(--bf-comment);
@@ -150,7 +148,7 @@
   --input: var(--bf-border);
   --ring: var(--bf-blue);
   --chart-1: var(--bf-blue);
-  --chart-2: var(--bf-lime);
+  --chart-2: var(--bf-light-blue);
   --chart-3: var(--bf-yellow);
   --chart-4: var(--bf-burnt-orange);
   --chart-5: var(--bf-purple);
@@ -174,14 +172,14 @@
   }
 }
 
-/* The moving caret → pale blue → blue → lime headline ink. */
+/* The moving caret → pale blue → blue → cyan headline ink. */
 @utility bf-grad {
   background: linear-gradient(
     100deg,
     var(--bf-fg) 6%,
     var(--bf-pale-blue) 30%,
     var(--bf-blue) 55%,
-    var(--bf-lime) 96%
+    var(--bf-cyan) 96%
   );
   background-size: 220% 100%;
   -webkit-background-clip: text;
@@ -303,7 +301,7 @@
       ),
       radial-gradient(
         30vmax 24vmax at 20% 76%,
-        color-mix(in srgb, var(--bf-lime) 7%, transparent),
+        color-mix(in srgb, var(--bf-cyan) 7%, transparent),
         transparent 60%
       );
     filter: blur(8px);
@@ -386,7 +384,7 @@
   }
 
   a:hover {
-    color: var(--bf-lime);
+    color: var(--bf-light-blue);
   }
 
   code,

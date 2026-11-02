@@ -1,7 +1,7 @@
 /**
  * Renders `install.sh`, the one-curl installer served from the Pages site.
  *
- *   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty vim
+ *   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- pi zed
  *
  * The script only writes Bigface's own files. It never edits an existing config file; it prints the
  * line you need to add instead.
@@ -48,22 +48,6 @@ export const installSpecs: InstallSpec[] = [
     undo: "If Bigface is your selected theme, pick another under /settings -> Theme.",
   },
   {
-    id: "ghostty",
-    kind: "files",
-    detect: `[ -d ${APPS}/Ghostty.app ] || command -v ghostty >/dev/null 2>&1 || [ -d "$CFG/ghostty" ]`,
-    files: [["Bigface", "$CFG/ghostty/themes/Bigface"]],
-    note: "Add `theme = Bigface` to $CFG/ghostty/config and reload.",
-    undo: "Remove `theme = Bigface` from $CFG/ghostty/config.",
-  },
-  {
-    id: "herdr",
-    kind: "manual",
-    files: [["theme.toml", "$CFG/bigface/herdr/theme.toml"]],
-    note: "herdr has no theme-file format: paste that file into $CFG/herdr/config.toml under your [theme] table, then run `herdr config check`.",
-    undo: "Remove the [theme.custom] block you pasted from $CFG/herdr/config.toml.",
-    owned: ["$CFG/bigface/herdr", "$CFG/bigface"],
-  },
-  {
     id: "vscode",
     kind: "vsix",
     detect: "command -v code >/dev/null 2>&1 || command -v cursor >/dev/null 2>&1",
@@ -88,54 +72,6 @@ export const installSpecs: InstallSpec[] = [
     owned: ["$CFG/bigface/jetbrains", "$CFG/bigface"],
   },
   {
-    id: "zellij",
-    kind: "files",
-    detect: 'command -v zellij >/dev/null 2>&1 || [ -d "$CFG/zellij" ]',
-    files: [["bigface.kdl", "$CFG/zellij/themes/bigface.kdl"]],
-    note: 'Set `theme "bigface"` in $CFG/zellij/config.kdl.',
-    undo: 'Remove `theme "bigface"` from $CFG/zellij/config.kdl.',
-  },
-  {
-    id: "starship",
-    kind: "manual",
-    files: [["palette.toml", "$CFG/bigface/starship/palette.toml"]],
-    note: "Paste that file at the top of $CFG/starship.toml (the `palette` line must come before any table).",
-    undo: "Remove the `palette = bigface` line and the [palettes.bigface] table from $CFG/starship.toml.",
-    owned: ["$CFG/bigface/starship", "$CFG/bigface"],
-  },
-  {
-    id: "vim",
-    kind: "files",
-    detect: "command -v vim >/dev/null 2>&1 || command -v nvim >/dev/null 2>&1",
-    files: [
-      ["colors/bigface.vim", "$HOME/.vim/colors/bigface.vim"],
-      ["colors/bigface.vim", "$CFG/nvim/colors/bigface.vim"],
-    ],
-    note: "Run `:colorscheme bigface`.",
-    undo: "Remove any `colorscheme bigface` line from your vimrc.",
-  },
-  {
-    id: "xcode",
-    kind: "files",
-    detect: `[ -d ${APPS}/Xcode.app ]`,
-    files: [
-      [
-        "Bigface.xccolortheme",
-        "$HOME/Library/Developer/Xcode/UserData/FontAndColorThemes/Bigface.xccolortheme",
-      ],
-    ],
-    note: "Restart Xcode, then choose Bigface in Settings -> Themes.",
-    undo: "If Bigface is your selected theme, pick another in Xcode -> Settings -> Themes.",
-  },
-  {
-    id: "micro",
-    kind: "files",
-    detect: 'command -v micro >/dev/null 2>&1 || [ -d "$CFG/micro" ]',
-    files: [["bigface.micro", "$CFG/micro/colorschemes/bigface.micro"]],
-    note: "In micro press ctrl-e and run `set colorscheme bigface` (needs COLORTERM=truecolor).",
-    undo: "In micro run `set colorscheme default` (or your usual scheme).",
-  },
-  {
     id: "obsidian",
     kind: "vault",
     files: [
@@ -145,13 +81,6 @@ export const installSpecs: InstallSpec[] = [
     note: "Select Bigface under Settings -> Appearance -> Themes. Needs BIGFACE_VAULT=/path/to/vault.",
     undo: "Select another theme under Settings -> Appearance -> Themes.",
     owned: ["$BIGFACE_VAULT/.obsidian/themes/Bigface"],
-  },
-  {
-    id: "slack",
-    kind: "print",
-    files: [["theme.txt", ""]],
-    note: "Paste it in Preferences -> Appearance -> Custom theme -> Import theme.",
-    undo: "Nothing was written to disk. In Slack: Preferences -> Appearance -> pick another theme.",
   },
 ];
 
@@ -287,7 +216,7 @@ export function renderInstaller(base = SITE): string {
 # Bigface installer — https://github.com/gjuoun/bigface-theme
 #
 #   curl -fsSL ${base}/install.sh | sh                          # interactive: asks what to install or remove
-#   curl -fsSL ${base}/install.sh | sh -s -- ghostty vim       # install named apps
+#   curl -fsSL ${base}/install.sh | sh -s -- pi zed           # install named apps
 #   curl -fsSL ${base}/install.sh | sh -s -- all                # every drop-in app it detects
 #   curl -fsSL ${base}/install.sh | sh -s -- --uninstall all    # remove what it installed
 #   curl -fsSL ${base}/install.sh | sh -s -- --list

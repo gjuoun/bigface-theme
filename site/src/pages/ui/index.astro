@@ -508,14 +508,14 @@ const cellLabel = "font-code text-[0.7rem] text-bf-dim";
           )}
           {entry.name === "BGSwatchChip" && (
             <div class="group/strip flex h-24 max-w-md gap-[0.3rem]">
-              {["blue", "lime", "purple"].map((n) => (
+              {["blue", "cyan", "purple"].map((n) => (
                 <BGSwatchChip name={n} hex={palette.colors[n]?.hex ?? ""} />
               ))}
             </div>
           )}
           {entry.name === "BGSwatch" && (
             <div class="max-w-[180px]">
-              <BGSwatch name="lime" color={palette.colors.lime as { hex: string; source: string }} />
+              <BGSwatch name="cyan" color={palette.colors.cyan as { hex: string; source: string }} />
             </div>
           )}
           {entry.name === "BGMarquee" && <BGMarquee items={targets.slice(0, 6).map((t) => t.name)} />}

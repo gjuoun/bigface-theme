@@ -50,7 +50,7 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Bigface names: every palette colour and ANSI alias as a Tailwind colour (bg-bf-lime, …). */
+  /* Bigface names: every palette colour and ANSI alias as a Tailwind colour (bg-bf-cyan, …). */
   --color-ink-on-bright: var(--ink-on-bright);
   --color-bf-bg: var(--bf-bg);
   --color-bf-fg: var(--bf-fg);
@@ -65,9 +65,7 @@
   --color-bf-pale-blue: var(--bf-pale-blue);
   --color-bf-cyan: var(--bf-cyan);
   --color-bf-green: var(--bf-green);
-  --color-bf-lime: var(--bf-lime);
   --color-bf-yellow: var(--bf-yellow);
-  --color-bf-bright-yellow: var(--bf-bright-yellow);
   --color-bf-burnt-orange: var(--bf-burnt-orange);
   --color-bf-purple: var(--bf-purple);
   --color-bf-comment: var(--bf-comment);
@@ -110,7 +108,7 @@
   --input: var(--bf-border);
   --ring: var(--bf-blue);
   --chart-1: var(--bf-blue);
-  --chart-2: var(--bf-lime);
+  --chart-2: var(--bf-light-blue);
   --chart-3: var(--bf-yellow);
   --chart-4: var(--bf-burnt-orange);
   --chart-5: var(--bf-purple);

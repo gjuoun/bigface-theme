@@ -164,19 +164,45 @@ export function deriveNeutrals(
   };
 }
 
-/** The accent family: EXACT borrows of the dark colour of the same name (`dark:<name>`), ruled 2026-10-24. */
+/**
+ * The accent family: the dark colour's hue and chroma, darkened only as far as the canvas requires
+ * (Jun, 2026-11-01). Every accent solves to the SAME contrast floor (4.5:1) by moving L alone, so none is
+ * darker than it has to be — one fixed L pushed yellow and orange further down than they needed.
+ */
+const LIGHT_ACCENT_FLOOR = MIN_CONTRAST;
+
+/** The lightest OKLCH lightness at which hue `H` and chroma `C` clear `floor` on `canvas`. */
+function solveLightness(C: number, H: number, canvas: string, floor: number): number {
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2;
+    if (contrastRatio(fromOklch([mid, C, H]), canvas) >= floor) lo = mid;
+    else hi = mid;
+  }
+  return lo;
+}
 const BORROWED = [
   "blue",
   "lightBlue",
   "paleBlue",
   "cyan",
   "green",
-  "lime",
   "yellow",
-  "brightYellow",
   "burntOrange",
   "purple",
 ] as const;
+
+/**
+ * Yellow needs a warmer hue once it is dark. The scheme's 102.5° at a readable L is olive, not gold, so
+ * yellow takes 85° at a 4.0:1 floor: the only accent allowed under the shared floor, and a dark gold
+ * rather than a green-gold (Jun, 2026-11-01).
+ */
+export const ACCENT_OVERRIDES: Partial<
+  Record<(typeof BORROWED)[number], { hue: number; floor: number }>
+> = {
+  yellow: { hue: 85, floor: 4 },
+};
 
 /**
  * Bright white is the lightest neutral. The dark palette's brightWhite aliases fg, its lightest colour; the light
@@ -196,7 +222,14 @@ export function renderLightPalette(dark: Palette): Palette {
   colors.border = { hex: n.border, source: "derived:border" };
   colors.highlight = { hex: n.highlight, source: "derived:highlight" };
   colors.panel = { hex: n.panel, source: "derived:panel" };
-  for (const key of BORROWED) colors[key] = { hex: dark.colors[key].hex, source: `dark:${key}` };
+  for (const key of BORROWED) {
+    const [L, C, H] = toOklch(dark.colors[key].hex);
+    const override = ACCENT_OVERRIDES[key];
+    const hue = override?.hue ?? H;
+    const floor = override?.floor ?? LIGHT_ACCENT_FLOOR;
+    const target = Math.min(L, solveLightness(C, hue, canvas, floor));
+    colors[key] = { hex: fromOklch([target, C, hue]), source: `derived:${key}` };
+  }
   const ordered = Object.fromEntries(
     REQUIRED_COLORS.map((k) => [k, colors[k] as { hex: string; source: string }]),
   );
@@ -244,7 +277,7 @@ export function renderSwatchSheet(dark: Palette): string {
       `    </tr>`,
     ].join("\n");
   };
-  // The sheet lists the six neutrals lightest first, then the ten accents as their own group (Jun, 2026-10-26).
+  // The sheet lists the six neutrals lightest first, then the nine accents as their own group (Jun, 2026-10-26).
   const order = [
     ...neutralsLightToDark(light.colors as Record<string, { hex: string }>),
     ...ACCENT_NAMES,

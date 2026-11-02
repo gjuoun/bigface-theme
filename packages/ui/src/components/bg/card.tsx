@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 
 // Bigface surface: the deep translucent plate with a hairline border and a long soft shadow.
-// `glow` adds the blue→lime gradient rim. Padding/gap are reset so content keeps its own layout.
+// `glow` adds the blue→cyan gradient rim. Padding/gap are reset so content keeps its own layout.
 export const bgCardVariants = cva("", {
   variants: {
     tone: {
@@ -14,7 +14,7 @@ export const bgCardVariants = cva("", {
     },
     glow: {
       false: "",
-      true: "before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:p-px before:bg-linear-140/srgb before:from-bf-blue/55 before:via-bf-lime/12 before:via-45% before:to-transparent before:to-70% before:content-[''] before:[mask:linear-gradient(#000_0_0)_content-box,linear-gradient(#000_0_0)] before:[mask-composite:exclude]",
+      true: "before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:p-px before:bg-linear-140/srgb before:from-bf-blue/55 before:via-bf-cyan/12 before:via-45% before:to-transparent before:to-70% before:content-[''] before:[mask:linear-gradient(#000_0_0)_content-box,linear-gradient(#000_0_0)] before:[mask-composite:exclude]",
     },
   },
   defaultVariants: { tone: "none", glow: false },

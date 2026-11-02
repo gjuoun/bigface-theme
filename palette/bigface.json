@@ -46,15 +46,7 @@
       "hex": "#00c853",
       "source": "jetbrains:DEFAULT_IDENTIFIER#FOREGROUND"
     },
-    "lime": {
-      "hex": "#c6ff00",
-      "source": "jetbrains:DEFAULT_FUNCTION_CALL#FOREGROUND"
-    },
     "yellow": {
-      "hex": "#e5e500",
-      "source": "jetbrains:DEFAULT_STRING#FOREGROUND"
-    },
-    "brightYellow": {
       "hex": "#ffeb3b",
       "source": "jetbrains:DEFAULT_OPERATION_SIGN#FOREGROUND"
     },
@@ -81,7 +73,7 @@
       "source": "alias:green"
     },
     "yellow": {
-      "hex": "#e5e500",
+      "hex": "#ffeb3b",
       "source": "alias:yellow"
     },
     "blue": {
@@ -109,12 +101,12 @@
       "source": "alias:burntOrange"
     },
     "brightGreen": {
-      "hex": "#c6ff00",
-      "source": "alias:lime"
+      "hex": "#00c853",
+      "source": "alias:green"
     },
     "brightYellow": {
       "hex": "#ffeb3b",
-      "source": "alias:brightYellow"
+      "source": "alias:yellow"
     },
     "brightBlue": {
       "hex": "#40c4ff",
@@ -136,14 +128,14 @@
   "syntax": {
     "comment": "fgDim",
     "keyword": "blue",
-    "function": "lime",
+    "function": "fg",
     "variable": "green",
     "string": "yellow",
     "number": "burntOrange",
     "type": "cyan",
-    "operator": "brightYellow",
+    "operator": "fg",
     "punctuation": "fg",
-    "constant": "purple",
+    "constant": "paleBlue",
     "tag": "lightBlue",
     "parameter": "paleBlue"
   }

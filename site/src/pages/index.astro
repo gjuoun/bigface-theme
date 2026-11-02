@@ -14,7 +14,7 @@ import { installCommand, REPO, targets } from "../data/targets.ts";
 import Base from "../layouts/Base.astro";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const strip = ["blue", "cyan", "lime", "green", "yellow", "burntOrange", "brightYellow", "purple"];
+const strip = ["blue", "cyan", "green", "yellow", "burntOrange", "purple"];
 const kinds = [...new Set(targets.map((t) => t.kind))];
 const marquee = [
   ...targets.map((t) => t.name),
@@ -30,7 +30,7 @@ const levelLabel = {
   format: "Format-checked only",
 };
 const isLevel = (level: string): level is keyof typeof levelLabel => level in levelLabel;
-const oneApp = installCommand("ghostty zed vim");
+const oneApp = installCommand("pi zed");
 const everything = installCommand("all");
 const removeAll = installCommand("--uninstall all");
 const installTabs = [
@@ -44,7 +44,7 @@ const installTabs = [
   {
     id: "one",
     label: "One app",
-    bar: "sh — install ghostty zed vim",
+    bar: "sh — install pi zed",
     command: oneApp,
     note: "Pass any app ids; unknown ones are reported and skipped.",
   },

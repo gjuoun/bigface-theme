@@ -1,5 +1,5 @@
 // The dark palette's neutral family (plan 2026-10-25; Jun, 2026-10-26). The seeds are JetBrains values and stay exact:
-// the background and the ten accents. The scheme's caret colour (SCHEME_CARET, read from the original scheme) is the anchor
+// the background and the nine accents. The scheme's caret colour (SCHEME_CARET, read from the original scheme) is the anchor
 // the neutrals derive from. Every other neutral is derived by deriveNeutrals in light.ts, the one formula both modes share.
 // Re-running this on its own output gives the same file, so the generator is a function of the seeds.
 //

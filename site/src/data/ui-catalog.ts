@@ -99,7 +99,7 @@ export const bgCatalog: BGEntry[] = [
     name: "BGCard",
     kind: "wrapper",
     wraps: "Card",
-    purpose: "The deep translucent plate with a hairline border; glow adds the blue→lime rim.",
+    purpose: "The deep translucent plate with a hairline border; glow adds the blue→cyan rim.",
     finalised: true,
     live: "here",
   },
