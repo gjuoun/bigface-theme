@@ -120,16 +120,7 @@ describe("running the script", () => {
     ["pi", ".pi/agent/themes/bigface.json", "bigface.json"],
     ["ghostty", ".config/ghostty/themes/Bigface", "Bigface"],
     ["zed", ".config/zed/themes/bigface.json", "themes/bigface.json"],
-    ["zellij", ".config/zellij/themes/bigface.kdl", "bigface.kdl"],
-    ["zellij", ".config/zellij/themes/bigface.kdl", "bigface.kdl"],
-    ["micro", ".config/micro/colorschemes/bigface.micro", "bigface.micro"],
-    [
-      "xcode",
-      "Library/Developer/Xcode/UserData/FontAndColorThemes/Bigface.xccolortheme",
-      "Bigface.xccolortheme",
-    ],
     ["herdr", ".config/bigface/herdr/theme.toml", "theme.toml"],
-    ["starship", ".config/bigface/starship/palette.toml", "palette.toml"],
     ["jetbrains", ".config/bigface/jetbrains/Bigface.xml", "Bigface.xml"],
   ];
   for (const [id, rel, remote] of placed) {
@@ -142,13 +133,6 @@ describe("running the script", () => {
       expect(r.out).toContain("wrote ~/");
     });
   }
-
-  test("vim installs for both vim and neovim", async () => {
-    const r = await run(["vim"]);
-    const want = await themeText("vim", "colors/bigface.vim");
-    expect(await Bun.file(join(r.home, ".vim/colors/bigface.vim")).text()).toBe(want);
-    expect(await Bun.file(join(r.home, ".config/nvim/colors/bigface.vim")).text()).toBe(want);
-  });
 
   test("XDG_CONFIG_HOME is respected", async () => {
     const xdg = await mkdtemp(join(tmpdir(), "bf-xdg-"));
@@ -167,11 +151,6 @@ describe("running the script", () => {
     expect(await Bun.file(join(vault, ".obsidian/themes/Bigface/manifest.json")).text()).toBe(
       await themeText("obsidian", "Bigface/manifest.json"),
     );
-  });
-
-  test("slack prints the 8-colour string", async () => {
-    const r = await run(["slack"]);
-    expect(r.out).toContain((await themeText("slack", "theme.txt")).trim());
   });
 
   test("vscode passes the .vsix to code and cursor", async () => {
@@ -200,7 +179,7 @@ describe("running the script", () => {
   });
 
   test("--dry-run writes nothing and says what it would do", async () => {
-    const r = await run(["--dry-run", "ghostty", "zellij", "vscode"]);
+    const r = await run(["--dry-run", "ghostty", "zed", "vscode"]);
     expect(r.code, r.out).toBe(0);
     expect(r.out).toContain("would write ~/");
     expect(r.out).not.toContain(r.home);
@@ -221,15 +200,15 @@ describe("running the script", () => {
   });
 
   test("a second run overwrites cleanly", async () => {
-    const home = (await run(["zellij"])).home;
-    const target = join(home, ".config/zellij/themes/bigface.kdl");
+    const home = (await run(["ghostty"])).home;
+    const target = join(home, ".config/ghostty/themes/Bigface");
     await writeFile(target, "stale");
-    const again = await $`sh ${script} zellij`
+    const again = await $`sh ${script} ghostty`
       .env({ HOME: home, PATH: basic, BIGFACE_BASE: `file://${site}` })
       .quiet()
       .nothrow();
     expect(again.exitCode).toBe(0);
-    expect(await Bun.file(target).text()).toBe(await themeText("zellij", "bigface.kdl"));
+    expect(await Bun.file(target).text()).toBe(await themeText("ghostty", "Bigface"));
     expect(dirname(target)).toBeTruthy();
   });
 
@@ -242,7 +221,7 @@ describe("running the script", () => {
     const home = await mkdtemp(join(tmpdir(), "bf-inst-home-"));
     const apps = join(home, "Applications");
     await mkdir(join(apps, "Ghostty.app"), { recursive: true });
-    await mkdir(join(home, ".config/zellij"), { recursive: true });
+    await mkdir(join(home, ".config/zed"), { recursive: true });
     const r = await $`sh ${script} all`
       .env({
         HOME: home,
@@ -255,7 +234,7 @@ describe("running the script", () => {
     expect(r.exitCode, r.stderr.toString()).toBe(0);
     expect(await tree(home)).toEqual([
       ".config/ghostty/themes/Bigface",
-      ".config/zellij/themes/bigface.kdl",
+      ".config/zed/themes/bigface.json",
     ]);
   });
 
@@ -284,21 +263,9 @@ describe("uninstall", () => {
   });
 
   test("install then uninstall every file-based app leaves the home empty", async () => {
-    const ids = [
-      "pi",
-      "ghostty",
-      "zed",
-      "zellij",
-      "zellij",
-      "micro",
-      "xcode",
-      "vim",
-      "herdr",
-      "starship",
-      "jetbrains",
-    ];
+    const ids = ["pi", "ghostty", "zed", "herdr", "jetbrains"];
     const r = await run(ids);
-    expect((await tree(r.home)).length).toBeGreaterThan(10);
+    expect((await tree(r.home)).length).toBe(5);
     const un = await $`sh ${script} --uninstall ${ids}`.env(homeEnv(r.home)).quiet().nothrow();
     expect(un.exitCode, un.stderr.toString()).toBe(0);
     expect(un.stdout.toString()).toContain("removed ~/");
@@ -315,28 +282,28 @@ describe("uninstall", () => {
   });
 
   test("uninstalling something that isn't installed is harmless", async () => {
-    const r = await run(["--uninstall", "zellij"]);
+    const r = await run(["--uninstall", "zed"]);
     expect(r.code).toBe(0);
     expect(r.out).toContain("not installed:");
   });
 
   test("--dry-run --uninstall removes nothing", async () => {
-    const r = await run(["zellij"]);
-    const un = await $`sh ${script} --dry-run --uninstall zellij`
+    const r = await run(["zed"]);
+    const un = await $`sh ${script} --dry-run --uninstall zed`
       .env(homeEnv(r.home))
       .quiet()
       .nothrow();
     expect(un.stdout.toString()).toContain("would remove ~/");
-    expect(await tree(r.home)).toEqual([".config/zellij/themes/bigface.kdl"]);
+    expect(await tree(r.home)).toEqual([".config/zed/themes/bigface.json"]);
   });
 
   test("`--uninstall all` removes only what is installed", async () => {
-    const r = await run(["pi", "zellij"]);
-    await mkdir(join(r.home, ".config/zellij/themes"), { recursive: true });
-    await writeFile(join(r.home, ".config/zellij/themes/mine.kdl"), "mine");
+    const r = await run(["pi", "zed"]);
+    await mkdir(join(r.home, ".config/zed/themes"), { recursive: true });
+    await writeFile(join(r.home, ".config/zed/themes/mine.json"), "mine");
     const un = await $`sh ${script} --uninstall all`.env(homeEnv(r.home)).quiet().nothrow();
     expect(un.exitCode, un.stderr.toString()).toBe(0);
-    expect(await tree(r.home)).toEqual([".config/zellij/themes/mine.kdl"]);
+    expect(await tree(r.home)).toEqual([".config/zed/themes/mine.json"]);
   });
 
   test("`--uninstall all` with nothing installed says so", async () => {
@@ -370,27 +337,22 @@ describe("uninstall", () => {
     expect(await readdir(join(vault, ".obsidian/themes"))).toEqual([]);
   });
 
-  test("slack: nothing on disk, so it only says where to remove it", async () => {
-    const r = await run(["--uninstall", "slack"]);
-    expect(r.code).toBe(0);
-    expect(r.out).toContain("Nothing was written to disk");
-  });
 });
 
 describe("interactive menu", () => {
   test("install: pick by number and by name, confirm, files appear", async () => {
-    const r = await ask("1\n2, zellij\ny\n");
+    const r = await ask("1\n2, zed\ny\n");
     expect(r.code, r.out).toBe(0);
     expect(r.out).toContain("What do you want to do?");
-    expect(r.out).toContain("install: ghostty zellij");
+    expect(r.out).toContain("install: ghostty zed");
     expect(await tree(r.home)).toEqual([
       ".config/ghostty/themes/Bigface",
-      ".config/zellij/themes/bigface.kdl",
+      ".config/zed/themes/bigface.json",
     ]);
   });
 
   test("the menu marks installed and detected apps", async () => {
-    const home = (await run(["zellij"])).home;
+    const home = (await run(["zed"])).home;
     const apps = join(home, "Applications");
     await mkdir(join(apps, "Ghostty.app"), { recursive: true });
     const answers = join(home, "answers");
@@ -406,15 +368,15 @@ describe("interactive menu", () => {
       .quiet()
       .nothrow();
     const out = r.stdout.toString();
-    expect(out).toMatch(/7\) zellij\s+installed/);
+    expect(out).toMatch(/5\) zed\s+installed/);
     expect(out).toMatch(/2\) ghostty\s+detected/);
     expect(out).toMatch(/3\) herdr\s{2,}downloads/);
   });
 
   test("uninstall: choose 2, pick an app, confirm, file is gone", async () => {
-    const home = (await run(["zellij", "ghostty"])).home;
+    const home = (await run(["zed", "ghostty"])).home;
     const answers = join(home, "answers");
-    await writeFile(answers, "2\nzellij\ny\n");
+    await writeFile(answers, "2\nzed\ny\n");
     const r = await $`sh ${script}`
       .env({ HOME: home, PATH: basic, BIGFACE_BASE: `file://${site}`, BIGFACE_TTY: answers })
       .quiet()
@@ -427,7 +389,7 @@ describe("interactive menu", () => {
     const home = await mkdtemp(join(tmpdir(), "bf-inst-home-"));
     const apps = join(home, "Applications");
     await mkdir(join(apps, "Ghostty.app"), { recursive: true });
-    await mkdir(join(home, ".config/zellij"), { recursive: true });
+    await mkdir(join(home, ".config/zed"), { recursive: true });
     const answers = join(home, "answers");
     await writeFile(answers, "\n\n\n");
     const r = await $`sh ${script}`
@@ -443,7 +405,7 @@ describe("interactive menu", () => {
     expect(r.exitCode, r.stderr.toString()).toBe(0);
     expect((await tree(home)).filter((f) => f !== "answers")).toEqual([
       ".config/ghostty/themes/Bigface",
-      ".config/zellij/themes/bigface.kdl",
+      ".config/zed/themes/bigface.json",
     ]);
   });
 
@@ -470,12 +432,12 @@ describe("interactive menu", () => {
   });
 
   test("--uninstall skips the first question; --dry-run writes nothing", async () => {
-    const r = await ask("zellij\ny\n", ["--dry-run"]);
+    const r = await ask("zed\ny\n", ["--dry-run"]);
     expect(r.out).toContain("What do you want to do?");
     const u = await ask("q\n", ["--uninstall"]);
     expect(u.out).not.toContain("What do you want to do?");
     expect(u.out).toContain("uninstall which?");
-    const d = await ask("1\nzellij\ny\n", ["--dry-run"]);
+    const d = await ask("1\nzed\ny\n", ["--dry-run"]);
     expect(d.out).toContain("would write ~/");
     expect(await tree(d.home)).toEqual([]);
   });
@@ -491,12 +453,12 @@ describe("interactive menu", () => {
   test("works when the script itself arrives on stdin, as with `curl | sh`", async () => {
     const home = await mkdtemp(join(tmpdir(), "bf-inst-home-"));
     const answers = join(home, "answers");
-    await writeFile(answers, "1\nzellij\ny\n");
+    await writeFile(answers, "1\nzed\ny\n");
     const r = await $`cat ${script} | sh`
       .env({ HOME: home, PATH: basic, BIGFACE_BASE: `file://${site}`, BIGFACE_TTY: answers })
       .quiet()
       .nothrow();
     expect(r.exitCode, r.stderr.toString()).toBe(0);
-    expect(await Bun.file(join(home, ".config/zellij/themes/bigface.kdl")).exists()).toBe(true);
+    expect(await Bun.file(join(home, ".config/zed/themes/bigface.json")).exists()).toBe(true);
   });
 });

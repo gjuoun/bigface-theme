@@ -12,13 +12,7 @@ const EXPECTED = [
   "vscode",
   "zed",
   "jetbrains",
-  "zellij",
-  "starship",
-  "vim",
-  "xcode",
-  "micro",
   "obsidian",
-  "slack",
 ];
 /** These formats take 6-digit colours only; the others (VS Code, Zed, Obsidian) use alpha on purpose. */
 const NO_ALPHA = new Set([
@@ -26,12 +20,6 @@ const NO_ALPHA = new Set([
   "ghostty",
   "herdr",
   "jetbrains",
-  "zellij",
-  "starship",
-  "vim",
-  "xcode",
-  "micro",
-  "slack",
 ]);
 
 async function walk(root: string, dir = root): Promise<string[]> {

@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import type { Palette } from "../palette.ts";
+import type { ColorName, Palette } from "../palette.ts";
 import { replaceSource } from "../scheme-xml.ts";
 import type { Target } from "./types.ts";
 
@@ -36,7 +36,7 @@ export const LEGACY_ADDRESSES: [
   // chroma >= 100) and off-palette now takes the single yellow; the fixture is untouched. CONSOLE_YELLOW_BRIGHT_OUTPUT is
   // ccff90 (hue 88) and is included because the scheme names it yellow. Lime (c6ff00) and the greens are not yellow and
   // are not in this list. The punctuation and instance-method rows (COMMA, DOT, INSTANCE_METHOD) differ from the palette's
-  // syntax map (punctuation fg, function lime); they follow the rule and can be reverted row by row.
+  // syntax map (punctuation fg, function fg); they follow the rule and can be reverted row by row.
   ["jetbrains:DEFAULT_STRING#FOREGROUND", "yellow"],
   ["jetbrains:PY.STRING.U#FOREGROUND", "yellow"],
   ["jetbrains:CONSOLE_YELLOW_BRIGHT_OUTPUT#FOREGROUND", "yellow"],
@@ -50,6 +50,23 @@ export const LEGACY_ADDRESSES: [
   ["jetbrains:DEFAULT_DOT#FOREGROUND", "yellow"],
   ["jetbrains:DEFAULT_INSTANCE_METHOD#FOREGROUND", "yellow"],
   ["jetbrains:KOTLIN_ANNOTATION#FOREGROUND", "yellow"],
+];
+
+/**
+ * Addresses the 2018 scheme paints lime (#c6ff00) that the palette no longer owns. Lime was the function
+ * ink there; functions now take fg, and keywords and links the blue. Without these rows the fixture's lime
+ * would survive into the export, because no palette colour points at these addresses any more.
+ */
+export const LIME_ADDRESSES: [source: string, role: ColorName][] = [
+  ["jetbrains:DEFAULT_FUNCTION_CALL#FOREGROUND", "fg"],
+  ["jetbrains:DEFAULT_FUNCTION_DECLARATION#FOREGROUND", "fg"],
+  ["jetbrains:PY.FUNC_DEFINITION#FOREGROUND", "fg"],
+  ["jetbrains:PY.METHOD_CALL#FOREGROUND", "fg"],
+  ["jetbrains:CUSTOM_KEYWORD2_ATTRIBUTES#FOREGROUND", "blue"],
+  ["jetbrains:HYPERLINK_ATTRIBUTES#FOREGROUND", "blue"],
+  ["jetbrains:HYPERLINK_ATTRIBUTES#EFFECT_COLOR", "blue"],
+  ["jetbrains:FOLLOWED_HYPERLINK_ATTRIBUTES#FOREGROUND", "blue"],
+  ["jetbrains:FOLLOWED_HYPERLINK_ATTRIBUTES#EFFECT_COLOR", "blue"],
 ];
 
 /**
@@ -75,6 +92,7 @@ export function renderJetBrains(p: Palette, base = ORIGINAL_XML): string {
     write(c.source, c.hex, name);
   }
   for (const [source, role] of LEGACY_ADDRESSES) write(source, p.colors[role].hex, role);
+  for (const [source, role] of LIME_ADDRESSES) write(source, p.colors[role].hex, role);
   return xml;
 }
 

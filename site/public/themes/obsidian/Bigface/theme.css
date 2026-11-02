@@ -77,14 +77,14 @@
   --text-highlight-bg: #4b4e49;
   --caret-color: #e8e9e1;
 
-  /* Headings (lime like functions, then cyan and blue) */
-  --h1-color: #c6ff00;
-  --h2-color: #c6ff00;
+  /* Headings (function ink, then cyan and blue) */
+  --h1-color: #e8e9e1;
+  --h2-color: #e8e9e1;
   --h3-color: #66d9ef;
   --h4-color: #66d9ef;
   --h5-color: #00b0ff;
   --h6-color: #8c8f89;
-  --inline-title-color: #c6ff00;
+  --inline-title-color: #e8e9e1;
 
   /* Inline formatting, links, tags */
   --bold-color: #ffeb3b;
@@ -116,7 +116,7 @@
   --checkbox-border-color-hover: #8c8f89;
   --checkbox-marker-color: #252925;
   --table-border-color: #3c403c;
-  --table-header-color: #c6ff00;
+  --table-header-color: #e8e9e1;
   --table-header-background: #4b4e49;
   --table-header-border-color: #3c403c;
   --table-row-alt-background: #4b4e4980;
@@ -127,10 +127,10 @@
   --code-background: #3c403c;
   --code-normal: #e8e9e1;
   --code-comment: #8c8f89;
-  --code-function: #c6ff00;
+  --code-function: #e8e9e1;
   --code-important: #fc5d23;
   --code-keyword: #00b0ff;
-  --code-operator: #ffeb3b;
+  --code-operator: #e8e9e1;
   --code-property: #00c853;
   --code-punctuation: #e8e9e1;
   --code-string: #ffeb3b;
@@ -157,7 +157,7 @@
   --nav-item-color-hover: #e8e9e1;
   --nav-item-color-active: #00b0ff;
   --nav-item-color-selected: #e8e9e1;
-  --nav-item-color-highlighted: #c6ff00;
+  --nav-item-color-highlighted: #00b0ff;
   --nav-item-background-hover: #4b4e49;
   --nav-item-background-active: #4b4e49;
   --nav-item-background-selected: #4b4e49;
@@ -202,5 +202,5 @@
 
 /* Empty tab ('no file open') title. */
 .empty-state-title {
-  color: #c6ff00;
+  color: #e8e9e1;
 }

@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { loadPalette } from "../palette.ts";
 import { allColorValues, lookupSource } from "../scheme-xml.ts";
-import { LEGACY_ADDRESSES, ORIGINAL_XML, renderJetBrains } from "./jetbrains.ts";
+import { LEGACY_ADDRESSES, LIME_ADDRESSES, ORIGINAL_XML, renderJetBrains } from "./jetbrains.ts";
 
 // Plan 2026-10-25, Step 9. The scheme follows the palette: its JetBrains-sourced colours and the legacy addresses of
 // the collapsed neutrals (the transition shim in jetbrains.ts) read back exactly as the palette has them. The
@@ -42,6 +42,7 @@ test("the fixture is untouched: every address the table does not own reads back 
   const out = renderJetBrains(p);
   const owned = new Set([
     ...LEGACY_ADDRESSES.map(([s]) => s),
+    ...LIME_ADDRESSES.map(([s]) => s),
     ...Object.values(p.colors).map((c) => c.source),
     ...Object.values(p.ansi).map((c) => c.source),
   ]);
@@ -83,10 +84,16 @@ test("control: changing one token changes only that colour (and restores strippe
   const out = renderJetBrains(p);
   expect(lookupSource(out, p.colors.blue.source)).toBe("#0a0b0c");
   expect(out).toContain('value="a0b0c"');
+  // Blue owns its scheme source and the five lime addresses it took over, so exactly those values move.
+  const blueAddresses = [
+    p.colors.blue.source,
+    ...LIME_ADDRESSES.filter(([, role]) => role === "blue").map(([s]) => s),
+  ];
   const a = allColorValues(baseline);
   const b = allColorValues(out);
   const changed = a.filter((v, i) => v !== b[i]);
-  expect(changed).toEqual(["#00b0ff"]);
+  expect(changed.length).toBe(blueAddresses.length);
+  expect(new Set(changed)).toEqual(new Set(["#00b0ff"]));
 });
 
 test("two tokens that share a source must agree", async () => {

@@ -1,54 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { loadPalette } from "../palette.ts";
-import { micro } from "./micro.ts";
 import { hsl, obsidian, obsidianVariables, rgbTriplet } from "./obsidian.ts";
 
 const p = await loadPalette();
-
-describe("micro (format: zyedidia/micro runtime/help/colors.md)", () => {
-  const text = (micro.files(p) as Record<string, string>)["bigface.micro"] as string;
-  const lines = text.split("\n").filter((l) => l && !l.startsWith("#"));
-  const COLOUR = "(?:#[0-9a-f]{6})";
-  const line = new RegExp(
-    `^color-link [A-Za-z.\\-]+ "(?:(?:bold|italic|underline|reverse) )*${COLOUR}?(?:,${COLOUR})?"$`,
-  );
-
-  test('every directive is `color-link <group> "[attrs ]fg[,bg]"` with 6-digit hex', () => {
-    expect(lines.length).toBeGreaterThan(30);
-    expect(lines.filter((l) => !line.test(l))).toEqual([]);
-  });
-  test("has the documented core groups", () => {
-    const groups = new Set(lines.map((l) => l.split(" ")[1]));
-    for (const g of [
-      "default",
-      "comment",
-      "identifier",
-      "constant",
-      "constant.string",
-      "constant.number",
-      "statement",
-      "type",
-      "symbol.operator",
-      "preproc",
-      "special",
-      "error",
-      "todo",
-      "selection",
-      "statusline",
-      "cursor-line",
-      "line-number",
-      "current-line-number",
-      "gutter-error",
-      "hlsearch",
-    ]) {
-      expect(groups.has(g), g).toBe(true);
-    }
-  });
-  test("uses the palette", () => {
-    expect(text).toContain('color-link default "' + p.colors.fg.hex + ',#252925"');
-    expect(text).toContain('color-link statement "#00b0ff,#252925"');
-  });
-});
 
 describe("Obsidian (format: docs.obsidian.md Build a theme + Manifest)", () => {
   const files = obsidian.files(p) as Record<string, string>;
@@ -63,7 +17,6 @@ describe("Obsidian (format: docs.obsidian.md Build a theme + Manifest)", () => {
     expect(manifest.name).not.toMatch(/theme|obsidian/i);
     expect(manifest.name).toMatch(/^[A-Za-z0-9 ()+-]+$/);
   });
-  test("css has a balanced .theme-dark block defining the essential variables", () => {});
 
   test("every variable it sets exists in Obsidian 1.14.4's own stylesheet", async () => {
     const known = new Set(

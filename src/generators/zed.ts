@@ -96,7 +96,7 @@ export const zed: Target = {
       "terminal.ansi.bright_magenta": a("brightMagenta"),
       "terminal.ansi.bright_cyan": a("brightCyan"),
       "terminal.ansi.bright_white": a("brightWhite"),
-      "link_text.hover": c("lime"),
+      "link_text.hover": c("blue"),
       error: c("burntOrange"),
       "error.background": c("highlight"),
       "error.border": c("burntOrange"),
@@ -120,7 +120,7 @@ export const zed: Target = {
       unreachable: c("fgDim"),
       players: [
         c("blue"),
-        c("lime"),
+        c("lightBlue"),
         c("burntOrange"),
         c("purple"),
         c("cyan"),

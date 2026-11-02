@@ -23,7 +23,7 @@ test("theme uses the palette: editor background, keyword, string, ANSI red", asy
     t.tokenColors.find((r: { scope: string[] }) => r.scope.includes(name)).settings.foreground;
   expect(scope("keyword")).toBe("#00b0ff");
   expect(scope("string")).toBe("#ffeb3b");
-  expect(scope("entity.name.function")).toBe("#c6ff00");
+  expect(scope("entity.name.function")).toBe("#e8e9e1");
 });
 
 test("every colour is #rrggbb or #rrggbbaa", async () => {

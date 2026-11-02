@@ -88,54 +88,6 @@ export const installSpecs: InstallSpec[] = [
     owned: ["$CFG/bigface/jetbrains", "$CFG/bigface"],
   },
   {
-    id: "zellij",
-    kind: "files",
-    detect: 'command -v zellij >/dev/null 2>&1 || [ -d "$CFG/zellij" ]',
-    files: [["bigface.kdl", "$CFG/zellij/themes/bigface.kdl"]],
-    note: 'Set `theme "bigface"` in $CFG/zellij/config.kdl.',
-    undo: 'Remove `theme "bigface"` from $CFG/zellij/config.kdl.',
-  },
-  {
-    id: "starship",
-    kind: "manual",
-    files: [["palette.toml", "$CFG/bigface/starship/palette.toml"]],
-    note: "Paste that file at the top of $CFG/starship.toml (the `palette` line must come before any table).",
-    undo: "Remove the `palette = bigface` line and the [palettes.bigface] table from $CFG/starship.toml.",
-    owned: ["$CFG/bigface/starship", "$CFG/bigface"],
-  },
-  {
-    id: "vim",
-    kind: "files",
-    detect: "command -v vim >/dev/null 2>&1 || command -v nvim >/dev/null 2>&1",
-    files: [
-      ["colors/bigface.vim", "$HOME/.vim/colors/bigface.vim"],
-      ["colors/bigface.vim", "$CFG/nvim/colors/bigface.vim"],
-    ],
-    note: "Run `:colorscheme bigface`.",
-    undo: "Remove any `colorscheme bigface` line from your vimrc.",
-  },
-  {
-    id: "xcode",
-    kind: "files",
-    detect: `[ -d ${APPS}/Xcode.app ]`,
-    files: [
-      [
-        "Bigface.xccolortheme",
-        "$HOME/Library/Developer/Xcode/UserData/FontAndColorThemes/Bigface.xccolortheme",
-      ],
-    ],
-    note: "Restart Xcode, then choose Bigface in Settings -> Themes.",
-    undo: "If Bigface is your selected theme, pick another in Xcode -> Settings -> Themes.",
-  },
-  {
-    id: "micro",
-    kind: "files",
-    detect: 'command -v micro >/dev/null 2>&1 || [ -d "$CFG/micro" ]',
-    files: [["bigface.micro", "$CFG/micro/colorschemes/bigface.micro"]],
-    note: "In micro press ctrl-e and run `set colorscheme bigface` (needs COLORTERM=truecolor).",
-    undo: "In micro run `set colorscheme default` (or your usual scheme).",
-  },
-  {
     id: "obsidian",
     kind: "vault",
     files: [
@@ -145,13 +97,6 @@ export const installSpecs: InstallSpec[] = [
     note: "Select Bigface under Settings -> Appearance -> Themes. Needs BIGFACE_VAULT=/path/to/vault.",
     undo: "Select another theme under Settings -> Appearance -> Themes.",
     owned: ["$BIGFACE_VAULT/.obsidian/themes/Bigface"],
-  },
-  {
-    id: "slack",
-    kind: "print",
-    files: [["theme.txt", ""]],
-    note: "Paste it in Preferences -> Appearance -> Custom theme -> Import theme.",
-    undo: "Nothing was written to disk. In Slack: Preferences -> Appearance -> pick another theme.",
   },
 ];
 
