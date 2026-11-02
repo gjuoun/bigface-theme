@@ -103,7 +103,7 @@ test("every app page shows its one-line install command, and install.sh is publi
   expect(home).toContain("install.sh | sh</code>");
   expect(home).toContain("install.sh | sh -s -- all");
   expect(home).toContain("install.sh | sh -s -- --uninstall all");
-  expect(script).toContain("uninstall_ghostty()");
+  expect(script).toContain("uninstall_zed()");
 });
 
 test("the Obsidian page shows a real screenshot that exists and matches its declared size", () => {
@@ -205,8 +205,8 @@ test("the site only ships colours that exist in the palette", () => {
   const htmlFiles = readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
     f.endsWith("index.html"),
   );
-  // home + palette + ui + one page per target (6 after herdr retired on 2026-11-02).
-  expect(htmlFiles.length).toBeGreaterThanOrEqual(9);
+  // home + palette + ui + one page per target (5 after ghostty retired on 2026-11-02).
+  expect(htmlFiles.length).toBeGreaterThanOrEqual(8);
   const offenders: string[] = [];
   for (const f of htmlFiles)
     for (const bad of findForeignInHtml(readFileSync(join(dist, f), "utf8"), known))

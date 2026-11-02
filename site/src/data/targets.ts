@@ -54,28 +54,6 @@ export const targets: Target[] = [
     terminalPreview: true,
   },
   {
-    id: "ghostty",
-    name: "Ghostty",
-    kind: "Terminal",
-    tagline: "Background, foreground, selection, cursor and the 16-colour palette.",
-    files: [{ path: "Bigface", label: "Bigface" }],
-    steps: [
-      "Copy `Bigface` to `~/.config/ghostty/themes/`.",
-      "Add `theme = Bigface` to `~/.config/ghostty/config` and reload the config.",
-    ],
-    check: {
-      level: "tool",
-      text: "Accepted by `ghostty +validate-config`; a bad colour is rejected.",
-    },
-    terminalPreview: true,
-    screenshot: {
-      file: "img/apps/ghostty.png",
-      alt: "Ghostty running the Bigface theme: a dark green-grey window with the palette's sixteen ANSI colours as dots, the theme list and a TypeScript file.",
-      width: 556,
-      height: 345,
-    },
-  },
-  {
     id: "vscode",
     name: "VS Code / Cursor",
     kind: "Editor",

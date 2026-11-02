@@ -54,14 +54,14 @@ With no arguments it is interactive: it asks whether to install or uninstall, sh
 `installed` or `detected`, and lets you pick by number or name (Enter = all detected). Or skip the questions:
 
 ```sh
-curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty zed vim
+curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- pi zed
 curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- all                # every supported app it detects
 curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --uninstall all   # remove what it installed
 curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --list
 ```
 
 The installer writes (and on uninstall removes) Bigface's own files only, for example
-`~/.config/ghostty/themes/Bigface`. It never edits your config: it prints the one line you still need to add
+`~/.pi/agent/themes/bigface.json`. It never edits your config: it prints the one line you still need to add
 or remove. Add `--dry-run` to see what it would do, or read the script first: it is generated from
 [`src/installer.ts`](src/installer.ts). Apps with no drop-in location (JetBrains, Obsidian) are
 downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs `BIGFACE_VAULT=/path/to/vault`
@@ -72,7 +72,6 @@ downloaded to `~/.config/bigface/<app>/` with the steps printed; Obsidian needs 
 | App | Files | Checked by |
 |---|---|---|
 | pi | `themes/pi/bigface.json` | pi's theme loader |
-| Ghostty | `themes/ghostty/Bigface` | `ghostty +validate-config` |
 | VS Code / Cursor | `themes/vscode/` | `vsce package` + `code --install-extension` |
 | Zed | `themes/zed/` | Zed's published JSON schema |
 | JetBrains | `themes/jetbrains/Bigface.xml` | identical to the original scheme |

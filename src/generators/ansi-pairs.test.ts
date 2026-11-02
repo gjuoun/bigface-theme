@@ -37,10 +37,6 @@ test("the light palette: yellow and red pair, and white stays the ruled differen
 
 test("every port writes both yellow ANSI slots as #ffeb3b", async () => {
   const p = await loadPalette();
-  // ghostty: palette 3 (yellow) and 11 (bright yellow)
-  const ghostty = await out("ghostty", p);
-  expect(ghostty).toMatch(/palette = 3=#ffeb3b/);
-  expect(ghostty).toMatch(/palette = 11=#ffeb3b/);
   // zed: terminal.ansi.yellow and terminal.ansi.bright_yellow
   const zed = await out("zed", p);
   expect(zed).toContain('"terminal.ansi.yellow": "' + YELLOW + '"');
@@ -51,11 +47,12 @@ test("every port writes both yellow ANSI slots as #ffeb3b", async () => {
   expect(vscode).toContain('"terminal.ansiBrightYellow": "' + YELLOW + '"');
 });
 
-test("dark ANSI pairs hold in ghostty too: red 1/9, magenta 5/13, white 7/15", async () => {
+test("dark ANSI pairs hold in zed too: red, magenta and white", async () => {
   const p = await loadPalette();
-  const g = await out("ghostty", p);
-  const hex = (n: number) => new RegExp("palette = " + n + "=(#[0-9a-f]{6})").exec(g)?.[1];
-  expect(hex(1)).toBe(hex(9));
-  expect(hex(5)).toBe(hex(13));
-  expect(hex(7)).toBe(hex(15));
+  const z = await out("zed", p);
+  const hex = (key: string) =>
+    new RegExp('"terminal\\.ansi\\.' + key + '": "(#[0-9a-f]{6})"').exec(z)?.[1];
+  expect(hex("red")).toBe(hex("bright_red"));
+  expect(hex("magenta")).toBe(hex("bright_magenta"));
+  expect(hex("white")).toBe(hex("bright_white"));
 });

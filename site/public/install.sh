@@ -2,7 +2,7 @@
 # Bigface installer — https://github.com/gjuoun/bigface-theme
 #
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh                          # interactive: asks what to install or remove
-#   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty vim       # install named apps
+#   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- pi zed           # install named apps
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- all                # every drop-in app it detects
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --uninstall all    # remove what it installed
 #   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- --list
@@ -20,8 +20,8 @@ BASE="${BIGFACE_BASE:-https://bigface.qqntt.com}"
 DRY="${BIGFACE_DRY_RUN:-}"
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
 TTY="${BIGFACE_TTY:-/dev/tty}"
-IDS="pi ghostty vscode zed jetbrains obsidian"
-ALL="pi ghostty vscode zed"
+IDS="pi vscode zed jetbrains obsidian"
+ALL="pi vscode zed"
 MODE="install"
 
 usage() {
@@ -32,7 +32,6 @@ usage() {
 blurb() {
   case "$1" in
     pi) echo 'installs the theme file' ;;
-    ghostty) echo 'installs the theme file' ;;
     vscode) echo 'installs the extension into code and cursor' ;;
     zed) echo 'installs the theme file' ;;
     jetbrains) echo 'downloads the file and prints the steps' ;;
@@ -104,7 +103,6 @@ note() { echo "  -> $(tilde "$1")"; }
 detected() {
   case "$1" in
     pi) command -v pi >/dev/null 2>&1 || [ -d "$HOME/.pi/agent" ] ;;
-    ghostty) [ -d "${BIGFACE_APPS:-/Applications}"/Ghostty.app ] || command -v ghostty >/dev/null 2>&1 || [ -d "$CFG/ghostty" ] ;;
     vscode) command -v code >/dev/null 2>&1 || command -v cursor >/dev/null 2>&1 ;;
     zed) [ -d "${BIGFACE_APPS:-/Applications}"/Zed.app ] || command -v zed >/dev/null 2>&1 || [ -d "$CFG/zed" ] ;;
     *) return 1 ;;
@@ -115,7 +113,6 @@ detected() {
 is_installed() {
   case "$1" in
     pi) [ -e "$HOME/.pi/agent/themes/bigface.json" ] ;;
-    ghostty) [ -e "$CFG/ghostty/themes/Bigface" ] ;;
     vscode) for editor in code cursor; do
         if command -v "$editor" >/dev/null 2>&1; then
           case "$("$editor" --list-extensions 2>/dev/null)" in *gjuoun.bigface-theme*) return 0 ;; esac
@@ -132,11 +129,6 @@ is_installed() {
 install_pi() {
   put 'themes/pi/bigface.json' "$HOME/.pi/agent/themes/bigface.json" || return 1
   note "Run \`pi --use-theme bigface\`, or pick it under /settings -> Theme."
-}
-
-install_ghostty() {
-  put 'themes/ghostty/Bigface' "$CFG/ghostty/themes/Bigface" || return 1
-  note "Add \`theme = Bigface\` to $CFG/ghostty/config and reload."
 }
 
 install_vscode() {
@@ -181,11 +173,6 @@ install_obsidian() {
 uninstall_pi() {
   remove "$HOME/.pi/agent/themes/bigface.json"
   note "If Bigface is your selected theme, pick another under /settings -> Theme."
-}
-
-uninstall_ghostty() {
-  remove "$CFG/ghostty/themes/Bigface"
-  note "Remove \`theme = Bigface\` from $CFG/ghostty/config."
 }
 
 uninstall_vscode() {

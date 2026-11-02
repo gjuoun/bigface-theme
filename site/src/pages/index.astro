@@ -30,7 +30,7 @@ const levelLabel = {
   format: "Format-checked only",
 };
 const isLevel = (level: string): level is keyof typeof levelLabel => level in levelLabel;
-const oneApp = installCommand("ghostty zed vim");
+const oneApp = installCommand("pi zed");
 const everything = installCommand("all");
 const removeAll = installCommand("--uninstall all");
 const installTabs = [
@@ -44,7 +44,7 @@ const installTabs = [
   {
     id: "one",
     label: "One app",
-    bar: "sh — install ghostty zed vim",
+    bar: "sh — install pi zed",
     command: oneApp,
     note: "Pass any app ids; unknown ones are reported and skipped.",
   },

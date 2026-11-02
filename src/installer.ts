@@ -1,7 +1,7 @@
 /**
  * Renders `install.sh`, the one-curl installer served from the Pages site.
  *
- *   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- ghostty vim
+ *   curl -fsSL https://bigface.qqntt.com/install.sh | sh -s -- pi zed
  *
  * The script only writes Bigface's own files. It never edits an existing config file; it prints the
  * line you need to add instead.
@@ -46,14 +46,6 @@ export const installSpecs: InstallSpec[] = [
     files: [["bigface.json", "$HOME/.pi/agent/themes/bigface.json"]],
     note: "Run `pi --use-theme bigface`, or pick it under /settings -> Theme.",
     undo: "If Bigface is your selected theme, pick another under /settings -> Theme.",
-  },
-  {
-    id: "ghostty",
-    kind: "files",
-    detect: `[ -d ${APPS}/Ghostty.app ] || command -v ghostty >/dev/null 2>&1 || [ -d "$CFG/ghostty" ]`,
-    files: [["Bigface", "$CFG/ghostty/themes/Bigface"]],
-    note: "Add `theme = Bigface` to $CFG/ghostty/config and reload.",
-    undo: "Remove `theme = Bigface` from $CFG/ghostty/config.",
   },
   {
     id: "vscode",
@@ -224,7 +216,7 @@ export function renderInstaller(base = SITE): string {
 # Bigface installer — https://github.com/gjuoun/bigface-theme
 #
 #   curl -fsSL ${base}/install.sh | sh                          # interactive: asks what to install or remove
-#   curl -fsSL ${base}/install.sh | sh -s -- ghostty vim       # install named apps
+#   curl -fsSL ${base}/install.sh | sh -s -- pi zed           # install named apps
 #   curl -fsSL ${base}/install.sh | sh -s -- all                # every drop-in app it detects
 #   curl -fsSL ${base}/install.sh | sh -s -- --uninstall all    # remove what it installed
 #   curl -fsSL ${base}/install.sh | sh -s -- --list
