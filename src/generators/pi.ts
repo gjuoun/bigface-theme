@@ -81,7 +81,7 @@ export const pi: Target = {
       scrollbarThumb: "fgDim",
       searchMatchBg: "highlight",
       searchMatchText: "fg",
-      userMessageBg: "bg",
+      userMessageBg: "panel",
       userMessageText: "fg",
       customMessageBg: "bg",
       customMessageText: "fg",
