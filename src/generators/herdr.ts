@@ -9,7 +9,7 @@ const MAP: [key: string, from: ColorName | `ansi.${string}`, note: string][] = [
   ["overlay1", "fgDim", "dimmer tier"],
   ["overlay0", "fgDim", "muted tokens, separators"],
   ["panel_bg", "bg", "main pane background"],
-  ["sidebar_bg", "border", "sidebar, darker than panel"],
+  ["sidebar_bg", "border", "sidebar, raised from the panel"],
   ["active_row_bg", "highlight", "focused / hovered sidebar row"],
   ["selection_bg", "highlight", "text selection"],
   ["surface0", "highlight", "raised surface"],
