@@ -26,12 +26,12 @@
     "error": "burntOrange",
     "warning": "yellow",
     "muted": "fgDim",
-    "dim": "fgDim",
+    "dim": "border",
     "text": "fg",
     "thinkingText": "fgDim",
     "selectedBg": "highlight",
     "scrollbarThumb": "fgDim",
-    "searchMatchBg": "highlight",
+    "searchMatchBg": "yellow",
     "searchMatchText": "fg",
     "userMessageBg": "panel",
     "userMessageText": "fg",
@@ -76,7 +76,7 @@
   },
   "export": {
     "pageBg": "bg",
-    "cardBg": "highlight",
+    "cardBg": "panel",
     "infoBg": "border"
   }
 }

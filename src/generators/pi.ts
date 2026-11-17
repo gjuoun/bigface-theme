@@ -74,12 +74,12 @@ export const pi: Target = {
       error: "burntOrange",
       warning: "yellow",
       muted: "fgDim",
-      dim: "fgDim",
+      dim: "border",
       text: "fg",
       thinkingText: "fgDim",
       selectedBg: "highlight",
       scrollbarThumb: "fgDim",
-      searchMatchBg: "highlight",
+      searchMatchBg: "yellow",
       searchMatchText: "fg",
       userMessageBg: "panel",
       userMessageText: "fg",
@@ -127,7 +127,7 @@ export const pi: Target = {
       appearance: "dark",
       vars,
       colors: roles,
-      export: { pageBg: "bg", cardBg: "highlight", infoBg: "border" },
+      export: { pageBg: "bg", cardBg: "panel", infoBg: "border" },
     };
     return { "bigface.json": `${JSON.stringify(theme, null, 2)}\n` };
   },
