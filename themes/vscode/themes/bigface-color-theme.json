@@ -468,6 +468,7 @@
     "macro": "#e8e9e1",
     "variable": "#00c853",
     "variable.defaultLibrary": "#b3e5fc",
+    "variable.readonly": "#e8e9e1",
     "variable.declaration": "#e8e9e1",
     "parameter.declaration": "#e8e9e1",
     "parameter": "#b3e5fc",

@@ -348,6 +348,10 @@ export const vscode: Target = {
       macro: s("function"),
       variable: s("variable"),
       "variable.defaultLibrary": s("constant"),
+      // tsserver marks every imported binding and every `const` `variable.readonly`. On the
+      // site a `const` or an `import { x }` name reads as plain ink — Shiki gives it no
+      // variable role — so readonly variables stay fg and only `let`/`var` carry the green.
+      "variable.readonly": s("operator"),
       // A name at its declaration site reads as plain ink — that is how the site's Shiki
       // pair paints an `import { x }` or `const x =` list, and it keeps imported names fg
       // while every later use of the variable still carries `variable` green.
