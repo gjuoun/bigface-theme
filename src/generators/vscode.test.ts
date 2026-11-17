@@ -28,6 +28,9 @@ test("theme uses the palette: editor background, keyword, string, ANSI red", asy
 
 test("every colour is #rrggbb or #rrggbbaa", async () => {
   const t = JSON.parse((await out())["themes/bigface-color-theme.json"] as string);
-  for (const [k, v] of Object.entries(t.colors))
-    expect(v, k).toMatch(/^#[0-9a-f]{6}([0-9a-f]{2})?$/);
+  for (const [k, v] of Object.entries(t.colors)) {
+    // symbolIcon.constantForeground is a ramp array; everything else is one colour.
+    const values = Array.isArray(v) ? v : [v];
+    for (const hex of values) expect(hex, k).toMatch(/^#[0-9a-f]{6}([0-9a-f]{2})?$/);
+  }
 });
