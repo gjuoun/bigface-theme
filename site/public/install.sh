@@ -20,7 +20,7 @@ BASE="${BIGFACE_BASE:-https://bigface.qqntt.com}"
 DRY="${BIGFACE_DRY_RUN:-}"
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
 TTY="${BIGFACE_TTY:-/dev/tty}"
-IDS="pi vscode zed jetbrains obsidian"
+IDS="pi vscode zed obsidian"
 ALL="pi vscode zed"
 MODE="install"
 
@@ -34,7 +34,6 @@ blurb() {
     pi) echo 'installs the theme file' ;;
     vscode) echo 'installs the extension into code and cursor' ;;
     zed) echo 'installs the theme file' ;;
-    jetbrains) echo 'downloads the file and prints the steps' ;;
     obsidian) echo 'needs BIGFACE_VAULT=/path/to/vault' ;;
   esac
 }
@@ -120,7 +119,6 @@ is_installed() {
       done
       return 1 ;;
     zed) [ -e "$CFG/zed/themes/bigface.json" ] ;;
-    jetbrains) [ -e "$CFG/bigface/jetbrains/Bigface.xml" ] ;;
     obsidian) [ -n "${BIGFACE_VAULT:-}" ] && [ -e "$BIGFACE_VAULT/.obsidian/themes/Bigface/theme.css" ] && [ -e "$BIGFACE_VAULT/.obsidian/themes/Bigface/manifest.json" ] ;;
     *) return 1 ;;
   esac
@@ -158,11 +156,6 @@ install_zed() {
   note "Open the theme selector (cmd-k cmd-t) and choose Bigface."
 }
 
-install_jetbrains() {
-  put 'themes/jetbrains/Bigface.xml' "$CFG/bigface/jetbrains/Bigface.xml" || return 1
-  note "In your IDE: Settings -> Editor -> Color Scheme -> gear icon -> Import Scheme..., then choose that file."
-}
-
 install_obsidian() {
   need_vault || return 1
   put 'themes/obsidian/Bigface/theme.css' "$BIGFACE_VAULT/.obsidian/themes/Bigface/theme.css" || return 1
@@ -192,13 +185,6 @@ uninstall_vscode() {
 uninstall_zed() {
   remove "$CFG/zed/themes/bigface.json"
   note "If Bigface is your selected theme, pick another (cmd-k cmd-t)."
-}
-
-uninstall_jetbrains() {
-  remove "$CFG/bigface/jetbrains/Bigface.xml"
-  drop_dir "$CFG/bigface/jetbrains"
-  drop_dir "$CFG/bigface"
-  note "The scheme you imported lives inside the IDE: Settings -> Editor -> Color Scheme, pick another, then delete Bigface from the gear menu."
 }
 
 uninstall_obsidian() {

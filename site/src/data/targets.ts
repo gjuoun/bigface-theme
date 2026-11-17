@@ -104,33 +104,6 @@ export const targets: Target[] = [
     },
   },
   {
-    id: "jetbrains",
-    name: "JetBrains IDEs",
-    kind: "IDE",
-    tagline:
-      "The original 2018 scheme: IntelliJ IDEA, WebStorm, PyCharm, Android Studio, DataGrip.",
-    files: [{ path: "Bigface.xml", label: "Bigface.xml" }],
-    steps: [
-      "Open *Settings → Editor → Color Scheme*.",
-      "Click the gear icon → *Import Scheme…* and choose `Bigface.xml`.",
-    ],
-    check: {
-      level: "tool",
-      text: "Regenerated from the palette; colour for colour identical to the original scheme file.",
-    },
-    terminalPreview: false,
-    market: {
-      label: "JetBrains Marketplace",
-      url: "https://plugins.jetbrains.com/plugin/10988-bigface-color-scheme",
-    },
-    screenshot: {
-      file: "img/apps/jetbrains.png",
-      alt: "IntelliJ IDEA using the Bigface .icls scheme: blue keywords, cream function calls, yellow strings, cyan types on the theme's green-grey background.",
-      width: 758,
-      height: 264,
-    },
-  },
-  {
     id: "obsidian",
     name: "Obsidian",
     kind: "Notes",

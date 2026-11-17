@@ -119,7 +119,6 @@ describe("running the script", () => {
   const placed: [string, string, string][] = [
     ["pi", ".pi/agent/themes/bigface.json", "bigface.json"],
     ["zed", ".config/zed/themes/bigface.json", "themes/bigface.json"],
-    ["jetbrains", ".config/bigface/jetbrains/Bigface.xml", "Bigface.xml"],
   ];
   for (const [id, rel, remote] of placed) {
     test(`${id}: writes ${rel}, byte-identical to themes/${id}/${remote}`, async () => {
@@ -233,17 +232,19 @@ describe("running the script", () => {
   });
 
   test("uninstall leaves unrelated files alone and removes only the empty dirs it created", async () => {
-    const r = await run(["jetbrains", "pi"]);
+    const r = await run(["zed", "pi"]);
     const other = join(r.home, ".pi/agent/themes/Other");
     await writeFile(other, "mine");
-    const un = await $`sh ${script} --uninstall jetbrains pi`
+    const un = await $`sh ${script} --uninstall zed pi`
       .env({ HOME: r.home, PATH: basic, BIGFACE_BASE: `file://${site}` })
       .quiet()
       .nothrow();
     expect(un.exitCode, un.stderr.toString()).toBe(0);
     expect(await tree(r.home)).toEqual([".pi/agent/themes/Other"]);
     expect(await Bun.file(other).text()).toBe("mine");
-    expect(await readdir(join(r.home, ".config"))).not.toContain("bigface");
+    // zed drops into the shared .config/zed tree, which the installer doesn't own —
+    // jetbrains was the only app that left its own empty .config dir to clean up.
+    expect(await readdir(join(r.home, ".config"))).toEqual(["zed"]);
   });
 });
 
@@ -256,10 +257,10 @@ describe("uninstall", () => {
     ...more,
   });
 
-  test("install then uninstall every file-based app leaves the home empty", async () => {
-    const ids = ["pi", "zed", "jetbrains"];
+  test("install then uninstall every file-based app leaves only owned files gone", async () => {
+    const ids = ["pi", "zed"];
     const r = await run(ids);
-    expect((await tree(r.home)).length).toBe(3);
+    expect((await tree(r.home)).length).toBe(2);
     const un = await $`sh ${script} --uninstall ${ids}`.env(homeEnv(r.home)).quiet().nothrow();
     expect(un.exitCode, un.stderr.toString()).toBe(0);
     expect(un.stdout.toString()).toContain("removed ~/");

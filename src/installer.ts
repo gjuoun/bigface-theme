@@ -64,14 +64,6 @@ export const installSpecs: InstallSpec[] = [
     undo: "If Bigface is your selected theme, pick another (cmd-k cmd-t).",
   },
   {
-    id: "jetbrains",
-    kind: "manual",
-    files: [["Bigface.xml", "$CFG/bigface/jetbrains/Bigface.xml"]],
-    note: "In your IDE: Settings -> Editor -> Color Scheme -> gear icon -> Import Scheme..., then choose that file.",
-    undo: "The scheme you imported lives inside the IDE: Settings -> Editor -> Color Scheme, pick another, then delete Bigface from the gear menu.",
-    owned: ["$CFG/bigface/jetbrains", "$CFG/bigface"],
-  },
-  {
     id: "obsidian",
     kind: "vault",
     files: [

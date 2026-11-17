@@ -205,8 +205,8 @@ test("the site only ships colours that exist in the palette", () => {
   const htmlFiles = readdirSync(dist, { recursive: true, encoding: "utf8" }).filter((f) =>
     f.endsWith("index.html"),
   );
-  // home + palette + ui + one page per target (5 after ghostty retired on 2026-11-02).
-  expect(htmlFiles.length).toBeGreaterThanOrEqual(8);
+  // home + palette + ui + one page per target (4 after JetBrains retired).
+  expect(htmlFiles.length).toBeGreaterThanOrEqual(7);
   const offenders: string[] = [];
   for (const f of htmlFiles)
     for (const bad of findForeignInHtml(readFileSync(join(dist, f), "utf8"), known))
