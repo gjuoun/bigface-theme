@@ -357,8 +357,10 @@ export const vscode: Target = {
       number: s("number"),
       regexp: s("string"),
       operator: s("operator"),
-      property: s("variable"),
-      "property.readonly": s("variable"),
+      // Member access has no TextMate scope in ts/js — Shiki paints it fg — so the semantic
+      // layer must not promote it to `variable` green either. fg keeps the site look.
+      property: s("operator"),
+      "property.readonly": s("operator"),
       comment: s("comment"),
       "comment.documentation": s("comment"),
       "*.deprecated": { foreground: s("variable"), fontStyle: "strikethrough" },

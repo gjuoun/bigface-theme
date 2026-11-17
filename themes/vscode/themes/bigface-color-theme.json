@@ -477,8 +477,8 @@
     "number": "#fc5d23",
     "regexp": "#ffeb3b",
     "operator": "#e8e9e1",
-    "property": "#00c853",
-    "property.readonly": "#00c853",
+    "property": "#e8e9e1",
+    "property.readonly": "#e8e9e1",
     "comment": "#8c8f89",
     "comment.documentation": "#8c8f89",
     "*.deprecated": {
