@@ -348,6 +348,11 @@ export const vscode: Target = {
       macro: s("function"),
       variable: s("variable"),
       "variable.defaultLibrary": s("constant"),
+      // A name at its declaration site reads as plain ink — that is how the site's Shiki
+      // pair paints an `import { x }` or `const x =` list, and it keeps imported names fg
+      // while every later use of the variable still carries `variable` green.
+      "variable.declaration": s("function"),
+      "parameter.declaration": s("function"),
       parameter: s("parameter"),
       function: s("function"),
       method: s("function"),
@@ -357,10 +362,8 @@ export const vscode: Target = {
       number: s("number"),
       regexp: s("string"),
       operator: s("operator"),
-      // Member access has no TextMate scope in ts/js — Shiki paints it fg — so the semantic
-      // layer must not promote it to `variable` green either. fg keeps the site look.
-      property: s("operator"),
-      "property.readonly": s("operator"),
+      property: s("variable"),
+      "property.readonly": s("variable"),
       comment: s("comment"),
       "comment.documentation": s("comment"),
       "*.deprecated": { foreground: s("variable"), fontStyle: "strikethrough" },
