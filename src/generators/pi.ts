@@ -74,7 +74,12 @@ export const pi: Target = {
       error: "burntOrange",
       warning: "yellow",
       muted: "fgDim",
-      dim: "border",
+      // pi paints every footer line, hint and autocomplete description with
+      // `dim`, so it is text, not a stroke: border (#3c403c) measures 1.40:1 on
+      // the canvas and disappears. fgDim clears 4.50:1. The GitHub Dark
+      // template's dim is one step under its muted, but its canvas is #0d1117 —
+      // that step does not survive on bigface's lighter green-grey.
+      dim: "fgDim",
       text: "fg",
       thinkingText: "fgDim",
       selectedBg: "highlight",

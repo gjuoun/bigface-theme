@@ -26,7 +26,7 @@
     "error": "burntOrange",
     "warning": "yellow",
     "muted": "fgDim",
-    "dim": "border",
+    "dim": "fgDim",
     "text": "fg",
     "thinkingText": "fgDim",
     "selectedBg": "highlight",
