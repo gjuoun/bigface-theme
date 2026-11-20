@@ -335,7 +335,7 @@ describe("uninstall", () => {
 
 describe("interactive menu", () => {
   test("install: pick by number and by name, confirm, files appear", async () => {
-    const r = await ask("1\n1, zed\ny\n");
+    const r = await ask("1\n2, zed\ny\n");
     expect(r.code, r.out).toBe(0);
     expect(r.out).toContain("What do you want to do?");
     expect(r.out).toContain("install: pi zed");
@@ -361,7 +361,7 @@ describe("interactive menu", () => {
       .quiet()
       .nothrow();
     const out = r.stdout.toString();
-    expect(out).toMatch(/3\) zed\s+installed/);
+    expect(out).toMatch(/4\) zed\s+installed/);
   });
 
   test("uninstall: choose 2, pick an app, confirm, file is gone", async () => {

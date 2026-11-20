@@ -45,7 +45,9 @@ test("the schema doesn't forbid unknown keys, so check every style key is a know
     ].flatMap((mode) => [`vim.${mode}.foreground`, `vim.${mode}.background`]),
   ]);
   const f = await family();
-  const unknown = Object.keys(f.themes[0].style).filter((k) => !known.includes(k) && !extras.has(k));
+  const unknown = Object.keys(f.themes[0].style).filter(
+    (k) => !known.includes(k) && !extras.has(k),
+  );
   expect(unknown).toEqual([]);
   const knownSyntax = Object.keys(f.themes[0].style.syntax);
   expect(knownSyntax.length).toBeGreaterThan(20);

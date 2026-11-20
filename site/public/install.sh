@@ -20,7 +20,7 @@ BASE="${BIGFACE_BASE:-https://bigface.qqntt.com}"
 DRY="${BIGFACE_DRY_RUN:-}"
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}"
 TTY="${BIGFACE_TTY:-/dev/tty}"
-IDS="pi vscode zed obsidian"
+IDS="tokens pi vscode zed obsidian"
 ALL="pi vscode zed"
 MODE="install"
 
@@ -31,6 +31,7 @@ usage() {
 
 blurb() {
   case "$1" in
+    tokens) echo 'prints the theme string' ;;
     pi) echo 'installs the theme file' ;;
     vscode) echo 'installs the extension into code and cursor' ;;
     zed) echo 'installs the theme file' ;;
@@ -111,6 +112,7 @@ detected() {
 # is_installed <id>: are Bigface's files in place?
 is_installed() {
   case "$1" in
+    tokens) return 1 ;;
     pi) [ -e "$HOME/.pi/agent/themes/bigface.json" ] ;;
     vscode) for editor in code cursor; do
         if command -v "$editor" >/dev/null 2>&1; then
@@ -122,6 +124,13 @@ is_installed() {
     obsidian) [ -n "${BIGFACE_VAULT:-}" ] && [ -e "$BIGFACE_VAULT/.obsidian/themes/Bigface/theme.css" ] && [ -e "$BIGFACE_VAULT/.obsidian/themes/Bigface/manifest.json" ] ;;
     *) return 1 ;;
   esac
+}
+
+install_tokens() {
+  if [ -n "$DRY" ]; then echo "  would print tokens theme"; else
+    echo "  $(get 'themes/tokens/bigface.json' -)"
+  fi
+  note "Token contract printed above; bigface-light.json is at the same URL path."
 }
 
 install_pi() {
@@ -161,6 +170,10 @@ install_obsidian() {
   put 'themes/obsidian/Bigface/theme.css' "$BIGFACE_VAULT/.obsidian/themes/Bigface/theme.css" || return 1
   put 'themes/obsidian/Bigface/manifest.json' "$BIGFACE_VAULT/.obsidian/themes/Bigface/manifest.json" || return 1
   note "Select Bigface under Settings -> Appearance -> Themes. Needs BIGFACE_VAULT=/path/to/vault."
+}
+
+uninstall_tokens() {
+  note "Nothing was installed — nothing to undo."
 }
 
 uninstall_pi() {

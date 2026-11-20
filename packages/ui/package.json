@@ -21,6 +21,7 @@
   ],
   "files": [
     "src",
+    "tokens",
     "!src/**/*.test.*",
     "!src/styles/tailwind.css",
     "README.md",
@@ -34,7 +35,9 @@
     "./theme.css": "./src/styles/theme.css",
     "./tokens.css": "./src/styles/tokens.css",
     "./styles.css": "./src/styles/styles.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./tokens.json": "./tokens/bigface.json",
+    "./tokens.light.json": "./tokens/bigface-light.json"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

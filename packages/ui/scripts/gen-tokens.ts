@@ -6,8 +6,10 @@
 //
 // `bun run --cwd packages/ui theme:sync`   rewrite tokens.css in place
 // `bun run --cwd packages/ui theme:check`  fail when tokens.css is stale (CI uses this)
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { tokens } from "../../../src/generators/tokens.ts";
+import { loadPalette } from "../../../src/palette.ts";
 
 export interface PaletteLike {
   colors: Record<string, { hex: string }>;
@@ -42,11 +44,24 @@ export function renderTokens(palette: PaletteLike): string {
 
 const here = import.meta.dir;
 export const tokensPath = join(here, "../src/styles/tokens.css");
+export const tokensJsonDir = join(here, "../tokens");
 const palettePath = join(here, "../../../palette/bigface.json");
 
 if (import.meta.main) {
   const palette = JSON.parse(readFileSync(palettePath, "utf8")) as PaletteLike;
   const next = renderTokens(palette);
+  // The npm-visible token JSONs are the same files the tokens target emits into themes/.
+  const jsonFiles = tokens.files(
+    await loadPalette(new URL("../../../palette/bigface.json", import.meta.url)),
+  );
+  const jsonPaths = Object.keys(jsonFiles).map((f) => join(tokensJsonDir, f));
+  const stale = (path: string, rendered: string) => {
+    try {
+      return readFileSync(path, "utf8") !== rendered;
+    } catch {
+      return true;
+    }
+  };
   if (process.argv.includes("--check")) {
     const current = readFileSync(tokensPath, "utf8");
     if (current !== next) {
@@ -55,9 +70,22 @@ if (import.meta.main) {
       );
       process.exit(1);
     }
-    console.log("tokens.css is up to date");
+    for (const [name, contents] of Object.entries(jsonFiles)) {
+      const path = join(tokensJsonDir, name);
+      if (stale(path, contents)) {
+        console.error(
+          `tokens/${name} is stale: run \`bun run --cwd packages/ui theme:sync\` and commit the result`,
+        );
+        process.exit(1);
+      }
+    }
+    console.log("tokens.css and tokens/*.json are up to date");
   } else {
     writeFileSync(tokensPath, next);
-    console.log(`wrote ${tokensPath}`);
+    mkdirSync(tokensJsonDir, { recursive: true });
+    for (const [name, contents] of Object.entries(jsonFiles)) {
+      writeFileSync(join(tokensJsonDir, name), contents);
+    }
+    console.log(`wrote ${tokensPath} and ${jsonPaths.length} token json(s) → ${tokensJsonDir}`);
   }
 }

@@ -40,6 +40,15 @@ const APPS = '"${BIGFACE_APPS:-/Applications}"';
 
 export const installSpecs: InstallSpec[] = [
   {
+    // Data, not an app theme — never lands in ~/.config; the repo's themes/tokens/
+    // and the npm export are the homes. Install prints the dark file.
+    id: "tokens",
+    kind: "print",
+    files: [["bigface.json", ""]],
+    note: "Token contract printed above; bigface-light.json is at the same URL path.",
+    undo: "Nothing was installed — nothing to undo.",
+  },
+  {
     id: "pi",
     kind: "files",
     detect: 'command -v pi >/dev/null 2>&1 || [ -d "$HOME/.pi/agent" ]',

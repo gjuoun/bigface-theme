@@ -5,7 +5,7 @@ import { join, relative } from "node:path";
 import { buildThemes } from "./build.ts";
 import { targets } from "./targets.ts";
 
-const EXPECTED = ["pi", "vscode", "zed", "obsidian"];
+const EXPECTED = ["tokens", "pi", "vscode", "zed", "obsidian"];
 /** These formats take 6-digit colours only; the others (VS Code, Zed, Obsidian) use alpha on purpose. */
 const NO_ALPHA = new Set(["pi"]);
 

@@ -38,6 +38,27 @@ export const rawUrl = (id: string, path: string) =>
 
 export const targets: Target[] = [
   {
+    id: "tokens",
+    name: "Design tokens",
+    kind: "Agent",
+    tagline:
+      "The machine-readable contract: every colour, ANSI slot, syntax and semantic role, dark and light.",
+    files: [
+      { path: "bigface.json", label: "bigface.json (dark)" },
+      { path: "bigface-light.json", label: "bigface-light.json (light)" },
+    ],
+    steps: [
+      "Fetch `bigface.json` (dark) or `bigface-light.json` (light) — the same palette data the ports are built from.",
+      "Read `colors`/`ansi` for raw values, `syntax` for the twelve syntax roles, `semantic` for status/diff/search intents.",
+      'JS consumers: `import tokens from "@gjuoun/bigface-ui/tokens.json"` — the same file, shipped with the component library.',
+    ],
+    check: {
+      level: "schema",
+      text: "Generated from the palette in the same pass as every port; a test re-parses it and proves every referenced colour exists.",
+    },
+    terminalPreview: false,
+  },
+  {
     id: "pi",
     name: "pi",
     kind: "Agent",

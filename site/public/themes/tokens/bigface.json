@@ -1,0 +1,232 @@
+{
+  "name": "Bigface",
+  "appearance": "dark",
+  "colors": {
+    "bg": {
+      "hex": "#252925",
+      "source": "jetbrains:TEXT#BACKGROUND"
+    },
+    "panel": {
+      "hex": "#2d312d",
+      "source": "derived:panel"
+    },
+    "fg": {
+      "hex": "#e8e9e1",
+      "source": "derived:fg"
+    },
+    "fgDim": {
+      "hex": "#8c8f89",
+      "source": "derived:fgDim"
+    },
+    "border": {
+      "hex": "#3c403c",
+      "source": "derived:border"
+    },
+    "highlight": {
+      "hex": "#4b4e49",
+      "source": "derived:highlight"
+    },
+    "blue": {
+      "hex": "#00b0ff",
+      "source": "jetbrains:DEFAULT_KEYWORD#FOREGROUND"
+    },
+    "lightBlue": {
+      "hex": "#40c4ff",
+      "source": "jetbrains:DEFAULT_TAG#FOREGROUND"
+    },
+    "paleBlue": {
+      "hex": "#b3e5fc",
+      "source": "jetbrains:DEFAULT_PARAMETER#FOREGROUND"
+    },
+    "cyan": {
+      "hex": "#66d9ef",
+      "source": "jetbrains:TYPEDEF#FOREGROUND"
+    },
+    "green": {
+      "hex": "#00c853",
+      "source": "jetbrains:DEFAULT_IDENTIFIER#FOREGROUND"
+    },
+    "yellow": {
+      "hex": "#ffeb3b",
+      "source": "jetbrains:DEFAULT_OPERATION_SIGN#FOREGROUND"
+    },
+    "burntOrange": {
+      "hex": "#fc5d23",
+      "source": "jetbrains:DEFAULT_NUMBER#FOREGROUND"
+    },
+    "purple": {
+      "hex": "#ae81ff",
+      "source": "jetbrains:PHP_CONSTANT#FOREGROUND"
+    }
+  },
+  "ansi": {
+    "black": {
+      "hex": "#3c403c",
+      "source": "alias:border"
+    },
+    "red": {
+      "hex": "#fc5d23",
+      "source": "alias:burntOrange"
+    },
+    "green": {
+      "hex": "#00c853",
+      "source": "alias:green"
+    },
+    "yellow": {
+      "hex": "#ffeb3b",
+      "source": "alias:yellow"
+    },
+    "blue": {
+      "hex": "#00b0ff",
+      "source": "alias:blue"
+    },
+    "magenta": {
+      "hex": "#ae81ff",
+      "source": "alias:purple"
+    },
+    "cyan": {
+      "hex": "#66d9ef",
+      "source": "alias:cyan"
+    },
+    "white": {
+      "hex": "#e8e9e1",
+      "source": "alias:fg"
+    },
+    "brightBlack": {
+      "hex": "#8c8f89",
+      "source": "alias:fgDim"
+    },
+    "brightRed": {
+      "hex": "#fc5d23",
+      "source": "alias:burntOrange"
+    },
+    "brightGreen": {
+      "hex": "#00c853",
+      "source": "alias:green"
+    },
+    "brightYellow": {
+      "hex": "#ffeb3b",
+      "source": "alias:yellow"
+    },
+    "brightBlue": {
+      "hex": "#40c4ff",
+      "source": "alias:lightBlue"
+    },
+    "brightMagenta": {
+      "hex": "#ae81ff",
+      "source": "alias:purple"
+    },
+    "brightCyan": {
+      "hex": "#b3e5fc",
+      "source": "alias:paleBlue"
+    },
+    "brightWhite": {
+      "hex": "#e8e9e1",
+      "source": "alias:fg"
+    }
+  },
+  "syntax": {
+    "comment": {
+      "name": "fgDim",
+      "hex": "#8c8f89"
+    },
+    "keyword": {
+      "name": "blue",
+      "hex": "#00b0ff"
+    },
+    "function": {
+      "name": "green",
+      "hex": "#00c853"
+    },
+    "variable": {
+      "name": "fg",
+      "hex": "#e8e9e1"
+    },
+    "string": {
+      "name": "yellow",
+      "hex": "#ffeb3b"
+    },
+    "number": {
+      "name": "burntOrange",
+      "hex": "#fc5d23"
+    },
+    "type": {
+      "name": "cyan",
+      "hex": "#66d9ef"
+    },
+    "operator": {
+      "name": "fg",
+      "hex": "#e8e9e1"
+    },
+    "punctuation": {
+      "name": "fg",
+      "hex": "#e8e9e1"
+    },
+    "constant": {
+      "name": "paleBlue",
+      "hex": "#b3e5fc"
+    },
+    "tag": {
+      "name": "lightBlue",
+      "hex": "#40c4ff"
+    },
+    "parameter": {
+      "name": "paleBlue",
+      "hex": "#b3e5fc"
+    }
+  },
+  "semantic": {
+    "status.success": {
+      "name": "green",
+      "hex": "#00c853"
+    },
+    "status.info": {
+      "name": "blue",
+      "hex": "#00b0ff"
+    },
+    "status.warning": {
+      "name": "yellow",
+      "hex": "#ffeb3b"
+    },
+    "status.error": {
+      "name": "burntOrange",
+      "hex": "#fc5d23"
+    },
+    "status.hint": {
+      "name": "fgDim",
+      "hex": "#8c8f89"
+    },
+    "diff.added": {
+      "name": "green",
+      "hex": "#00c853"
+    },
+    "diff.removed": {
+      "name": "burntOrange",
+      "hex": "#fc5d23"
+    },
+    "diff.context": {
+      "name": "fgDim",
+      "hex": "#8c8f89"
+    },
+    "git.added": {
+      "name": "green",
+      "hex": "#00c853"
+    },
+    "git.deleted": {
+      "name": "burntOrange",
+      "hex": "#fc5d23"
+    },
+    "git.renamed": {
+      "name": "green",
+      "hex": "#00c853"
+    },
+    "search.match": {
+      "name": "yellow",
+      "hex": "#ffeb3b"
+    },
+    "link": {
+      "name": "blue",
+      "hex": "#00b0ff"
+    }
+  }
+}
