@@ -15,10 +15,10 @@ export const vscode: Target = {
     // Each value is transcoded to the closest palette role (github's greens merge into green,
     // its blues into blue/lightBlue/paleBlue, its reds/oranges into burntOrange).
     const workbench: Record<string, string | string[]> = {
-      "focusBorder": c("blue"),
-      "foreground": c("fg"),
-      "descriptionForeground": c("fgDim"),
-      "errorForeground": c("burntOrange"),
+      focusBorder: c("blue"),
+      foreground: c("fg"),
+      descriptionForeground: c("fgDim"),
+      errorForeground: c("burntOrange"),
       "textLink.foreground": c("blue"),
       "textLink.activeForeground": c("blue"),
       "textBlockQuote.background": c("bg"),
@@ -307,10 +307,15 @@ export const vscode: Target = {
         settings: { foreground: s("type") },
       },
       {
-        // variable.other.constant stays green like the site: a destructured const name is
-        // still a variable there. tsserver marks it readonly anyway, so the semantic table
+        // variable.other.constant stays plain ink like the site: a destructured const name
+        // is still a variable there. tsserver marks it readonly anyway, so the semantic table
         // below is what drops it to fg in the real editor.
-        scope: ["variable", "variable.other", "variable.other.constant", "meta.definition.variable"],
+        scope: [
+          "variable",
+          "variable.other",
+          "variable.other.constant",
+          "meta.definition.variable",
+        ],
         settings: { foreground: s("variable") },
       },
       { scope: ["variable.parameter", "meta.parameter"], settings: { foreground: s("parameter") } },
@@ -335,24 +340,53 @@ export const vscode: Target = {
         settings: { foreground: c("blue") },
       },
       { scope: ["markup.quote"], settings: { foreground: s("string") } },
-      { scope: ["markup.inserted", "meta.diff.header.to-file", "punctuation.definition.inserted"], settings: { foreground: c("green") } },
-      { scope: ["markup.deleted", "meta.diff.header.from-file", "punctuation.definition.deleted"], settings: { foreground: c("burntOrange") } },
-      { scope: ["markup.changed", "punctuation.definition.changed"], settings: { foreground: s("variable") } },
+      {
+        scope: ["markup.inserted", "meta.diff.header.to-file", "punctuation.definition.inserted"],
+        settings: { foreground: c("green") },
+      },
+      {
+        scope: ["markup.deleted", "meta.diff.header.from-file", "punctuation.definition.deleted"],
+        settings: { foreground: c("burntOrange") },
+      },
+      {
+        scope: ["markup.changed", "punctuation.definition.changed"],
+        settings: { foreground: s("variable") },
+      },
       { scope: ["markup.ignored", "markup.untracked"], settings: { foreground: c("fgDim") } },
       { scope: ["invalid", "invalid.illegal"], settings: { foreground: c("burntOrange") } },
-      { scope: ["invalid.broken", "invalid.deprecated", "invalid.unimplemented"], settings: { foreground: c("burntOrange"), fontStyle: "italic" } },
+      {
+        scope: ["invalid.broken", "invalid.deprecated", "invalid.unimplemented"],
+        settings: { foreground: c("burntOrange"), fontStyle: "italic" },
+      },
       // GitHub Dark's wider coverage, same roles: regexes read as strings, diff headers and
       // module meta read as constants, token-info levels keep the error/warn/info ladder.
       { scope: ["source.regexp", "string.regexp"], settings: { foreground: s("string") } },
-      { scope: ["string.regexp constant.character.escape"], settings: { foreground: s("constant"), fontStyle: "bold" } },
+      {
+        scope: ["string.regexp constant.character.escape"],
+        settings: { foreground: s("constant"), fontStyle: "bold" },
+      },
       // Namespaces read as constants like the site: `std`/`axum` are pale blue there, not
-      // the type cyan. entity.name.scope-resolution sits here (after meta.parameter) because
+      // the type cyan. Variables now sit in fg, so this stays the pale-blue constant role. entity.name.scope-resolution sits here (after meta.parameter) because
       // the C++ grammar scopes `std` inside a parameter declaration and the site's
       // meta.parameter rule wins by order.
-      { scope: ["entity.name.namespace", "entity.name.scope-resolution", "meta.module-reference", "meta.output"], settings: { foreground: s("constant") } },
-      { scope: ["meta.diff.header", "meta.diff.range", "meta.separator"], settings: { foreground: s("punctuation") } },
+      {
+        scope: [
+          "entity.name.namespace",
+          "entity.name.scope-resolution",
+          "meta.module-reference",
+          "meta.output",
+        ],
+        settings: { foreground: s("constant") },
+      },
+      {
+        scope: ["meta.diff.header", "meta.diff.range", "meta.separator"],
+        settings: { foreground: s("punctuation") },
+      },
       { scope: ["meta.property-name"], settings: { foreground: s("variable") } },
-      { scope: ["punctuation.definition.list.begin.markdown"], settings: { foreground: s("variable") } },
+      {
+        scope: ["punctuation.definition.list.begin.markdown"],
+        settings: { foreground: s("variable") },
+      },
       { scope: ["string variable"], settings: { foreground: s("constant") } },
       { scope: ["support", "support.variable"], settings: { foreground: s("constant") } },
       { scope: ["message.error"], settings: { foreground: c("burntOrange") } },
@@ -360,7 +394,10 @@ export const vscode: Target = {
       { scope: ["token.warn-token"], settings: { foreground: c("yellow") } },
       { scope: ["token.error-token"], settings: { foreground: c("burntOrange") } },
       { scope: ["token.debug-token"], settings: { foreground: c("purple") } },
-      { scope: ["carriage-return"], settings: { foreground: c("fg"), fontStyle: "italic underline" } },
+      {
+        scope: ["carriage-return"],
+        settings: { foreground: c("fg"), fontStyle: "italic underline" },
+      },
       {
         scope: [
           "brackethighlighter.tag",
@@ -373,14 +410,17 @@ export const vscode: Target = {
         settings: { foreground: c("fgDim") },
       },
       { scope: ["brackethighlighter.unmatched"], settings: { foreground: c("burntOrange") } },
-      { scope: ["storage.modifier.package", "storage.modifier.import", "storage.type.java"], settings: { foreground: s("punctuation") } },
+      {
+        scope: ["storage.modifier.package", "storage.modifier.import", "storage.type.java"],
+        settings: { foreground: s("punctuation") },
+      },
     ];
 
     // VS Code's language servers repaint tokens semantically on top of TextMate — the layer
     // Shiki never runs. tsserver marks every imported binding and every const variable.readonly,
     // so on the site those names read as plain ink; here readonly variables stay fg while
-    // let/var and properties keep the variable green the site gives them. Declarations read fg
-    // too — an import list or const name is not a usage.
+    // let/var and properties keep the variable fg the site gives them. Declarations read fg
+    // too — an import list or const name is not a usage; they map to variable, not function.
     const semanticTokenColors = {
       namespace: s("constant"),
       class: s("type"),
@@ -396,8 +436,8 @@ export const vscode: Target = {
       variable: s("variable"),
       "variable.defaultLibrary": s("constant"),
       "variable.readonly": s("operator"),
-      "variable.declaration": s("function"),
-      "parameter.declaration": s("function"),
+      "variable.declaration": s("variable"),
+      "parameter.declaration": s("variable"),
       parameter: s("parameter"),
       function: s("function"),
       method: s("function"),

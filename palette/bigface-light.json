@@ -128,8 +128,8 @@
   "syntax": {
     "comment": "fgDim",
     "keyword": "blue",
-    "function": "fg",
-    "variable": "green",
+    "function": "green",
+    "variable": "fg",
     "string": "yellow",
     "number": "burntOrange",
     "type": "cyan",

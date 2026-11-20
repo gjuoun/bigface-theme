@@ -324,7 +324,7 @@
         "variable.function"
       ],
       "settings": {
-        "foreground": "#e8e9e1"
+        "foreground": "#00c853"
       }
     },
     {
@@ -347,7 +347,7 @@
         "meta.definition.variable"
       ],
       "settings": {
-        "foreground": "#00c853"
+        "foreground": "#e8e9e1"
       }
     },
     {
@@ -373,7 +373,7 @@
         "entity.other.attribute-name"
       ],
       "settings": {
-        "foreground": "#00c853"
+        "foreground": "#e8e9e1"
       }
     },
     {
@@ -399,7 +399,7 @@
         "entity.name.section"
       ],
       "settings": {
-        "foreground": "#e8e9e1",
+        "foreground": "#00c853",
         "fontStyle": "bold"
       }
     },
@@ -488,7 +488,7 @@
         "punctuation.definition.changed"
       ],
       "settings": {
-        "foreground": "#00c853"
+        "foreground": "#e8e9e1"
       }
     },
     {
@@ -564,7 +564,7 @@
         "meta.property-name"
       ],
       "settings": {
-        "foreground": "#00c853"
+        "foreground": "#e8e9e1"
       }
     },
     {
@@ -572,7 +572,7 @@
         "punctuation.definition.list.begin.markdown"
       ],
       "settings": {
-        "foreground": "#00c853"
+        "foreground": "#e8e9e1"
       }
     },
     {
@@ -684,28 +684,28 @@
     "type": "#66d9ef",
     "typeParameter": "#66d9ef",
     "enumMember": "#b3e5fc",
-    "decorator": "#e8e9e1",
-    "macro": "#e8e9e1",
-    "variable": "#00c853",
+    "decorator": "#00c853",
+    "macro": "#00c853",
+    "variable": "#e8e9e1",
     "variable.defaultLibrary": "#b3e5fc",
     "variable.readonly": "#e8e9e1",
     "variable.declaration": "#e8e9e1",
     "parameter.declaration": "#e8e9e1",
     "parameter": "#b3e5fc",
-    "function": "#e8e9e1",
-    "method": "#e8e9e1",
-    "function.defaultLibrary": "#e8e9e1",
+    "function": "#00c853",
+    "method": "#00c853",
+    "function.defaultLibrary": "#00c853",
     "keyword": "#00b0ff",
     "string": "#ffeb3b",
     "number": "#fc5d23",
     "regexp": "#ffeb3b",
     "operator": "#e8e9e1",
-    "property": "#00c853",
-    "property.readonly": "#00c853",
+    "property": "#e8e9e1",
+    "property.readonly": "#e8e9e1",
     "comment": "#8c8f89",
     "comment.documentation": "#8c8f89",
     "*.deprecated": {
-      "foreground": "#00c853",
+      "foreground": "#e8e9e1",
       "fontStyle": "strikethrough"
     }
   }

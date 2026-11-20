@@ -1,4 +1,4 @@
-import { type Palette } from "../palette.ts";
+import { type Palette, type SyntaxRole } from "../palette.ts";
 import type { Target } from "./types.ts";
 
 /** Every role pi requires (plus the optional `searchMatchText`). */
@@ -109,15 +109,17 @@ export const pi: Target = {
       toolDiffAdded: "green",
       toolDiffRemoved: "burntOrange",
       toolDiffContext: "fgDim",
-      syntaxComment: "fgDim",
-      syntaxKeyword: "blue",
-      syntaxFunction: "fg",
-      syntaxVariable: "green",
-      syntaxString: "yellow",
-      syntaxNumber: "burntOrange",
-      syntaxType: "cyan",
-      syntaxOperator: "fg",
-      syntaxPunctuation: "fg",
+      // Syntax roles come from the palette, not a copy of it — a role swap
+      // (function/variable, 2026-11-18) reaches pi like every other port.
+      syntaxComment: p.syntax.comment,
+      syntaxKeyword: p.syntax.keyword,
+      syntaxFunction: p.syntax.function,
+      syntaxVariable: p.syntax.variable,
+      syntaxString: p.syntax.string,
+      syntaxNumber: p.syntax.number,
+      syntaxType: p.syntax.type,
+      syntaxOperator: p.syntax.operator,
+      syntaxPunctuation: p.syntax.punctuation,
       thinkingOff: "border",
       thinkingMinimal: "fgDim",
       thinkingLow: "lightBlue",

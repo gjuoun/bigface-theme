@@ -242,13 +242,13 @@
             "color": "#b3e5fc"
           },
           "function": {
-            "color": "#e8e9e1"
+            "color": "#00c853"
           },
           "function.method": {
-            "color": "#e8e9e1"
+            "color": "#00c853"
           },
           "function.special.definition": {
-            "color": "#e8e9e1"
+            "color": "#00c853"
           },
           "type": {
             "color": "#66d9ef"
@@ -263,7 +263,7 @@
             "color": "#66d9ef"
           },
           "variable": {
-            "color": "#00c853"
+            "color": "#e8e9e1"
           },
           "variable.builtin": {
             "color": "#b3e5fc"
@@ -281,7 +281,7 @@
             "color": "#b3e5fc"
           },
           "property": {
-            "color": "#00c853"
+            "color": "#e8e9e1"
           },
           "property.json_key": {
             "color": "#40c4ff"
@@ -320,7 +320,7 @@
             "color": "#ffeb3b"
           },
           "title": {
-            "color": "#e8e9e1",
+            "color": "#00c853",
             "font_weight": 700
           },
           "emphasis": {
